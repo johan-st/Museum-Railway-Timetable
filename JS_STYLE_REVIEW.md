@@ -2,7 +2,7 @@
 
 Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
-**Senast analyserad:** 2025-02-17
+**Senast analyserad:** 2025-02-17 (efter commit 68ff30a)
 
 ---
 
@@ -15,51 +15,51 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 | **console.log** | Endast bakom `window.mrtDebug` (admin.js, admin-timetable-services-ui.js) |
 | **camelCase** | Variabler och funktioner använder camelCase |
 | **Prefix** | `mrtAdmin`, `mrtFrontend` för lokaliserade strängar |
-| **Nonces** | Admin-AJAX skickar nonce; frontend read-only anrop (search, timetable) saknar – OK för publika läsoperationer |
-| **Felhantering** | De flesta AJAX-anrop har success/error-hantering |
+| **Nonces** | Admin-AJAX skickar nonce; frontend read-only anrop saknar – OK för publika läsoperationer |
+| **Felhantering** | Alla AJAX-anrop har success/error eller .fail() |
 | **CSS-klasser** | Använder `.mrt-*` enligt COMPONENT_LIBRARY |
-| **XSS** | `escapeHtml()` för användardata, `.text()` för meddelanden i showError |
+| **XSS** | `escapeHtml()` för användardata, `.text()` för meddelanden |
+| **Clean Code** | Funktioner under ~50 rader, uppdelade moduler |
 
 ---
 
 ## ✅ Genomförda förbättringar
 
-- XSS: escapeHtml för station.name, stationName; showError använder .text()
-- Felhantering: error-callback för route end stations AJAX
-- i18n: saving, adding, timeHint, pickup, dropoff, edit, tripAdded, tripRemoved
-- Clean Code: admin-service-edit, admin-timetable-services-ui uppdelade
+- XSS: escapeHtml, showError med .text()
+- Felhantering: .fail() på alla AJAX, error-callbacks
+- i18n: saving, adding, timeHint, pickup, dropoff, edit, tripAdded, tripRemoved, saved
+- Clean Code: initRouteUI, initStopTimesUI, initTimetableServicesUI uppdelade
+- DRY: MRTAdminUtils.getAjaxUrl() i admin-service-edit, admin-route-ui, admin-timetable-services-ui
 
 ---
 
-## ⚠️ Återstående förbättringar
+## ⚠️ Mindre observationer (valfria)
 
-### 1. Långa funktioner ✓ (genomfört)
+### 1. admin-stoptimes-ui.js – getAjaxUrl
 
-- **admin-route-ui.js:** `initRouteUI` delad i `bindAddStation`, `bindMoveAndRemove`, `bindEndStationsChange`
-- **admin-stoptimes-ui.js:** `initStopTimesUI` delad i `bindRowClick`, `bindSave`, `bindAdd`, `bindCancel`, `bindDelete`
+- Använder `mrtAdmin.ajaxurl` direkt i $.post (4 ställen)
+- **Åtgärd:** Lägg till `mrt-admin-utils` som dependency, använd `window.MRTAdminUtils.getAjaxUrl()` för konsekvens
 
-### 2. Felhantering ✓ (genomfört)
+### 2. admin-stoptimes-ui.js – cancelEditStopTime
 
-- **admin-stoptimes-ui.js:** `.fail()` tillagd på alla tre AJAX-anrop (save, add, delete)
+- `mrt_get_stoptime` AJAX-anrop saknar `.fail()` – vid nätverksfel ingen feedback (rad 168)
+- **Åtgärd:** Lägg till `.fail()` med t.ex. exitEditMode + alert
 
-### 3. XSS – frontend.js ✓ (genomfört)
+### 3. admin-service-edit.js – bindTimeValidation
 
-- **frontend.js:** `showError()` används nu för initMonthCalendar (response.data.message via .text())
+- `errorText` sätts i HTML via `$field.append('<span>'+errorText+'</span>')` (rad 219)
+- `errorText` kommer från mrtAdmin (översatt) – säker, men `document.createElement` + `textContent` skulle vara mer konsekvent
 
-### 4. DRY – getAjaxUrl ✓ (genomfört)
+### 4. admin.js – MODULES-kommentar
 
-- **admin-utils.js:** `MRTAdminUtils.getAjaxUrl()` tillagd
-- **admin-service-edit.js**, **admin-route-ui.js**, **admin-timetable-services-ui.js**: Använder nu getAjaxUrl()
+- Listar inte `getAjaxUrl` under admin-utils
+- **Åtgärd:** Uppdatera kommentaren
 
-### 5. i18n ✓ (genomfört)
-
-- **admin-route-ui.js:** `mrtAdmin.saved` för "✓ Saved"
-
-### 6. Frontend – nonce för AJAX (valfritt)
+### 5. Frontend – nonce (valfritt)
 
 - `mrt_search_journey`, `mrt_get_timetable_for_date` skickar ingen nonce
-- För publika read-only anrop är nonce inte strikt nödvändig
-- **Åtgärd:** Överväg nonce för extra CSRF-skydd om policy kräver det
+- För publika read-only anrop inte nödvändigt
+- **Åtgärd:** Överväg nonce om policy kräver extra CSRF-skydd
 
 ---
 
@@ -67,7 +67,7 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 | Nuvarande | Style guide | Kommentar |
 |-----------|-------------|-----------|
-| `MRTAdminUtils` | mrtAdmin, mrtFrontend | OK – objektnamn, inte lokaliserings-objekt |
+| `MRTAdminUtils` | mrtAdmin, mrtFrontend | OK – objektnamn |
 | `MRTAdminServiceEdit` | – | OK – modul/namespace |
 
 ---
@@ -76,18 +76,18 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 | Fil | Rader | Ansvar |
 |-----|-------|--------|
-| admin.js | 29 | Entry point, laddar MRTAdminServiceEdit |
-| admin-utils.js | 75 | escapeHtml, populateDestinationsSelect, setSelectState, validateTimeFormat |
+| admin.js | 29 | Entry point, MRTAdminServiceEdit.init |
+| admin-utils.js | 83 | getAjaxUrl, escapeHtml, populateDestinationsSelect, setSelectState, validateTimeFormat |
 | admin-service-edit.js | 305 | Route/destination, title preview, stoptimes-formulär |
-| admin-route-ui.js | 157 | Lägg till/ta bort/ordna stationer på rutt, end stations |
-| admin-stoptimes-ui.js | 205 | Legacy inline redigering av stoptimes |
-| admin-timetable-services-ui.js | 235 | Lägg till/ta bort turer i tidtabell |
+| admin-route-ui.js | 166 | Lägg till/ta bort/ordna stationer, end stations |
+| admin-stoptimes-ui.js | 228 | Legacy inline redigering av stoptimes |
+| admin-timetable-services-ui.js | 234 | Lägg till/ta bort turer i tidtabell |
 | frontend.js | 155 | Journey planner, månadskalender |
 
 ---
 
 ## Sammanfattning
 
-- **Struktur och grund:** Bra
-- **Prioritet 1–3 genomförda:** Felhantering (.fail), XSS frontend, refaktorering initRouteUI/initStopTimesUI
+- **Struktur och grund:** Bra – följer STYLE_GUIDE och COMPONENT_LIBRARY
 - **Alla prioriterade förbättringar genomförda**
+- **Återstår:** Endast mindre, valfria förbättringar (getAjaxUrl i stoptimes, .fail på cancel, MODULES-kommentar)
