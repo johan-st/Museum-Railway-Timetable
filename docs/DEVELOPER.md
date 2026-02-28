@@ -1,60 +1,74 @@
-# Developer Guide
+# Developer Guide – Museum Railway Timetable
 
-## Nästa steg: Köra lint
-
-Om Composer inte är installerat:
-
-1. **Installera Composer:** https://getcomposer.org/download/
-2. **Windows:** Kör installationsprogrammet, starta om terminalen
-3. **Alternativt (om PHP finns):**
-   ```powershell
-   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-   php composer-setup.php
-   php composer.phar install
-   ```
-
-Kör sedan:
-
-```powershell
-cd c:\Projects\Museum-Railway-Timetable
-composer install
-composer phpstan
-composer phpcs
-```
-
-Åtgärda eventuella fel som rapporteras. Committa när allt är grönt.
+En ingång för utvecklare. Läs detta först.
 
 ---
 
-## Kodkvalitet (Linting)
+## Snabbstart
 
-### Krav
-- PHP 8.0+
-- [Composer](https://getcomposer.org/)
+```powershell
+# 1. Klona och installera
+git clone <repo>
+cd Museum-Railway-Timetable
+composer install
 
-### Installation
+# 2. Deploy till Local (första gången: kopiera config)
+copy scripts\deploy.config.example.json scripts\deploy.config.json
+# Redigera scripts/deploy.config.json med din Local-sökväg
+
+.\scripts\deploy.ps1 -OpenBrowser
+
+# 3. Vid kodändringar – validera innan commit
+composer lint
+php scripts\validate.php
+```
+
+---
+
+## Dokumentation
+
+| Dokument | Innehåll |
+|----------|----------|
+| [docs/README.md](README.md) | Index över all dokumentation |
+| [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
+| [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
+| [DATA_MODEL.md](DATA_MODEL.md) | Datamodell, relationer, post types |
+| [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filstruktur, uppdelning |
+| [FUTURE_WORK.md](FUTURE_WORK.md) | Rekommendationer för framtida arbete |
+
+---
+
+## Krav
+
+- **PHP** 8.0+
+- **Composer** – [getcomposer.org](https://getcomposer.org/download/)
+- **WordPress** 6.0+ (för testning)
+
+---
+
+## Kodkvalitet
+
+### Lint (PHPStan + PHPCS)
 
 ```bash
 composer install
+composer phpstan    # Statisk analys
+composer phpcs      # Kodstil (WordPress)
+composer lint       # Båda
 ```
 
-### Köra lint
-
-```bash
-# PHPStan (statisk analys)
-composer phpstan
-
-# PHPCS (kodstil)
-composer phpcs
-
-# Båda
-composer lint
-```
-
-Windows (PowerShell):
+**Windows (PowerShell):**
 ```powershell
 .\scripts\lint.ps1
 ```
+
+### Validering
+
+```powershell
+php scripts\validate.php
+```
+
+Kontrollerar: filer, PHP-syntax, ABSPATH, inline styles, plugin header, text domain, CSS/JS.
 
 ### Pre-commit hooks
 
@@ -65,13 +79,34 @@ pre-commit install
 
 Kör manuellt: `pre-commit run --all-files`
 
+**OBS:** Kräver bash (WSL eller Git Bash på Windows).
+
+---
+
+## Deploy till Local
+
+1. Kopiera `scripts/deploy.config.example.json` → `scripts/deploy.config.json`
+2. Sätt `localPath` och `localUrl` till din Local-site
+3. Kör: `.\scripts\deploy.ps1` eller `.\scripts\deploy.ps1 -OpenBrowser`
+
+---
+
 ## Konstanter
 
-- **MRT_TEXT_DOMAIN** – Text domain för översättningar
-- **MRT_POST_TYPE_STATION**, **MRT_POST_TYPE_ROUTE**, **MRT_POST_TYPE_TIMETABLE**, **MRT_POST_TYPE_SERVICE**
-- **MRT_TAXONOMY_TRAIN_TYPE**
-- **MRT_POST_TYPES** – Array med alla post types
+| Konstant | Användning |
+|----------|------------|
+| `MRT_TEXT_DOMAIN` | Text domain för översättningar |
+| `MRT_POST_TYPE_STATION` | Station post type |
+| `MRT_POST_TYPE_ROUTE` | Route post type |
+| `MRT_POST_TYPE_TIMETABLE` | Timetable post type |
+| `MRT_POST_TYPE_SERVICE` | Service post type |
+| `MRT_TAXONOMY_TRAIN_TYPE` | Train type taxonomy |
+| `MRT_POST_TYPES` | Array med alla post types |
+
+Definieras i `inc/constants.php`.
+
+---
 
 ## Typning
 
-Filer använder `declare(strict_types=1)` och type hints där det är möjligt.
+PHP-filer använder `declare(strict_types=1)` och type hints där det är möjligt.

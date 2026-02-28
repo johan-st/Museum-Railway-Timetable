@@ -160,6 +160,8 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 ## Development
 
+**Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) för snabbstart, lint, validering och dokumentation.
+
 ### Deploy to Local (WordPress)
 
 To automate copying the plugin to your Local by Flywheel site for testing:

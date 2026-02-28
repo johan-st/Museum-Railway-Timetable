@@ -9,6 +9,8 @@
 | [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) | PHP-granskning |
 | [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) | JavaScript-granskning |
 | [VALIDATION.md](VALIDATION.md) | Pre-deploy checklista |
+| [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | CSS-granskning mot style guide |
+| [FUTURE_WORK.md](FUTURE_WORK.md) | Rekommendationer för framtida arbete |
 | [DATA_MODEL.md](DATA_MODEL.md) | Datamodell |
 | [TIMETABLE_STRUCTURE.md](TIMETABLE_STRUCTURE.md) | Tidtabellstruktur |
 | [SHORTCODES_OVERVIEW.md](SHORTCODES_OVERVIEW.md) | Shortcode-dokumentation |
