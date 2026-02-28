@@ -212,7 +212,10 @@
                 if (timeValue && timeValue.trim() !== '' && !utils.validateTimeFormat(timeValue)) {
                     $input.addClass('mrt-time-error');
                     var errorText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.invalidTimeFormat) ? mrtAdmin.invalidTimeFormat : 'Invalid format. Use HH:MM (e.g., 09:15)';
-                    $field.append('<span class="mrt-time-error-message mrt-block mrt-text-error mrt-text-small mrt-mt-xs">' + errorText + '</span>');
+                    var $err = document.createElement('span');
+                    $err.className = 'mrt-time-error-message mrt-block mrt-text-error mrt-text-small mrt-mt-xs';
+                    $err.textContent = errorText;
+                    $field[0].appendChild($err);
                 }
             });
         },

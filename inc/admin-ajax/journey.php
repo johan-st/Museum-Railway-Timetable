@@ -11,6 +11,11 @@ if (!defined('ABSPATH')) { exit; }
  * Search for journey connections via AJAX (frontend)
  */
 function MRT_ajax_search_journey() {
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
+    if (!wp_verify_nonce($nonce, 'mrt_frontend')) {
+        wp_send_json_error(['message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable')]);
+        return;
+    }
     $from_station_id = intval($_POST['from_station'] ?? 0);
     $to_station_id = intval($_POST['to_station'] ?? 0);
     $date = sanitize_text_field($_POST['date'] ?? '');

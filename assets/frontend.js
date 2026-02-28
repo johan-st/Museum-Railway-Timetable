@@ -54,6 +54,7 @@
                 type: 'POST',
                 data: {
                     action: 'mrt_search_journey',
+                    nonce: (typeof mrtFrontend !== 'undefined' && mrtFrontend.nonce) ? mrtFrontend.nonce : '',
                     from_station: fromStation,
                     to_station: toStation,
                     date: date
@@ -118,6 +119,7 @@
                 type: 'POST',
                 data: {
                     action: 'mrt_get_timetable_for_date',
+                    nonce: (typeof mrtFrontend !== 'undefined' && mrtFrontend.nonce) ? mrtFrontend.nonce : '',
                     date: date,
                     train_type: trainType
                 },

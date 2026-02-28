@@ -89,7 +89,7 @@
             var originalText = $btn.text();
             $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...');
 
-            $.post(mrtAdmin.ajaxurl, data, function(response) {
+            $.post(window.MRTAdminUtils.getAjaxUrl(), data, function(response) {
                 if (response.success) {
                     if (response.data) {
                         applyStoptimeToRow($row, response.data);
@@ -135,7 +135,7 @@
             var originalText = $btn.text();
             $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.adding) ? mrtAdmin.adding : 'Adding...');
 
-            $.post(mrtAdmin.ajaxurl, data, function(response) {
+            $.post(window.MRTAdminUtils.getAjaxUrl(), data, function(response) {
                 if (response.success) {
                     if (response.data) {
                         var st = response.data;
@@ -165,10 +165,13 @@
         var nonce = $('#mrt_stoptimes_nonce').val();
 
         if (stoptimeId && stoptimeId !== 'new' && id) {
-            $.post(mrtAdmin.ajaxurl, { action: 'mrt_get_stoptime', nonce: nonce, id: id }, function(response) {
+            $.post(window.MRTAdminUtils.getAjaxUrl(), { action: 'mrt_get_stoptime', nonce: nonce, id: id }, function(response) {
                 if (response.success && response.data) {
                     applyStoptimeToRow($row, response.data);
                 }
+                exitEditMode($row, state);
+            }).fail(function() {
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.');
                 exitEditMode($row, state);
             });
         } else {
@@ -190,7 +193,7 @@
                 return;
             }
             var id = $(this).data('id');
-            $.post(mrtAdmin.ajaxurl, {
+            $.post(window.MRTAdminUtils.getAjaxUrl(), {
                 action: 'mrt_delete_stoptime',
                 nonce: nonce,
                 id: id

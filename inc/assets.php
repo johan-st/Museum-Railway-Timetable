@@ -111,7 +111,7 @@ function MRT_enqueue_admin_css(string $hook): void {
 function MRT_enqueue_admin_js() {
     wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-service-edit', MRT_URL . 'assets/admin-service-edit.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin', MRT_URL . 'assets/admin.js', [
@@ -280,6 +280,7 @@ function MRT_enqueue_frontend_assets(): void {
     // Localize script for AJAX and translations
     wp_localize_script('mrt-frontend', 'mrtFrontend', [
         'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('mrt_frontend'),
         'search' => __('Search', MRT_TEXT_DOMAIN),
         'searching' => __('Searching...', MRT_TEXT_DOMAIN),
         'loading' => __('Loading...', MRT_TEXT_DOMAIN),

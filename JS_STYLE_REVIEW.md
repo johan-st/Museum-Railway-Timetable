@@ -33,33 +33,23 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 ---
 
-## ⚠️ Mindre observationer (valfria)
+## ✅ Mindre observationer (genomförda)
 
-### 1. admin-stoptimes-ui.js – getAjaxUrl
+### 1. admin-stoptimes-ui.js – getAjaxUrl ✓
+- `mrt-admin-utils` som dependency, använder `window.MRTAdminUtils.getAjaxUrl()`
 
-- Använder `mrtAdmin.ajaxurl` direkt i $.post (4 ställen)
-- **Åtgärd:** Lägg till `mrt-admin-utils` som dependency, använd `window.MRTAdminUtils.getAjaxUrl()` för konsekvens
+### 2. admin-stoptimes-ui.js – cancelEditStopTime ✓
+- `.fail()` tillagd på `mrt_get_stoptime`
 
-### 2. admin-stoptimes-ui.js – cancelEditStopTime
+### 3. admin-service-edit.js – bindTimeValidation ✓
+- `document.createElement` + `textContent` för felmeddelande
 
-- `mrt_get_stoptime` AJAX-anrop saknar `.fail()` – vid nätverksfel ingen feedback (rad 168)
-- **Åtgärd:** Lägg till `.fail()` med t.ex. exitEditMode + alert
+### 4. admin.js – MODULES-kommentar ✓
+- Uppdaterad med getAjaxUrl, escapeHtml
 
-### 3. admin-service-edit.js – bindTimeValidation
-
-- `errorText` sätts i HTML via `$field.append('<span>'+errorText+'</span>')` (rad 219)
-- `errorText` kommer från mrtAdmin (översatt) – säker, men `document.createElement` + `textContent` skulle vara mer konsekvent
-
-### 4. admin.js – MODULES-kommentar
-
-- Listar inte `getAjaxUrl` under admin-utils
-- **Åtgärd:** Uppdatera kommentaren
-
-### 5. Frontend – nonce (valfritt)
-
-- `mrt_search_journey`, `mrt_get_timetable_for_date` skickar ingen nonce
-- För publika read-only anrop inte nödvändigt
-- **Åtgärd:** Överväg nonce om policy kräver extra CSRF-skydd
+### 5. Frontend – nonce ✓
+- `mrtFrontend.nonce` tillagd, skickas med mrt_search_journey och mrt_get_timetable_for_date
+- Backend verifierar med wp_verify_nonce
 
 ---
 
@@ -90,4 +80,4 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 - **Struktur och grund:** Bra – följer STYLE_GUIDE och COMPONENT_LIBRARY
 - **Alla prioriterade förbättringar genomförda**
-- **Återstår:** Endast mindre, valfria förbättringar (getAjaxUrl i stoptimes, .fail på cancel, MODULES-kommentar)
+- **Alla observationer genomförda**
