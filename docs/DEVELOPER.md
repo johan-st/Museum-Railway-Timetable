@@ -40,7 +40,7 @@ php scripts\validate.php
 
 ## Krav
 
-- **PHP** 8.0+
+- **PHP** 8.0+ – Se [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) om PHP saknas
 - **Composer** – [getcomposer.org](https://getcomposer.org/download/)
 - **WordPress** 6.0+ (för testning)
 

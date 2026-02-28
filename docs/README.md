@@ -11,6 +11,7 @@
 | [VALIDATION.md](VALIDATION.md) | Pre-deploy checklista |
 | [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | CSS-granskning mot style guide |
 | [FUTURE_WORK.md](FUTURE_WORK.md) | Rekommendationer för framtida arbete |
+| [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | Installera PHP på Windows (3 alternativ) |
 | [DATA_MODEL.md](DATA_MODEL.md) | Datamodell |
 | [TIMETABLE_STRUCTURE.md](TIMETABLE_STRUCTURE.md) | Tidtabellstruktur |
 | [SHORTCODES_OVERVIEW.md](SHORTCODES_OVERVIEW.md) | Shortcode-dokumentation |
