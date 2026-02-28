@@ -21,33 +21,27 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 ---
 
-## ⚠️ Förbättringar
+## ✅ Förbättringar (genomförda)
 
-### 1. XSS-säkerhet
-**admin-service-edit.js** (rad 131–134) och **admin-route-ui.js** (rad 38–39):
-- `station.name` och `stationName` sätts direkt i HTML-strängar
-- **Åtgärd:** Använd `document.createElement` + `textContent` eller escape-funktion
+### 1. XSS-säkerhet ✓
+- `admin-service-edit.js`, `admin-route-ui.js`: `escapeHtml()` för station.name, stationName
+- **frontend.js**: `showError()` använder `.text(message)` istället för `.html()`
 
-### 2. Saknad felhantering
-**admin-route-ui.js** (rad 116–138): AJAX för end stations har ingen `error`-callback.
-- **Åtgärd:** Lägg till `error: function() { ... }` och visa meddelande vid nätverksfel
+### 2. Felhantering ✓
+- `admin-route-ui.js`: error-callback för route end stations AJAX
 
-### 3. Hårdkodade strängar (i18n)
-Strängar som borde komma från `mrtAdmin`/`mrtFrontend`:
-- `admin-service-edit.js`: "Saving...", "Leave empty if train stops...", "Pickup", "Dropoff"
-- `admin-timetable-services-ui.js`: "Edit", "Trip added successfully.", "Trip removed successfully."
-- **Åtgärd:** Lägg till i `wp_localize_script` och använd i JS
+### 3. i18n ✓
+- `admin-service-edit.js`: saving, timeHint, pickup, dropoff
+- `admin-timetable-services-ui.js`: edit, tripAdded, tripRemoved
+- `admin-stoptimes-ui.js`: saving, adding
 
-### 4. showError – XSS
-**frontend.js** (rad 81): `$container.html('<div class="...">' + message + '</div>')`
-- Om `message` kommer från API kan den vara escaped på servern
-- **Åtgärd:** Använd `textContent` eller escape innan insättning i HTML
+### 4. showError – XSS ✓
+- `frontend.js`: `.text(message)` för säker insättning
 
-### 5. Långa funktioner (Clean Code: max 50 rader)
-- **admin-service-edit.js** `bindSaveAllStoptimes`: ~55 rader
-- **admin-stoptimes-ui.js** `initStopTimesUI`: ~220 rader
-- **admin-timetable-services-ui.js** `initTimetableServicesUI`: ~210 rader
-- **Åtgärd:** Dela upp i mindre funktioner (t.ex. `buildSaveStoptimesHandler`, `handleSaveSuccess`)
+### 5. Clean Code – långa funktioner ✓
+- `admin-service-edit.js`: validateStoptimeFormats, sendSaveAllStoptimes
+- `admin-stoptimes-ui.js`: exitEditMode, applyStoptimeToRow
+- `admin-timetable-services-ui.js`: bindRouteChange, bindAddService, bindRemoveService, helpers
 
 ---
 
@@ -63,7 +57,4 @@ Strängar som borde komma från `mrtAdmin`/`mrtFrontend`:
 ## Sammanfattning
 
 - **Struktur och grund:** Bra
-- **Prioritet 1:** XSS-säkerhet (station.name, message i HTML)
-- **Prioritet 2:** Felhantering för route end stations
-- **Prioritet 3:** i18n för hårdkodade strängar
-- **Prioritet 4:** Refaktorera långa funktioner
+- Alla förbättringar genomförda (XSS, felhantering, i18n, Clean Code)

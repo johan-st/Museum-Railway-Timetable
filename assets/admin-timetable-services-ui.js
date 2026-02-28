@@ -6,44 +6,80 @@
 (function($) {
     'use strict';
 
-    function initTimetableServicesUI() {
-        var $container = $('#mrt-timetable-services-container');
-        if (!$container.length) {
-            if (window.mrtDebug) {
-                console.log('MRT: Timetable services container not found');
-            }
-            return;
-        }
+    function getAjaxUrl() {
+        return (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+    }
 
-        if (window.mrtDebug) {
-            console.log('MRT: Initializing timetable services UI');
-        }
+    function getEmptyDestinationOptions() {
+        var defOpt = document.createElement('option');
+        defOpt.value = '';
+        defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+        var disOpt = document.createElement('option');
+        disOpt.value = '';
+        disOpt.disabled = true;
+        disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
+        return [defOpt, disOpt];
+    }
 
-        var nonce = $('#mrt_timetable_services_nonce').val();
-        var utils = window.MRTAdminUtils;
+    function setDestinationSelectEmpty($select) {
+        $select.empty().append(getEmptyDestinationOptions());
+    }
 
+    function showTemporaryNotice(message, type) {
+        type = type || 'success';
+        var cssClass = type === 'success' ? 'mrt-success-message notice notice-success' : 'mrt-error-message notice notice-error';
+        var $msg = $('<div class="' + cssClass + ' is-dismissible mrt-my-1"><p></p></div>');
+        $msg.find('p').text(message);
+        $('#mrt-timetable-services-box').before($msg);
+        setTimeout(function() { $msg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
+    }
+
+    function buildNewServiceRow(response, timetableId) {
+        var editUrlWithTimetable = response.data.edit_url + (response.data.edit_url.indexOf('?') > -1 ? '&' : '?') + 'timetable_id=' + timetableId;
+        var $row = $('<tr></tr>').attr('data-service-id', response.data.service_id);
+        var td1 = document.createElement('td');
+        td1.textContent = response.data.route_name || '';
+        var td2 = document.createElement('td');
+        td2.textContent = response.data.train_type_name || '';
+        var td3 = document.createElement('td');
+        td3.textContent = response.data.destination || response.data.direction || '—';
+        var td4 = document.createElement('td');
+        var editLink = document.createElement('a');
+        editLink.href = editUrlWithTimetable;
+        editLink.className = 'button button-small';
+        editLink.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.edit) ? mrtAdmin.edit : 'Edit';
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'button button-small mrt-delete-service-from-timetable';
+        removeBtn.setAttribute('data-service-id', response.data.service_id);
+        removeBtn.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.remove) ? mrtAdmin.remove : 'Remove';
+        td4.appendChild(editLink);
+        td4.appendChild(document.createTextNode(' '));
+        td4.appendChild(removeBtn);
+        $row.append(td1).append(td2).append(td3).append(td4);
+        return $row;
+    }
+
+    function resetNewServiceForm() {
+        $('#mrt-new-service-route').val('');
+        $('#mrt-new-service-train-type').val('');
+        setDestinationSelectEmpty($('#mrt-new-service-end-station'));
+    }
+
+    function bindRouteChange(nonce, utils) {
         $('#mrt-new-service-route').on('change', function() {
             var routeId = $(this).val();
             var $destinationSelect = $('#mrt-new-service-end-station');
 
             if (!routeId) {
-                $destinationSelect.empty();
-                var defOpt = document.createElement('option');
-                defOpt.value = '';
-                defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
-                $destinationSelect.append(defOpt);
-                var disOpt = document.createElement('option');
-                disOpt.value = '';
-                disOpt.disabled = true;
-                disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
-                $destinationSelect.append(disOpt);
+                setDestinationSelectEmpty($destinationSelect);
                 return;
             }
 
             utils.setSelectState($destinationSelect, 'loading');
 
             $.ajax({
-                url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                url: getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_get_route_destinations',
@@ -62,7 +98,9 @@
                 }
             });
         });
+    }
 
+    function bindAddService(nonce) {
         $('#mrt-add-service-to-timetable').on('click', function(e) {
             e.preventDefault();
 
@@ -82,15 +120,14 @@
                 return;
             }
 
-            $btn.prop('disabled', true).text('Adding...');
             if (!$btn.data('original-text')) {
                 $btn.data('original-text', $btn.text());
             }
-
-            var ajaxUrl = (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+            var addingText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.adding) ? mrtAdmin.adding : 'Adding...';
+            $btn.prop('disabled', true).text(addingText);
 
             $.ajax({
-                url: ajaxUrl,
+                url: getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_add_service_to_timetable',
@@ -104,74 +141,30 @@
                     if (response.success) {
                         var $tbody = $('#mrt-timetable-services-tbody');
                         var $newRow = $tbody.find('.mrt-new-service-row');
-                        var editUrlWithTimetable = response.data.edit_url + (response.data.edit_url.indexOf('?') > -1 ? '&' : '?') + 'timetable_id=' + timetableId;
-                        var $row = $('<tr></tr>').attr('data-service-id', response.data.service_id);
-                        var td1 = document.createElement('td');
-                        td1.textContent = response.data.route_name || '';
-                        var td2 = document.createElement('td');
-                        td2.textContent = response.data.train_type_name || '';
-                        var td3 = document.createElement('td');
-                        td3.textContent = response.data.destination || response.data.direction || '—';
-                        var td4 = document.createElement('td');
-                        var editLink = document.createElement('a');
-                        editLink.href = editUrlWithTimetable;
-                        editLink.className = 'button button-small';
-                        editLink.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.edit) ? mrtAdmin.edit : 'Edit';
-                        var removeBtn = document.createElement('button');
-                        removeBtn.type = 'button';
-                        removeBtn.className = 'button button-small mrt-delete-service-from-timetable';
-                        removeBtn.setAttribute('data-service-id', response.data.service_id);
-                        removeBtn.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.remove) ? mrtAdmin.remove : 'Remove';
-                        td4.appendChild(editLink);
-                        td4.appendChild(document.createTextNode(' '));
-                        td4.appendChild(removeBtn);
-                        $row.append(td1).append(td2).append(td3).append(td4);
+                        var $row = buildNewServiceRow(response, timetableId);
                         $newRow.before($row);
 
                         var tripAddedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripAdded) ? mrtAdmin.tripAdded : 'Trip added successfully.';
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
-                        $successMsg.find('p').text(tripAddedMsg);
-                        $('#mrt-timetable-services-box').before($successMsg);
-                        setTimeout(function() {
-                            $successMsg.fadeOut(300, function() { $(this).remove(); });
-                        }, 3000);
-
-                        $('#mrt-new-service-route').val('');
-                        $('#mrt-new-service-train-type').val('');
-                        var $destSel = $('#mrt-new-service-end-station');
-                        $destSel.empty();
-                        var defOpt = document.createElement('option');
-                        defOpt.value = '';
-                        defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
-                        $destSel.append(defOpt);
-                        var disOpt = document.createElement('option');
-                        disOpt.value = '';
-                        disOpt.disabled = true;
-                        disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
-                        $destSel.append(disOpt);
+                        showTemporaryNotice(tripAddedMsg, 'success');
+                        resetNewServiceForm();
                     } else {
                         var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error adding trip.';
-                        var $errP = document.createElement('p');
-                        $errP.textContent = errMsg;
-                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
-                        $('#mrt-timetable-services-box').before($errorMsg);
-                        $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
+                        showTemporaryNotice(errMsg, 'error');
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
-                    var $errP = document.createElement('p');
-                    $errP.textContent = networkErrorMsg;
-                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
-                    $('#mrt-timetable-services-box').before($errorMsg);
+                    showTemporaryNotice(networkErrorMsg, 'error');
                 },
                 complete: function() {
                     $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
                 }
             });
         });
+    }
 
-        $container.on('click', '.mrt-delete-service-from-timetable', function() {
+    function bindRemoveService(nonce) {
+        $('#mrt-timetable-services-container').on('click', '.mrt-delete-service-from-timetable', function() {
             if (!confirm(typeof mrtAdmin !== 'undefined' ? mrtAdmin.confirmRemoveTrip : 'Are you sure you want to remove this trip from the timetable?')) {
                 return;
             }
@@ -182,10 +175,8 @@
 
             $btn.prop('disabled', true);
 
-            var ajaxUrl = (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
-
             $.ajax({
-                url: ajaxUrl,
+                url: getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_remove_service_from_timetable',
@@ -198,18 +189,10 @@
                             $(this).remove();
                         });
                         var tripRemovedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripRemoved) ? mrtAdmin.tripRemoved : 'Trip removed successfully.';
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
-                        $successMsg.find('p').text(tripRemovedMsg);
-                        $('#mrt-timetable-services-box').before($successMsg);
-                        setTimeout(function() {
-                            $successMsg.fadeOut(300, function() { $(this).remove(); });
-                        }, 3000);
+                        showTemporaryNotice(tripRemovedMsg, 'success');
                     } else {
                         var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error removing trip.';
-                        var $errP = document.createElement('p');
-                        $errP.textContent = errMsg;
-                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
-                        $('#mrt-timetable-services-box').before($errorMsg);
+                        showTemporaryNotice(errMsg, 'error');
                         $btn.prop('disabled', false);
                     }
                 },
@@ -219,6 +202,27 @@
                 }
             });
         });
+    }
+
+    function initTimetableServicesUI() {
+        var $container = $('#mrt-timetable-services-container');
+        if (!$container.length) {
+            if (window.mrtDebug) {
+                console.log('MRT: Timetable services container not found');
+            }
+            return;
+        }
+
+        if (window.mrtDebug) {
+            console.log('MRT: Initializing timetable services UI');
+        }
+
+        var nonce = $('#mrt_timetable_services_nonce').val();
+        var utils = window.MRTAdminUtils;
+
+        bindRouteChange(nonce, utils);
+        bindAddService(nonce);
+        bindRemoveService(nonce);
     }
 
     $(function() {
