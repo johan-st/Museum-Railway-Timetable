@@ -6,11 +6,31 @@
 (function($) {
     'use strict';
 
-    function initRouteUI() {
-        var $container = $('#mrt-route-stations-container');
-        if (!$container.length) return;
+    function updateRouteStationOrders() {
+        var $rows = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)');
+        var totalRows = $rows.length;
 
-        // Add station to route
+        $rows.each(function(index) {
+            $(this).find('td:first').text(index + 1);
+
+            var $upBtn = $(this).find('.mrt-move-route-station-up');
+            var $downBtn = $(this).find('.mrt-move-route-station-down');
+
+            $upBtn.prop('disabled', index === 0);
+            $downBtn.prop('disabled', index === totalRows - 1);
+        });
+
+        var stationIds = [];
+        $rows.each(function() {
+            stationIds.push($(this).data('station-id'));
+        });
+        $('#mrt_route_stations').val(stationIds.join(','));
+
+        var nextOrder = totalRows + 1;
+        $('.mrt-new-route-station-row td:first').text(nextOrder);
+    }
+
+    function bindAddStation($container) {
         $('#mrt-add-route-station').on('click', function() {
             var $select = $('#mrt-new-route-station');
             var stationId = $select.val();
@@ -48,7 +68,9 @@
             $select.val('').focus();
             updateRouteStationOrders();
         });
+    }
 
+    function bindMoveAndRemove($container) {
         $container.on('click', '.mrt-move-route-station-up', function() {
             var $row = $(this).closest('tr');
             var $prevRow = $row.prev();
@@ -76,31 +98,9 @@
             $(this).closest('tr').remove();
             updateRouteStationOrders();
         });
+    }
 
-        function updateRouteStationOrders() {
-            var $rows = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)');
-            var totalRows = $rows.length;
-
-            $rows.each(function(index) {
-                $(this).find('td:first').text(index + 1);
-
-                var $upBtn = $(this).find('.mrt-move-route-station-up');
-                var $downBtn = $(this).find('.mrt-move-route-station-down');
-
-                $upBtn.prop('disabled', index === 0);
-                $downBtn.prop('disabled', index === totalRows - 1);
-            });
-
-            var stationIds = [];
-            $rows.each(function() {
-                stationIds.push($(this).data('station-id'));
-            });
-            $('#mrt_route_stations').val(stationIds.join(','));
-
-            var nextOrder = totalRows + 1;
-            $('.mrt-new-route-station-row td:first').text(nextOrder);
-        }
-
+    function bindEndStationsChange() {
         var endStationsSaveTimeout;
         $('#mrt-route-start-station, #mrt-route-end-station').on('change', function() {
             var routeId = $('#post_ID').val();
@@ -146,6 +146,15 @@
                 });
             }, 1000);
         });
+    }
+
+    function initRouteUI() {
+        var $container = $('#mrt-route-stations-container');
+        if (!$container.length) return;
+
+        bindAddStation($container);
+        bindMoveAndRemove($container);
+        bindEndStationsChange();
     }
 
     $(function() {

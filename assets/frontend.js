@@ -6,6 +6,12 @@
 (function($) {
     'use strict';
 
+    function showError($container, message) {
+        var $div = $('<div class="mrt-alert mrt-alert-error"></div>');
+        $div.text(message);
+        $container.html($div);
+    }
+
     /**
      * Initialize Journey Planner AJAX
      */
@@ -76,12 +82,6 @@
                 }
             });
         }
-
-        function showError($container, message) {
-            var $div = $('<div class="mrt-alert mrt-alert-error"></div>');
-            $div.text(message);
-            $container.html($div);
-        }
     }
 
     /**
@@ -125,11 +125,13 @@
                     if (response.success) {
                         $container.html(response.data.html);
                     } else {
-                        $container.html('<div class="mrt-alert mrt-alert-error">' + (response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.')) + '</div>');
+                        var msg = response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.');
+                        showError($container, msg);
                     }
                 },
                 error: function() {
-                    $container.html('<div class="mrt-alert mrt-alert-error">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.') + '</div>');
+                    var msg = typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.';
+                    showError($container, msg);
                 }
             });
         });
