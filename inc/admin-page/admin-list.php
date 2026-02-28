@@ -1,32 +1,36 @@
 <?php
+/**
+ * Admin: Stations Overview list
+ *
+ * @package Museum_Railway_Timetable
+ */
+
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Admin: Stations Overview list
- * - Shows each station with type, display order, services count (distinct services stopping there),
- *   and the next running day (within X days) where any of those services run.
- * - Overview is integrated as a view tab under Stations (no separate menu).
+ * Stations Overview: view tab under Stations list.
+ * Shows each station with type, display order, services count, and next running day (within X days).
  */
 
 /**
  * Add "Overview" view tab to Stations list
  */
 add_filter('views_edit-mrt_station', function($views) {
-    $current_view = isset($_GET['mrt_view']) ? sanitize_text_field($_GET['mrt_view']) : '';
+    $current_view = isset($_GET['mrt_view']) ? sanitize_text_field(wp_unslash($_GET['mrt_view'])) : '';
     $overview_url = admin_url('edit.php?post_type=mrt_station&mrt_view=overview');
     $list_url = admin_url('edit.php?post_type=mrt_station');
-    
+
     $class = ($current_view === 'overview') ? 'current' : '';
     $count = wp_count_posts('mrt_station')->publish;
-    
+
     $views['overview'] = sprintf(
         '<a href="%s" class="%s">%s <span class="count">(%d)</span></a>',
         esc_url($overview_url),
-        $class,
+        esc_attr($class),
         esc_html__('Overview', 'museum-railway-timetable'),
-        $count
+        (int) $count
     );
-    
+
     return $views;
 });
 
@@ -38,8 +42,8 @@ add_action('admin_init', function() {
     if (!$screen || $screen->id !== 'edit-mrt_station') {
         return;
     }
-    
-    $current_view = isset($_GET['mrt_view']) ? sanitize_text_field($_GET['mrt_view']) : '';
+
+    $current_view = isset($_GET['mrt_view']) ? sanitize_text_field(wp_unslash($_GET['mrt_view'])) : '';
     if ($current_view === 'overview') {
         // Hide default list table and show overview instead
         add_action('admin_footer', 'MRT_render_stations_overview_inline');
@@ -51,7 +55,7 @@ add_action('admin_init', function() {
  */
 function MRT_render_stations_overview_filter_form() {
     $terms = get_terms(['taxonomy' => 'mrt_train_type', 'hide_empty' => false]);
-    $current_slug = isset($_GET['train_type']) ? sanitize_title($_GET['train_type']) : '';
+    $current_slug = isset($_GET['train_type']) ? sanitize_title(wp_unslash($_GET['train_type'])) : '';
     ?>
     <div class="mrt-box mrt-mb-1">
         <form method="get" class="mrt-mt-sm mrt-mb-1">
@@ -92,7 +96,7 @@ function MRT_get_routes_using_station($sid) {
 /**
  * Render a single station overview row
  *
- * @param int $sid Station post ID
+ * @param int    $sid         Station post ID
  * @param string $train_type Train type slug filter
  */
 function MRT_render_stations_overview_row($sid, $train_type) {
@@ -108,7 +112,7 @@ function MRT_render_stations_overview_row($sid, $train_type) {
     <tr class="mrt-row-hover">
         <td><?php echo esc_html($title ?: ('#' . $sid)); ?></td>
         <td><?php echo esc_html($type ?: ''); ?></td>
-        <td><?php echo esc_html($order); ?></td>
+        <td><?php echo esc_html((string) $order); ?></td>
         <td>
             <?php if (!empty($routes_using_station)): ?>
                 <?php
@@ -122,7 +126,7 @@ function MRT_render_stations_overview_row($sid, $train_type) {
                 <span class="description"><?php echo esc_html__('None', 'museum-railway-timetable'); ?></span>
             <?php endif; ?>
         </td>
-        <td><?php echo esc_html($count); ?></td>
+        <td><?php echo esc_html((string) $count); ?></td>
         <td>
             <?php
             if ($next) {
@@ -145,8 +149,8 @@ function MRT_render_stations_overview_row($sid, $train_type) {
 /**
  * Render stations overview table body rows
  *
- * @param array $station_ids Station post IDs
- * @param string $train_type Train type slug filter
+ * @param array  $station_ids Station post IDs
+ * @param string $train_type  Train type slug filter
  */
 function MRT_render_stations_overview_table_rows($station_ids, $train_type) {
     foreach ($station_ids as $sid) {
@@ -157,8 +161,8 @@ function MRT_render_stations_overview_table_rows($station_ids, $train_type) {
 /**
  * Render stations overview table (header + body)
  *
- * @param array $station_ids Station post IDs
- * @param string $train_type Train type slug filter
+ * @param array  $station_ids Station post IDs
+ * @param string $train_type  Train type slug filter
  */
 function MRT_render_stations_overview_table($station_ids, $train_type) {
     ?>
@@ -203,7 +207,7 @@ function MRT_render_stations_overview_inline() {
         'nopaging' => true,
     ]);
     $station_ids = $q->posts;
-    $train_type = isset($_GET['train_type']) ? sanitize_title($_GET['train_type']) : '';
+    $train_type = isset($_GET['train_type']) ? sanitize_title(wp_unslash($_GET['train_type'])) : '';
     ?>
     <script>
     jQuery(document).ready(function($) {
@@ -229,22 +233,22 @@ function MRT_render_stations_overview_inline() {
  */
 function MRT_get_services_for_station($station_id) {
     global $wpdb;
-    
+
     // Validate input
     $station_id = intval($station_id);
     if ($station_id <= 0) {
         return [];
     }
-    
+
     $table = $wpdb->prefix . 'mrt_stoptimes';
     $sql = $wpdb->prepare("SELECT DISTINCT service_post_id FROM $table WHERE station_post_id = %d", $station_id);
     $ids = $wpdb->get_col($sql);
-    
+
     // Check for database errors
     if (MRT_check_db_error('MRT_get_services_for_station')) {
         return [];
     }
-    
+
     return array_map('intval', $ids ?: []);
 }
 
@@ -252,7 +256,7 @@ function MRT_get_services_for_station($station_id) {
  * Find next running day for a station by checking timetables for services that stop at the station.
  * Checks from 'today' up to +60 days (configurable via filter 'mrt_overview_days_ahead').
  *
- * @param int    $station_id Station post ID
+ * @param int    $station_id    Station post ID
  * @param string $train_type_slug Optional train type taxonomy slug
  * @return string Date in YYYY-MM-DD format or empty string if none found
  */
@@ -275,4 +279,3 @@ function MRT_next_running_day_for_station($station_id, $train_type_slug = '') {
     }
     return '';
 }
-

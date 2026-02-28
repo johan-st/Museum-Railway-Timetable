@@ -10,7 +10,7 @@ Granskning av `*.php` mot STYLE_GUIDE.md (sektion 2. PHP).
 
 | Krav | Status |
 |------|--------|
-| **ABSPATH** | Alla PHP-filer (utom uninstall.php, validate.php, phpstan-bootstrap) har `if (!defined('ABSPATH')) { exit; }` |
+| **ABSPATH** | Alla PHP-filer (utom uninstall.php, scripts/validate.php, phpstan-bootstrap) har `if (!defined('ABSPATH')) { exit; }` |
 | **uninstall.php** | Använder `WP_UNINSTALL_PLUGIN` enligt WordPress-konvention |
 | **Funktionsnamn** | `MRT_` + snake_case konsekvent |
 | **Hooks** | `mrt_` prefix |

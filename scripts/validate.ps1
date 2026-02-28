@@ -1,5 +1,5 @@
 # PowerShell validation script for Museum Railway Timetable
-# Run this with: .\validate.ps1
+# Run this with: .\scripts\validate.ps1
 
 $errors = @()
 $warnings = @()
@@ -14,7 +14,8 @@ $required_files = @(
     "uninstall.php",
     "inc/assets.php",
     "inc/admin-page.php",
-    "inc/admin-list.php",
+    "inc/admin-page/admin-list.php",
+    "inc/import-lennakatten/loader.php",
     "inc/shortcodes.php",
     "inc/cpt.php",
     "inc/functions/helpers.php",
@@ -43,7 +44,7 @@ foreach ($file in $required_files) {
 
 # 2. Check ABSPATH protection
 Write-Host "`n2. Checking ABSPATH protection..." -ForegroundColor Yellow
-$php_files = Get-ChildItem -Path . -Recurse -Include *.php -Exclude validate.php,validate.ps1 | Where-Object { $_.FullName -notmatch "node_modules|vendor|\.git" }
+$php_files = Get-ChildItem -Path . -Recurse -Include *.php -Exclude validate.php | Where-Object { $_.FullName -notmatch "node_modules|vendor|\.git" }
 
 foreach ($file in $php_files) {
     $checks++

@@ -1,6 +1,6 @@
 # Deploy Museum Railway Timetable plugin to Local WordPress
-# Usage: .\deploy.ps1 [-OpenBrowser]
-# Run: .\deploy.ps1 -OpenBrowser   # to also open localhost after deploy
+# Usage: .\scripts\deploy.ps1 [-OpenBrowser]
+# Run: .\scripts\deploy.ps1 -OpenBrowser   # to also open localhost after deploy
 
 param(
     [switch]$OpenBrowser = $false
@@ -8,6 +8,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$projectRoot = Split-Path -Parent $scriptDir
 $configPath = Join-Path $scriptDir "deploy.config.json"
 
 # Default paths - Local by Flywheel typical structure
@@ -38,7 +39,7 @@ $pluginItems = @(
 )
 
 Write-Host "`nDeploying Museum Railway Timetable to Local..." -ForegroundColor Cyan
-Write-Host "  Source: $scriptDir" -ForegroundColor Gray
+Write-Host "  Source: $projectRoot" -ForegroundColor Gray
 Write-Host "  Target: $localPath" -ForegroundColor Gray
 Write-Host ""
 
@@ -60,7 +61,7 @@ if (-not (Test-Path $localPath)) {
 # Copy files
 $copied = 0
 foreach ($item in $pluginItems) {
-    $src = Join-Path $scriptDir $item
+    $src = Join-Path $projectRoot $item
     $dst = Join-Path $localPath $item
     
     if (-not (Test-Path $src)) {

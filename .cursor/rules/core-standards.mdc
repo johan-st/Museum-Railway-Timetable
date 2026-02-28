@@ -25,4 +25,4 @@ WordPress-plugin för tidtabeller. Följ dessa regler i all kod.
 - Nonces på formulär och AJAX
 - `$wpdb->prepare()` för SQL
 
-Se STYLE_GUIDE.md för fullständig dokumentation.
+Se docs/STYLE_GUIDE.md för fullständig dokumentation.

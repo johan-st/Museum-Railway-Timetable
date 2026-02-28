@@ -140,7 +140,7 @@ Before deploying, test:
 
 ## Pre-Deployment Steps
 
-1. Run validation script: `php validate.php` (if PHP CLI available)
+1. Run validation script: `php scripts/validate.php` (if PHP CLI available)
 2. Check all items in this checklist
 3. Test in a clean WordPress installation
 4. Check browser console for JavaScript errors

@@ -1,7 +1,7 @@
 <?php
 /**
  * Validation script for Museum Railway Timetable plugin
- * Run this before deploying: php validate.php
+ * Run this before deploying: php scripts/validate.php
  */
 
 $errors = [];
@@ -17,7 +17,8 @@ $required_files = [
     'uninstall.php',
     'inc/assets.php',
     'inc/admin-page.php',
-    'inc/admin-list.php',
+    'inc/admin-page/admin-list.php',
+    'inc/import-lennakatten/loader.php',
     'inc/shortcodes.php',
     'inc/cpt.php',
     'inc/functions/helpers.php',
@@ -54,12 +55,13 @@ $php_files = array_merge(
     glob('*.php') ?: [],
     glob('inc/*.php') ?: [],
     glob('inc/*/*.php') ?: [],
-    glob('inc/*/*/*.php') ?: []
+    glob('inc/*/*/*.php') ?: [],
+    glob('inc/*/*/*/*.php') ?: []
 );
 $php_files = array_unique(array_filter($php_files));
 
 foreach ($php_files as $file) {
-    if (strpos($file, 'validate.php') !== false) continue;
+    if (strpos($file, 'scripts/validate.php') !== false) continue;
     $checks++;
     $output = [];
     $return_var = 0;
@@ -76,7 +78,7 @@ foreach ($php_files as $file) {
 // 3. Check ABSPATH protection
 echo "\n3. Checking ABSPATH protection...\n";
 foreach ($php_files as $file) {
-    if (strpos($file, 'validate.php') !== false) continue;
+    if (strpos($file, 'scripts/validate.php') !== false) continue;
     if (strpos($file, 'uninstall.php') !== false) continue; // uninstall.php has different check
     $checks++;
     $content = file_get_contents($file);
@@ -92,7 +94,7 @@ foreach ($php_files as $file) {
 // 4. Check for inline styles (CSS custom properties like --service-count are allowed)
 echo "\n4. Checking for inline styles...\n";
 foreach ($php_files as $file) {
-    if (strpos($file, 'validate.php') !== false) continue;
+    if (strpos($file, 'scripts/validate.php') !== false) continue;
     $checks++;
     $content = file_get_contents($file);
     if (preg_match('/style\s*=\s*["\']/', $content)) {
@@ -134,7 +136,7 @@ $text_domain = 'museum-railway-timetable';
 $domain_matches = 0;
 $domain_issues = 0;
 foreach ($php_files as $file) {
-    if (strpos($file, 'validate.php') !== false) continue;
+    if (strpos($file, 'scripts/validate.php') !== false) continue;
     $content = file_get_contents($file);
     preg_match_all('/__(\(|[\'"])[^\'"\)]*[\'"],\s*[\'"]([^\'"]+)[\'"]/', $content, $matches);
     if (!empty($matches[2])) {

@@ -122,19 +122,31 @@ Kodstandarder och clean code-principer för projektet.
 
 ## 6. Filstruktur
 
+### Mappar
+- **Använd mappar** – Organisera kod i mappar efter ansvar (admin-ajax, admin-meta-boxes, shortcodes m.fl.)
+- **En fil per ansvar** – Varje mapp innehåller filer med tydligt, sammanhörande ansvar
+- **Loader-filer** – En huvudfil (t.ex. `admin-ajax.php`) kan require:a moduler från undermappar
+
+### Struktur
 ```
 museum-railway-timetable/
 ├── museum-railway-timetable.php   # Huvudfil
 ├── uninstall.php
+├── docs/                          # Dokumentation (STYLE_GUIDE, COMPONENT_LIBRARY, etc.)
+├── scripts/                       # deploy, validate, lint
 ├── inc/
-│   ├── functions/                 # Helper-funktioner
-│   ├── admin-*.php                # Admin-specifikt
+│   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)
+│   ├── admin-ajax/                # AJAX-handlers (stoptimes, journey, timetable, route-*)
+│   ├── admin-meta-boxes/          # Meta boxes (station, route, timetable, service)
+│   ├── admin-page/                # Dashboard, clear-db, stats, routes
+│   ├── cpt/                       # Custom post types, taxonomier
+│   ├── shortcodes/                # shortcode-month, shortcode-journey, shortcode-overview
 │   ├── assets.php
-│   ├── cpt.php
-│   └── shortcodes.php
+│   └── ...
 ├── assets/
-│   ├── admin.css
+│   ├── admin-*.css                # Uppdelad CSS (base, timetable, meta-boxes, dashboard, ui)
 │   ├── admin.js
+│   ├── admin-*.js                 # Moduler (utils, route-ui, stoptimes-ui, timetable-services-ui)
 │   └── frontend.js
 └── languages/
 ```

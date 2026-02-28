@@ -79,7 +79,6 @@ require_once MRT_PATH . 'inc/assets.php';
 require_once MRT_PATH . 'inc/admin-page.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes.php';
 require_once MRT_PATH . 'inc/admin-ajax.php';
-require_once MRT_PATH . 'inc/import-lennakatten.php';
-require_once MRT_PATH . 'inc/admin-list.php';
+require_once MRT_PATH . 'inc/import-lennakatten/loader.php';
 require_once MRT_PATH . 'inc/cpt.php';
 require_once MRT_PATH . 'inc/shortcodes.php';

@@ -30,7 +30,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to **Railway Timetable** in the admin menu to configure
 
-**Local development:** Use `.\deploy.ps1 -OpenBrowser` to copy the plugin to Local by Flywheel and open the site. See [Deploy to Local](#deploy-to-local-wordpress) for setup.
+**Local development:** Use `.\scripts\deploy.ps1 -OpenBrowser` to copy the plugin to Local by Flywheel and open the site. See [Deploy to Local](#deploy-to-local-wordpress) for setup.
 
 ## Usage
 
@@ -164,11 +164,11 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 To automate copying the plugin to your Local by Flywheel site for testing:
 
-1. **First time:** Copy `deploy.config.example.json` to `deploy.config.json` and edit with your Local site path and URL.
+1. **First time:** Copy `scripts/deploy.config.example.json` to `scripts/deploy.config.json` and edit with your Local site path and URL.
 2. Run:
    ```powershell
-   .\deploy.ps1              # Copy plugin files only
-   .\deploy.ps1 -OpenBrowser # Copy and open localhost in browser
+   .\scripts\deploy.ps1              # Copy plugin files only
+   .\scripts\deploy.ps1 -OpenBrowser  # Copy and open localhost in browser
    ```
 
 The script copies `inc/`, `assets/`, `languages/`, and main plugin files to your Local site's plugins folder.
@@ -179,25 +179,25 @@ The script copies `inc/`, `assets/`, `languages/`, and main plugin files to your
 museum-railway-timetable/
 ├─ museum-railway-timetable.php  # Main plugin file
 ├─ uninstall.php                 # Uninstall hook
+├─ docs/                         # Documentation (STYLE_GUIDE, COMPONENT_LIBRARY, etc.)
+├─ scripts/                      # deploy, validate, lint
 ├─ inc/
 │   ├─ functions/
 │   │   ├─ helpers.php           # Loader + helpers-*.php
 │   │   ├─ services.php          # Service-related functions
 │   │   └─ timetable-view/       # prepare, grid, overview
-│   ├─ admin-page/               # dashboard, clear-db, dashboard-*
+│   ├─ admin-page/               # dashboard, clear-db, admin-list (stations overview)
 │   ├─ admin-meta-boxes/         # station, route, timetable, service, etc.
 │   ├─ admin-ajax/              # stoptimes, timetable-services, journey, etc.
 │   ├─ shortcodes/              # shortcode-month, shortcode-overview, shortcode-journey
 │   ├─ cpt/                     # cpt-register, cpt-admin
-│   ├─ import-lennakatten/       # import-data, import-run
+│   ├─ import-lennakatten/       # import-data, import-run, loader
 │   ├─ assets.php               # Asset enqueuing
 │   ├─ admin-page.php           # Loader
 │   ├─ admin-meta-boxes.php     # Loader
 │   ├─ admin-ajax.php           # Loader
-│   ├─ admin-list.php           # Stations overview
 │   ├─ cpt.php                  # Loader
 │   ├─ shortcodes.php           # Loader
-│   └─ import-lennakatten.php   # Loader
 ├─ assets/
 │   ├─ admin-base.css           # Variables, base styles
 │   ├─ admin-timetable.css      # Timetable grid, calendar
@@ -216,7 +216,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-Se [STYLE_GUIDE.md](STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
+Se [STYLE_GUIDE.md](docs/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
 
 ### Hooks and Filters
 
@@ -231,7 +231,7 @@ The plugin creates one custom table:
 
 ## Contributing
 
-1. Följ [STYLE_GUIDE.md](STYLE_GUIDE.md)
+1. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
 2. Add PHPDoc comments to all functions
 3. Ensure all output is properly escaped
 4. Test your changes thoroughly

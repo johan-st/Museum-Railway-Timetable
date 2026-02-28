@@ -10,7 +10,7 @@ Alla långa metoder har brutits ner till max 50 rader:
 - `grid.php` – MRT_render_timetable_table_body → from/to/regular/transfer rows
 - `dashboard.php` – Partials (stats, routes, quick-actions, guide, shortcodes, dev-tools)
 - `service.php` – Timetable label, destination field, editing hooks, info/timetable/route/train-type/number/train-types-by-date rows
-- `admin-list.php` – Filterform, tabellrader, MRT_render_stations_overview_row, MRT_get_routes_using_station, MRT_render_stations_overview_table
+- `admin-list.php` → inc/admin-page/admin-list.php ✅
 - `assets.php` – CSS, JS, localize i egna funktioner
 - `timetable-services.php` – Validering, auto title, response
 - `service-stoptimes.php` – Instruktioner, tabell
@@ -28,7 +28,7 @@ Alla långa metoder har brutits ner till max 50 rader:
 - `shortcodes.php` → `inc/shortcodes/` (shortcode-month.php, shortcode-overview.php, shortcode-journey.php)
 - `shortcode-journey.php` – MRT_render_journey_form, MRT_render_journey_results_title, MRT_render_journey_connections_table ✅
 - `service.php` → service-save.php (save_post callback extraherad)
-- `import-lennakatten.php` → `inc/import-lennakatten/` (import-data.php, import-run.php)
+- `import-lennakatten.php` → `inc/import-lennakatten/` (import-data.php, import-run.php, loader.php) ✅
 - `cpt.php` → `inc/cpt/` (cpt-register.php, cpt-admin.php)
 
 ## Nuvarande storlekar (uppskattat)

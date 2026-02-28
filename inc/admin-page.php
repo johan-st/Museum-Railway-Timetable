@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) { exit; }
 
 require_once MRT_PATH . 'inc/admin-page/dashboard.php';
 require_once MRT_PATH . 'inc/admin-page/clear-db.php';
+require_once MRT_PATH . 'inc/admin-page/admin-list.php';
 
 // Add a top-level menu for the plugin settings
 add_action('admin_menu', function () {
