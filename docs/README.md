@@ -7,6 +7,7 @@
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, clean code, PHP/CSS/JS |
 | [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (btn, form, badge, card) |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Tokens, färger, spacing |
+| [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md) | Publik boknings-UI: mockup-flöde, komponenter, stil tokens, faser |
 | [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filuppdelning, metodlängd |
 | [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) | PHP-granskning |
 | [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) | JavaScript-granskning |
