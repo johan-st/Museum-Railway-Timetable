@@ -13,10 +13,10 @@ cd Museum-Railway-Timetable
 composer install
 
 # 2. Deploy till Local (första gången: kopiera config)
-copy scripts\deploy.config.example.json scripts\deploy.config.json
-# Redigera scripts/deploy.config.json med din Local-sökväg
+copy local\deploy.config.example.json local\deploy.config.json
+# Redigera local/deploy.config.json med din Local-sökväg
 
-.\scripts\deploy.ps1 -OpenBrowser
+.\local\deploy.ps1 -OpenBrowser
 
 # 3. Vid kodändringar – validera innan commit
 composer plugin-check
@@ -99,9 +99,9 @@ Kör manuellt: `pre-commit run --all-files`
 
 ## Deploy till Local
 
-1. Kopiera `scripts/deploy.config.example.json` → `scripts/deploy.config.json`
+1. Kopiera `local/deploy.config.example.json` → `local/deploy.config.json`
 2. Sätt `localPath` och `localUrl` till din Local-site
-3. Kör: `.\scripts\deploy.ps1` eller `.\scripts\deploy.ps1 -OpenBrowser`
+3. Kör: `.\local\deploy.ps1` eller `.\local\deploy.ps1 -OpenBrowser`
 
 ---
 

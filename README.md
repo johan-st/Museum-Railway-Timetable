@@ -30,7 +30,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to **Railway Timetable** in the admin menu to configure
 
-**Local development:** Use `.\scripts\deploy.ps1 -OpenBrowser` to copy the plugin to Local by Flywheel and open the site. See [Deploy to Local](#deploy-to-local-wordpress) for setup.
+**Local development:** Use `.\local\deploy.ps1 -OpenBrowser` to copy the plugin to Local by Flywheel and open the site. See [Deploy to Local](#deploy-to-local-wordpress) for setup.
 
 ## Usage
 
@@ -166,11 +166,11 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 To automate copying the plugin to your Local by Flywheel site for testing:
 
-1. **First time:** Copy `scripts/deploy.config.example.json` to `scripts/deploy.config.json` and edit with your Local site path and URL.
+1. **First time:** Copy `local/deploy.config.example.json` to `local/deploy.config.json` and edit with your Local site path and URL.
 2. Run:
    ```powershell
-   .\scripts\deploy.ps1              # Copy plugin files only
-   .\scripts\deploy.ps1 -OpenBrowser  # Copy and open localhost in browser
+   .\local\deploy.ps1              # Copy plugin files only
+   .\local\deploy.ps1 -OpenBrowser  # Copy and open localhost in browser
    ```
 
 The script copies `inc/`, `assets/`, `languages/`, and main plugin files to your Local site's plugins folder.
@@ -184,7 +184,8 @@ museum-railway-timetable/
 ├─ composer.json                 # Dev tools (PHPStan, PHPCS)
 ├─ phpcs.xml, phpstan.neon       # Lint config
 ├─ docs/                         # All developer docs (see docs/README.md)
-├─ scripts/                      # deploy.ps1, validate.php, lint.ps1
+├─ local/                        # deploy.ps1, deploy.config (Local by Flywheel)
+├─ scripts/                      # validate.php, lint.ps1
 ├─ inc/
 │   ├─ constants.php             # MRT_* constants
 │   ├─ functions/

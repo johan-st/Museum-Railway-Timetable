@@ -1,6 +1,6 @@
 # Deploy Museum Railway Timetable plugin to Local WordPress
-# Usage: .\scripts\deploy.ps1 [-OpenBrowser]
-# Run: .\scripts\deploy.ps1 -OpenBrowser   # to also open localhost after deploy
+# Usage: .\local\deploy.ps1 [-OpenBrowser]
+# Run: .\local\deploy.ps1 -OpenBrowser   # to also open localhost after deploy
 
 param(
     [switch]$OpenBrowser = $false
@@ -47,7 +47,7 @@ Write-Host ""
 $targetParent = Split-Path -Parent $localPath
 if (-not (Test-Path $targetParent)) {
     Write-Host "ERROR: Local plugins folder not found: $targetParent" -ForegroundColor Red
-    Write-Host "Create a site in Local first, or edit deploy.config.json with your site path." -ForegroundColor Yellow
+    Write-Host "Create a site in Local first, or edit local/deploy.config.json with your site path." -ForegroundColor Yellow
     Write-Host "Example path: $env:USERPROFILE\Local Sites\YOUR-SITE-NAME\app\public\wp-content\plugins\museum-railway-timetable" -ForegroundColor Gray
     exit 1
 }
@@ -63,16 +63,16 @@ $copied = 0
 foreach ($item in $pluginItems) {
     $src = Join-Path $projectRoot $item
     $dst = Join-Path $localPath $item
-    
+
     if (-not (Test-Path $src)) {
         Write-Host "  Skip (missing): $item" -ForegroundColor Yellow
         continue
     }
-    
+
     if (Test-Path $dst) {
         Remove-Item $dst -Recurse -Force -ErrorAction SilentlyContinue
     }
-    
+
     Copy-Item -Path $src -Destination $dst -Recurse -Force
     Write-Host "  Copied: $item" -ForegroundColor Green
     $copied++

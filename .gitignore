@@ -52,4 +52,4 @@ COMMIT_MESSAGE.txt
 /vendor/
 
 # Deploy config (user-specific Local path)
-scripts/deploy.config.json
+local/deploy.config.json

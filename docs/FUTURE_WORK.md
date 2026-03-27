@@ -95,7 +95,7 @@ composer require --dev phpunit/phpunit
 | **Dependabot** | `.github/dependabot.yml` (Composer månadsvis) |
 | **Överblick** | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) |
 | **Lint** | PHPStan, PHPCS, scripts/lint.ps1 |
-| **Deploy** | scripts/deploy.ps1 för Local |
+| **Deploy** | local/deploy.ps1 för Local |
 | **Dokumentation** | docs/ med README som index |
 
 ---
@@ -104,8 +104,8 @@ composer require --dev phpunit/phpunit
 
 1. Klona repo
 2. `composer install`
-3. Kopiera `scripts/deploy.config.example.json` → `scripts/deploy.config.json`, sätt Local-sökväg
-4. `.\scripts\deploy.ps1 -OpenBrowser`
+3. Kopiera `local/deploy.config.example.json` → `local/deploy.config.json`, sätt Local-sökväg
+4. `.\local\deploy.ps1 -OpenBrowser`
 5. Läs docs/DEVELOPER.md och docs/STYLE_GUIDE.md
 6. Vid ändringar: `composer plugin-check` (och vid behov `composer lint`)
 
