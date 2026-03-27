@@ -8,6 +8,7 @@
 | [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (btn, form, badge, card) |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Tokens, färger, spacing |
 | [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md) | Publik boknings-UI: mockup-flöde, komponenter, stil tokens, faser |
+| [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md) | Funktionella krav, user stories, stildetaljer (mockup-analys) |
 | [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filuppdelning, metodlängd |
 | [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) | PHP-granskning |
 | [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) | JavaScript-granskning |
