@@ -23,6 +23,7 @@ $required_files = [
     'inc/cpt.php',
     'inc/functions/helpers.php',
     'inc/functions/services.php',
+    'inc/functions/journey-loader.php',
     'assets/admin-base.css',
     'assets/admin-timetable.css',
     'assets/admin-timetable-overview.css',

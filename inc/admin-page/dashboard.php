@@ -13,6 +13,7 @@ require_once MRT_PATH . 'inc/admin-page/dashboard-quick-actions.php';
 require_once MRT_PATH . 'inc/admin-page/dashboard-guide.php';
 require_once MRT_PATH . 'inc/admin-page/dashboard-shortcodes.php';
 require_once MRT_PATH . 'inc/admin-page/dashboard-dev-tools.php';
+require_once MRT_PATH . 'inc/admin-page/dashboard-prices.php';
 
 /**
  * Sanitize plugin settings input

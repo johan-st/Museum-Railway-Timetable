@@ -23,6 +23,7 @@ function MRT_save_service_meta_box($post_id) {
     MRT_save_service_route($post_id);
     MRT_save_service_train_type($post_id);
     MRT_save_service_number($post_id);
+    MRT_save_service_notice($post_id);
     MRT_save_service_train_types_by_date($post_id);
     MRT_save_service_end_station($post_id);
     MRT_save_service_direction_legacy($post_id);
@@ -70,6 +71,23 @@ function MRT_save_service_number($post_id) {
     if (!isset($_POST['mrt_service_number'])) return;
     $num = sanitize_text_field($_POST['mrt_service_number']);
     !empty($num) ? update_post_meta($post_id, 'mrt_service_number', $num) : delete_post_meta($post_id, 'mrt_service_number');
+}
+
+/**
+ * Save optional public notice for a service
+ *
+ * @param int $post_id Post ID
+ */
+function MRT_save_service_notice($post_id) {
+    if (!isset($_POST['mrt_service_notice'])) {
+        return;
+    }
+    $text = sanitize_textarea_field(wp_unslash($_POST['mrt_service_notice']));
+    if ($text === '') {
+        delete_post_meta($post_id, 'mrt_service_notice');
+    } else {
+        update_post_meta($post_id, 'mrt_service_notice', $text);
+    }
 }
 
 /**

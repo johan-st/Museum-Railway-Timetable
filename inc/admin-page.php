@@ -88,4 +88,27 @@ add_action('admin_init', function () {
         'mrt_settings',
         'mrt_main'
     );
+
+    register_setting('mrt_group', 'mrt_price_matrix', [
+        'type' => 'array',
+        'sanitize_callback' => 'MRT_sanitize_price_matrix',
+        'default' => [],
+    ]);
+
+    add_settings_section(
+        'mrt_prices',
+        __('Public journey — price matrix', 'museum-railway-timetable'),
+        function () {
+            echo '<p>' . esc_html__('Optional prices for passenger categories (display/API).', 'museum-railway-timetable') . '</p>';
+        },
+        'mrt_settings'
+    );
+
+    add_settings_field(
+        'mrt_price_matrix',
+        __('Prices (SEK)', 'museum-railway-timetable'),
+        'MRT_render_price_matrix_field',
+        'mrt_settings',
+        'mrt_prices'
+    );
 });

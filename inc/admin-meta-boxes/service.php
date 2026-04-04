@@ -232,6 +232,27 @@ function MRT_render_service_number_row($post) {
 }
 
 /**
+ * Public notice row (traffic messages for journey API / front)
+ *
+ * @param WP_Post $post Service post
+ */
+function MRT_render_service_notice_row($post) {
+    $notice = get_post_meta($post->ID, 'mrt_service_notice', true);
+    if (!is_string($notice)) {
+        $notice = '';
+    }
+    ?>
+    <tr>
+        <th><label for="mrt_service_notice"><?php esc_html_e('Public notice', 'museum-railway-timetable'); ?></label></th>
+        <td>
+            <textarea name="mrt_service_notice" id="mrt_service_notice" class="large-text" rows="3"><?php echo esc_textarea($notice); ?></textarea>
+            <p class="description"><?php esc_html_e('Optional message for this trip (e.g. replaced locomotive). Shown in public journey data.', 'museum-railway-timetable'); ?></p>
+        </td>
+    </tr>
+    <?php
+}
+
+/**
  * Render date-specific train types row for service meta box
  */
 function MRT_render_service_train_types_by_date_row($post, $timetable_id, $all_train_types) {
@@ -311,6 +332,7 @@ function MRT_render_service_meta_box($post) {
             MRT_render_service_route_row($routes, $route_id);
             MRT_render_service_train_type_row($train_types, $all_train_types);
             MRT_render_service_number_row($post);
+            MRT_render_service_notice_row($post);
             MRT_render_service_train_types_by_date_row($post, $timetable_id, $all_train_types);
             MRT_render_service_destination_field($route_id, $end_station_id);
             ?>

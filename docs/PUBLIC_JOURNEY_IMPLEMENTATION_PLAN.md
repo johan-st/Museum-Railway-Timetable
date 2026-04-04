@@ -20,6 +20,8 @@ Dokumentera besluten här eller i `FUTURE_WORK.md` när de är tagna.
 
 ## Del 1 – Funktioner (backend / `inc/`)
 
+**Status:** Implementerad i `inc/functions/journey-loader.php` och inkluderade moduler (`journey-*.php`), samt utökningar i `helpers-datetime.php`, `helpers-services.php`, `services.php`. Admin: prismatris under inställningssidan, fältet **Public notice** på resa (service).
+
 Mål: tydliga `MRT_*`-funktioner som shortcode, AJAX och framtida REST kan anropa utan duplicerad SQL i templates.
 
 ### Fas 1.1 – Utöka befintlig resdata (ingen ny skärm än)

@@ -109,6 +109,54 @@ function MRT_get_service_stop_times($service_id) {
 }
 
 /**
+ * Stop times for a service ordered by stop_sequence (list rows)
+ *
+ * @param int $service_id Service post ID
+ * @return array<int, array<string, mixed>> List of DB row arrays
+ */
+function MRT_get_service_stop_times_ordered($service_id) {
+    global $wpdb;
+    if (!$service_id || $service_id <= 0) {
+        return [];
+    }
+    $table = $wpdb->prefix . 'mrt_stoptimes';
+    $rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM $table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
+        $service_id
+    ), ARRAY_A);
+    if (MRT_check_db_error('MRT_get_service_stop_times_ordered') || !$rows) {
+        return [];
+    }
+    return $rows;
+}
+
+/**
+ * Effective departure time at a stop (for boarding / first movement)
+ *
+ * @param array<string, mixed> $row Stoptime row
+ * @return string Empty or HH:MM
+ */
+function MRT_stop_effective_departure(array $row) {
+    if (!empty($row['departure_time'])) {
+        return (string) $row['departure_time'];
+    }
+    return !empty($row['arrival_time']) ? (string) $row['arrival_time'] : '';
+}
+
+/**
+ * Effective arrival time at a stop (for alighting)
+ *
+ * @param array<string, mixed> $row Stoptime row
+ * @return string Empty or HH:MM
+ */
+function MRT_stop_effective_arrival(array $row) {
+    if (!empty($row['arrival_time'])) {
+        return (string) $row['arrival_time'];
+    }
+    return !empty($row['departure_time']) ? (string) $row['departure_time'] : '';
+}
+
+/**
  * Get timetable dates, handling both array and legacy single date format
  *
  * @param int $timetable_id Timetable post ID
