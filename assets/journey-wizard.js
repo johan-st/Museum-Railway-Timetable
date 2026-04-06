@@ -137,8 +137,30 @@
                 if ($h.length) {
                     $h.attr('tabindex', '-1');
                     $h.trigger('focus');
+                    $h.one('blur', function() {
+                        $h.removeAttr('tabindex');
+                    });
                 }
             }
+        }
+
+        function dayButtonAriaLabel(ymd, st, cfg) {
+            var human = formatDateYmd(ymd, cfg);
+            if (st === 'ok') {
+                return (cfg.dayDateOk || human).replace('%s', human);
+            }
+            if (st === 'traffic_no_match') {
+                return (cfg.dayDateTraffic || human).replace('%s', human);
+            }
+            return (cfg.dayDateNone || human).replace('%s', human);
+        }
+
+        function ariaChooseTrip(conn, dep, arr, cfg) {
+            var s = cfg.btnChooseTripAria || '';
+            return s
+                .replace('%1$s', conn.service_name || '')
+                .replace('%2$s', dep)
+                .replace('%3$s', arr);
         }
 
         function orderedWeekdayHeaders() {
@@ -190,6 +212,7 @@
                 var $td = $('<td></td>');
                 var $btn = $('<button type="button" class="mrt-journey-wizard__day"></button>');
                 $btn.text(String(d));
+                $btn.attr('aria-label', dayButtonAriaLabel(ymd, st, cfg));
                 if (st === 'ok') {
                     $btn.addClass('mrt-journey-wizard__day--ok');
                     $btn.attr('aria-pressed', state.date === ymd ? 'true' : 'false');
@@ -229,7 +252,9 @@
         function loadCalendar(year, month) {
             state.calYear = year;
             state.calMonth = month;
-            $root.find('[data-wizard-calendar]').html('<p class="mrt-empty">' + escapeHtml(cfg.loading) + '</p>');
+            var $calHost = $root.find('[data-wizard-calendar]');
+            $calHost.attr('aria-busy', 'true');
+            $calHost.html('<p class="mrt-empty">' + escapeHtml(cfg.loading) + '</p>');
             ajaxPost('mrt_journey_calendar_month', {
                 from_station: state.from,
                 to_station: state.to,
@@ -237,11 +262,14 @@
                 month: month
             }).done(function(res) {
                 if (!res || !res.success || !res.data) {
+                    $calHost.attr('aria-busy', 'false');
                     showError(cfg.errorGeneric);
                     return;
                 }
                 renderCalendarGrid(res.data.year, res.data.month, res.data.days || {});
+                $calHost.attr('aria-busy', 'false');
             }).fail(function() {
+                $calHost.attr('aria-busy', 'false');
                 showError(typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : cfg.errorGeneric);
             });
         }
@@ -253,14 +281,21 @@
                 lastReturnList = list;
             }
             var $wrap = $('<div data-wizard-conn-context="' + escapeHtml(ctx) + '"></div>');
+            var captionText = ctx === 'return'
+                ? (cfg.tripsCaptionReturn || '')
+                : (cfg.tripsCaptionOutbound || '').replace('%s', formatDateYmd(state.date, cfg));
             var $table = $('<table class="mrt-table mrt-journey-table"></table>');
+            if (captionText) {
+                $table.append($('<caption class="mrt-journey-wizard__table-caption"></caption>').text(captionText));
+            }
+            var actionsTh = '<th scope="col"><span class="mrt-sr-only">' + escapeHtml(cfg.colActions || '') + '</span></th>';
             var $thead = $('<thead><tr>' +
                 '<th scope="col">' + escapeHtml(cfg.selectTrip) + '</th>' +
                 '<th scope="col">' + escapeHtml(cfg.colService) + '</th>' +
                 '<th scope="col">' + escapeHtml(cfg.colTrainType) + '</th>' +
                 '<th scope="col">' + escapeHtml(cfg.colDeparture) + '</th>' +
                 '<th scope="col">' + escapeHtml(cfg.colArrival) + '</th>' +
-                '<th scope="col"></th>' +
+                actionsTh +
                 '</tr></thead>');
             $table.append($thead);
             var $tb = $('<tbody></tbody>');
@@ -271,6 +306,7 @@
                 $tr.append($('<td></td>').append(
                     $('<button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__btn-select"></button>')
                         .text(cfg.selectTrip)
+                        .attr('aria-label', ariaChooseTrip(conn, dep, arr, cfg))
                         .attr('data-ctx', ctx)
                         .attr('data-idx', String(idx))
                 ));
@@ -282,6 +318,7 @@
                 $act.append(
                     $('<button type="button" class="mrt-btn mrt-btn--secondary mrt-journey-wizard__btn-detail"></button>')
                         .text(cfg.showStops)
+                        .attr('aria-label', (cfg.btnShowStopsAria || '').replace('%s', conn.service_name || ''))
                         .attr('aria-expanded', 'false')
                         .attr('data-ctx', ctx)
                         .attr('data-idx', String(idx))
@@ -337,9 +374,9 @@
                 if (detail.duration_minutes !== null && detail.duration_minutes !== undefined) {
                     html += '<p>' + escapeHtml(cfg.durationMinutes.replace('%d', String(detail.duration_minutes))) + '</p>';
                 }
-                html += '<table class="mrt-table"><thead><tr><th>' + escapeHtml(cfg.colStation) +
-                    '</th><th>' + escapeHtml(cfg.colArrival) +
-                    '</th><th>' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
+                html += '<table class="mrt-table"><thead><tr><th scope="col">' + escapeHtml(cfg.colStation) +
+                    '</th><th scope="col">' + escapeHtml(cfg.colArrival) +
+                    '</th><th scope="col">' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
                 (detail.stops || []).forEach(function(s) {
                     html += '<tr><td>' + escapeHtml(s.station_title || '') + '</td><td>' +
                         escapeHtml(s.arrival_time || '—') + '</td><td>' +
@@ -423,7 +460,8 @@
             var html = '<div class="mrt-journey-wizard__prices mrt-mt-lg">';
             html += '<h4 class="mrt-heading mrt-heading--md">' + escapeHtml(cfg.priceTitle || '') + '</h4>';
             html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
-            html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"></th>';
+            html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
+                escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';
             PRICE_CAT_KEYS.forEach(function(ck) {
                 html += '<th scope="col">' + escapeHtml(cats[ck] || ck) + '</th>';
             });

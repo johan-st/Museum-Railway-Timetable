@@ -5,6 +5,7 @@
 | Fil | Innehåll |
 |-----|----------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager (domän / WP / UI), testning, affärslogik fri från presentation |
+| [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) | Tillgänglighet för reseplaneraren (wizard) |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, clean code, PHP/CSS/JS |
 | [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (btn, form, badge, card) |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Tokens, färger, spacing |

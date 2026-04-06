@@ -149,7 +149,7 @@ Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande 
 **Status (löpande):**
 
 - **Tester:** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](FUTURE_WORK.md)).
-- **Tillgänglighet:** wizard enligt Del 3 (`aria-labelledby`, steg `aria-current`, kalender `role="grid"`, knappar `aria-expanded` / `aria-pressed`); fortsatt förbättring (tangentbord i alla delar, kontrast) i backlog.
+- **Tillgänglighet:** wizard enligt Del 3 och [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (regioner, `aria-live`, kalenderetiketter, tabellcaption, fokus); fortsatt manuell audit vid temabyte.
 - **Översättning:** nya strängar via `__()` / `esc_html__()` med textdomain `museum-railway-timetable`.
 - **PR:** checklista kopplad till [ARCHITECTURE.md](ARCHITECTURE.md) (`.github/pull_request_template.md`).
 

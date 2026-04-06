@@ -114,7 +114,7 @@ function MRT_render_journey_wizard_step_route(array $stations, $title_id, $panel
                 class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
                 id="<?php echo esc_attr($panel_id); ?>"
                 data-wizard-step="route"
-                role="tabpanel"
+                role="region"
                 aria-labelledby="<?php echo esc_attr($title_id); ?>"
             >
                 <header class="mrt-journey-wizard__hero-head">
@@ -147,23 +147,28 @@ function MRT_render_journey_wizard_step_date($title_id, $panel_id) {
         class="mrt-journey-wizard__panel"
         id="<?php echo esc_attr($panel_id); ?>"
         data-wizard-step="date"
-        role="tabpanel"
+        role="region"
         aria-labelledby="<?php echo esc_attr($title_id); ?>"
         hidden
     >
         <h3 class="mrt-heading mrt-heading--lg mrt-mb-1" id="<?php echo esc_attr($title_id); ?>">
             <?php esc_html_e('Choose date', 'museum-railway-timetable'); ?>
         </h3>
-        <div class="mrt-journey-wizard__calendar-nav mrt-mb-sm">
+        <div class="mrt-journey-wizard__calendar-nav mrt-mb-sm" aria-label="<?php esc_attr_e('Calendar month navigation', 'museum-railway-timetable'); ?>">
             <button type="button" class="mrt-btn mrt-btn--secondary mrt-journey-wizard__cal-prev" aria-label="<?php esc_attr_e('Previous month', 'museum-railway-timetable'); ?>">‹</button>
             <span class="mrt-journey-wizard__cal-title" aria-live="polite"></span>
             <button type="button" class="mrt-btn mrt-btn--secondary mrt-journey-wizard__cal-next" aria-label="<?php esc_attr_e('Next month', 'museum-railway-timetable'); ?>">›</button>
         </div>
-        <div class="mrt-journey-wizard__calendar mrt-mb-sm" data-wizard-calendar></div>
-        <ul class="mrt-journey-wizard__legend mrt-text-secondary mrt-mb-sm">
-            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok"></span> <?php esc_html_e('Connection available', 'museum-railway-timetable'); ?></li>
-            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic"></span> <?php esc_html_e('Traffic, no direct connection on this route', 'museum-railway-timetable'); ?></li>
-            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none"></span> <?php esc_html_e('No traffic', 'museum-railway-timetable'); ?></li>
+        <div
+            class="mrt-journey-wizard__calendar mrt-mb-sm"
+            data-wizard-calendar
+            role="region"
+            aria-label="<?php esc_attr_e('Travel dates calendar', 'museum-railway-timetable'); ?>"
+        ></div>
+        <ul class="mrt-journey-wizard__legend mrt-text-secondary mrt-mb-sm" aria-label="<?php esc_attr_e('Calendar legend', 'museum-railway-timetable'); ?>">
+            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true"></span> <?php esc_html_e('Connection available', 'museum-railway-timetable'); ?></li>
+            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true"></span> <?php esc_html_e('Traffic, no direct connection on this route', 'museum-railway-timetable'); ?></li>
+            <li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true"></span> <?php esc_html_e('No traffic', 'museum-railway-timetable'); ?></li>
         </ul>
         <button type="button" class="mrt-btn mrt-btn--secondary" data-wizard-back="date"><?php esc_html_e('Back', 'museum-railway-timetable'); ?></button>
     </div>
@@ -187,7 +192,7 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
         class="mrt-journey-wizard__panel"
         id="<?php echo esc_attr($panel_out); ?>"
         data-wizard-step="outbound"
-        role="tabpanel"
+        role="region"
         aria-labelledby="<?php echo esc_attr($title_out); ?>"
         hidden
     >
@@ -201,7 +206,7 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
         class="mrt-journey-wizard__panel"
         id="<?php echo esc_attr($panel_ret); ?>"
         data-wizard-step="return"
-        role="tabpanel"
+        role="region"
         aria-labelledby="<?php echo esc_attr($title_ret); ?>"
         hidden
     >
@@ -216,7 +221,7 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
         class="mrt-journey-wizard__panel"
         id="<?php echo esc_attr($panel_sum); ?>"
         data-wizard-step="summary"
-        role="tabpanel"
+        role="region"
         aria-labelledby="<?php echo esc_attr($title_sum); ?>"
         hidden
     >
@@ -280,7 +285,7 @@ function MRT_render_shortcode_journey_wizard($atts) {
         <noscript>
             <p class="mrt-alert mrt-alert-info"><?php esc_html_e('This planner needs JavaScript enabled.', 'museum-railway-timetable'); ?></p>
         </noscript>
-        <div class="mrt-journey-wizard__errors" role="alert" aria-live="assertive"></div>
+        <div id="<?php echo esc_attr($u); ?>-errors" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive" aria-relevant="additions text"></div>
         <nav class="mrt-journey-wizard__nav" aria-label="<?php esc_attr_e('Trip planner steps', 'museum-railway-timetable'); ?>">
             <ol class="mrt-journey-wizard__steps" data-wizard-steps></ol>
         </nav>
