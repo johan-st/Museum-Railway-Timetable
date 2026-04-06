@@ -1,6 +1,6 @@
 # Översikt över Shortcodes och Komponenter
 
-## Shortcodes (3 st)
+## Shortcodes (4 st)
 
 ### 1. `[museum_timetable_month]` - Månadsvy
 Visar en kalendermånadsvy som visar vilka dagar som har turer.
@@ -61,8 +61,25 @@ Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 ---
 
-### 3. `[museum_journey_planner]` - Reseplanerare
-Visar en reseplanerare där användare kan söka efter anslutningar mellan två stationer.
+### 3. `[museum_journey_wizard]` - Reseplanerare (flerssteg)
+Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa → ev. retur → sammanfattning med prismatris. Använder samma AJAX-actions som enkla plannern (`mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail`). Kräver JavaScript.
+
+**Användning:**
+```
+[museum_journey_wizard ticket_url="https://example.com/biljetter" hero_image="" hero_subtitle=""]
+```
+
+**Parametrar:**
+- `ticket_url` – Länk till biljett/bokning (valfritt; knapp i sista steget)
+- `hero_image` – URL till bakgrundsbild steg 1 (valfritt)
+- `hero_subtitle` – Underrubrik steg 1 (valfritt)
+
+**Se även:** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md), [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md)
+
+---
+
+### 4. `[museum_journey_planner]` - Reseplanerare (en skärm)
+Visar en reseplanerare där användare kan söka efter anslutningar mellan två stationer på **en sida** (formulär + resultat). Samma backend som wizard.
 
 **Användning:**
 ```
@@ -106,11 +123,12 @@ Shortcodes kan dock användas i widgets genom att lägga till dem i text-widgets
 
 ## Frontend Assets
 
-Alla shortcodes använder:
-- **CSS**: `assets/admin.css` (delad mellan admin och frontend)
-- **JavaScript**: `assets/frontend.js` (för AJAX-funktionalitet)
+Vid användning på webbplatsen laddar plugin relevanta filer från `inc/assets.php`, bland annat:
+- Gemensam bas: `admin-base.css`, komponenter, tidtabell-CSS, m.m.
+- **Månad / översikt / enkel planner:** `assets/frontend.js` (AJAX)
+- **Wizard:** `assets/journey-wizard.css` + `assets/journey-wizard.js` (endast när `[museum_journey_wizard]` finns i innehållet)
 
-Assets laddas automatiskt när shortcodes används på sidan.
+Assets köas när motsvarande shortcode finns på sidan (eller via filter `mrt_should_enqueue_frontend_assets`).
 
 ---
 

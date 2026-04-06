@@ -8,6 +8,21 @@ Princip: **domänlogik och testbara PHP-funktioner** byggs och stabiliseras för
 
 ---
 
+## Leveransstatus – Del 1–2 + wizard-MVP + enkel planner
+
+MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]` + `[museum_journey_planner]`**) betraktas som **slutförd** i kodbasen.
+
+| Del | Innehåll | Status |
+|-----|----------|--------|
+| **Del 1** | Fas 1.1–1.3, 1.5–1.7: bl.a. `MRT_get_connection_journey_detail`, `MRT_format_duration_minutes`, `MRT_get_journey_calendar_month`, `MRT_get_all_traffic_dates_in_range`, `MRT_find_return_connections`, prismatris + `MRT_get_prices_for_context`, `mrt_service_notice` + `MRT_get_service_notice`, `MRT_normalize_connection_for_api` | **Klart** (`inc/functions/journey-*.php`, admin prismatris + notice på service) |
+| **Del 1.4** | `MRT_find_multi_leg_connections` | **Kod finns**; wizard visar inte flerben som huvudflöde (valfri senare fas) |
+| **Del 2** | `mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail` + `journey-parse.php` / `journey-render.php` | **Klart** |
+| **Del 3** | `[museum_journey_wizard]`, `[museum_journey_planner]` + tillhörande CSS/JS | **Klart** (MVP) |
+
+*Valfritt framåt:* rate limiting på AJAX (nämns i Del 2), integrationstester mot DB (Del 4), pixel-polish mot mockup (hero m.m.).
+
+---
+
 ## 0. Scope-beslut innan kod (kort)
 
 | Fråga | Påverkar |
@@ -126,7 +141,7 @@ Ingen ny skärm krävs för att **testa** – Postman eller en minimal admin-deb
 
 ## Del 3 – Vyer (i ordning enligt mockup-flöde)
 
-**Status (MVP):** Ny shortcode `[museum_journey_wizard]` med `assets/journey-wizard.js` + `journey-wizard.css` (laddas när shortcoden finns på sidan). Flöde: rutt + enkel/retur → kalender (`mrt_journey_calendar_month`) → utresa (`mrt_search_journey` single) → valfritt retur (`mrt_search_journey` return) → sammanfattning inkl. **prismatris** (`mrt_price_matrix`, rad enkel/retur markerad). Mellanliggande stopp: `mrt_journey_connection_detail`. ARIA: `aria-labelledby` på paneler, `aria-current="step"` i steglista, kalender `role="grid"`, valda dagar `aria-pressed`, expanderbara stopp `aria-expanded`. Attribut: `ticket_url`. Befintlig `[museum_journey_planner]` oförändrad.
+**Status:** **Slutfört (MVP).** Shortcode `[museum_journey_wizard]` med `assets/journey-wizard.js` + `journey-wizard.css` (laddas när shortcoden finns på sidan). Flöde: rutt + enkel/retur → kalender (`mrt_journey_calendar_month`) → utresa (`mrt_search_journey` single) → valfritt retur (`mrt_search_journey` return) → sammanfattning inkl. **prismatris** (`mrt_price_matrix`, rad enkel/retur markerad). Mellanliggande stopp: `mrt_journey_connection_detail`. WCAG: se [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md). Attribut: `ticket_url`, `hero_image`, `hero_subtitle`. `[museum_journey_planner]` är kvar som **en skärms enkel sökning** (samma AJAX-backend), se [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md).
 
 Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande steg.
 

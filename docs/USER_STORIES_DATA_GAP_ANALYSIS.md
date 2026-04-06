@@ -4,6 +4,8 @@ Jämför kraven i [mockup-analys-funktionella-krav-user-stories.md](mockup-analy
 
 **Föreslagen implementationsordning (funktioner → vyer):** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md). Syftet är att se **var vi redan har stöd**, **var det räcker delvis**, och **var ny struktur eller logik krävs**.
 
+> **Uppdatering 2026-04:** MVP enligt planen (tur/retur, kalender per sträcka, AJAX, wizard, prismatris, notis per tjänst, enkel planner) är **levererad** – se tabellen *Leveransstatus* i [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md). Avsnitt **1–6 nedan** är en **djupare krav- och mockup-jämförelse**; enskilda rader kan fortfarande beskriva **nice-to-have** eller skillnad mot full mockup (t.ex. flerben i UI, autocomplete).
+
 **Kärnfunktioner i kodbasen (referens):**
 
 - `MRT_find_connections()` – hittar resor där **samma tåg** (en `mrt_service`) stannar vid både från- och till-station i rätt ordning (`inc/functions/services.php`).
@@ -15,21 +17,21 @@ Jämför kraven i [mockup-analys-funktionella-krav-user-stories.md](mockup-analy
 
 ---
 
-## Sammanfattning
+## Sammanfattning (2026-04, efter MVP-leverans)
 
 | Område | Bedömning |
 |--------|-----------|
 | Stationer, rutter, stopp, tider | **Stark grund** – CPT + `mrt_stoptimes` |
-| Enkel sökning från/till/datum | **Stöd** – journey + AJAX |
-| Tur/retur som affärslogik | **Saknas** – ingen koppling ut-/hemresa |
-| Kalender med två nivåer (linje vs generell trafik) | **Delvis** – underlag finns, dedikerad API/aggregering saknas |
-| Resa med **byte mellan tjänster** | **Saknas** i sökresultat – endast direkt på en service |
-| Delsträckor, tidlinje, total restid | **Delvis** – data i `mrt_stoptimes`; ingen färdig “resa”-modell i API |
-| Trafikslag per **delsträcka** | **Delvis** – en tjänst har taxonomy/datumoverride, inte per segment |
-| Priser (kategori × biljetttyp) | **Saknas** – ingen tabell/meta för prislista |
-| Trafikmeddelanden per avgång | **Saknas** – endast global `mrt_settings[note]` |
-| Behovsuppehåll | **Delvis** – `pickup_allowed` / `dropoff_allowed` på stopp; ingen semantik “P” i frontend-API |
-| Tillstånd i flöde (steg utan att tappa val) | **UI/frontend** – backend är stateless; inget inbyggt sessions-API |
+| Enkel sökning från/till/datum | **Stöd** – `[museum_journey_planner]` + `MRT_ajax_search_journey` |
+| Tur/retur som affärslogik | **Stöd** – `MRT_find_return_connections`, wizard + AJAX `trip_type=return` |
+| Kalender med två nivåer (linje vs generell trafik) | **Stöd** – `MRT_get_journey_calendar_month` + `mrt_journey_calendar_month` |
+| Resa med **byte mellan tjänster** | **Delvis** – `MRT_find_multi_leg_connections` finns; **inte** huvudflöde i wizard |
+| Delsträckor, tidlinje, total restid | **Delvis** – `MRT_get_connection_journey_detail`, wizard accordion; full mockup-detalj kan skilja |
+| Trafikslag per **delsträcka** | **Delvis** – per tjänst/datum; segmentvis mockup kan skilja |
+| Priser (kategori × biljetttyp) | **Stöd (admin)** – `mrt_price_matrix`, `MRT_get_prices_for_context`, visning i wizard |
+| Trafikmeddelanden per avgång | **Stöd** – `mrt_service_notice`, `MRT_get_service_notice` |
+| Behovsuppehåll | **Delvis** – stoppflaggor + tidsvisning; dedikerad “P”-copy i API kan utökas |
+| Tillstånd i flöde (steg utan att tappa val) | **UI** – wizard state i JS; backend stateless |
 
 ---
 

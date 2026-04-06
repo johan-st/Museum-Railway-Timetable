@@ -34,7 +34,23 @@ function MRT_render_dashboard_shortcodes() {
         </div>
 
         <div class="mrt-mt-1">
-            <h3>4. <?php esc_html_e('Timetable Overview', 'museum-railway-timetable'); ?></h3>
+            <h3>2. <?php esc_html_e('Journey wizard (multi-step)', 'museum-railway-timetable'); ?></h3>
+            <p><code>[museum_journey_wizard]</code></p>
+            <p class="description">
+                <?php esc_html_e('Full mockup-style flow: route and trip type (one way / return), calendar with traffic-day states, outbound and optional return trips, summary with price matrix. Requires JavaScript.', 'museum-railway-timetable'); ?>
+            </p>
+            <p class="description mrt-mt-sm">
+                <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>
+                • <code>ticket_url</code> – <?php esc_html_e('URL for the “Continue to tickets” button (optional)', 'museum-railway-timetable'); ?><br>
+                • <code>hero_image</code> – <?php esc_html_e('Background image URL for step 1 (optional)', 'museum-railway-timetable'); ?><br>
+                • <code>hero_subtitle</code> – <?php esc_html_e('Optional subtitle line under the title on step 1', 'museum-railway-timetable'); ?>
+            </p>
+            <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
+            <pre class="mrt-box mrt-code-block">[museum_journey_wizard ticket_url="https://example.com/biljetter" hero_subtitle="Välj rutt och datum"]</pre>
+        </div>
+
+        <div class="mrt-mt-1">
+            <h3>3. <?php esc_html_e('Timetable Overview', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_timetable_overview timetable_id="123"]</code></p>
             <p class="description">
                 <?php esc_html_e('Displays a complete timetable overview grouped by route and direction, showing all trips with train types and times. Similar to traditional printed timetables.', 'museum-railway-timetable'); ?>
@@ -72,7 +88,7 @@ function MRT_render_dashboard_shortcodes() {
         </div>
 
         <div class="mrt-mt-1">
-            <h3>3. <?php esc_html_e('Journey Planner (Reseplanerare)', 'museum-railway-timetable'); ?></h3>
+            <h3>4. <?php esc_html_e('Journey Planner (Reseplanerare)', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_journey_planner]</code></p>
             <p class="description">
                 <?php esc_html_e('Displays a journey planner where users can search for connections between two stations on a specific date.', 'museum-railway-timetable'); ?><br>
