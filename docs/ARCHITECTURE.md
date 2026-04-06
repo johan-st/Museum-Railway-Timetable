@@ -2,7 +2,7 @@
 
 Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydligt, kod kan testas, och **affärskritisk logik** inte låses in i presentation.
 
-**Relaterat:** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md) (reseflöde funktioner → vyer), [STYLE_GUIDE.md](STYLE_GUIDE.md), [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (tillgänglighet wizard), [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md) (planner + månad). **Pull requests:** checklista i [`.github/pull_request_template.md`](../.github/pull_request_template.md).
+**Relaterat:** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md) (reseflöde funktioner → vyer), [STYLE_GUIDE.md](STYLE_GUIDE.md), [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (tillgänglighet wizard), [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md) (planner + månad + översikt), [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md) (manuell checklista). **Pull requests:** checklista i [`.github/pull_request_template.md`](../.github/pull_request_template.md).
 
 ---
 

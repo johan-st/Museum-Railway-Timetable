@@ -1289,3 +1289,39 @@ msgstr "Inga stationer hittades på denna linje."
 msgid "Error loading stations. Please refresh the page."
 msgstr "Fel vid laddning av stationer. Vänligen uppdatera sidan."
 
+msgid "Timetable overview: %s"
+msgstr "Tidtabellsöversikt: %s"
+
+msgid "%1$s. %2$s: %3$s"
+msgstr "%1$s. %2$s: %3$s"
+
+msgid "Train connections from %1$s to %2$s on %3$s"
+msgstr "Tåganslutningar från %1$s till %2$s den %3$s"
+
+msgid "Return train connections from %1$s to %2$s on %3$s"
+msgstr "Returtåganslutningar från %1$s till %2$s den %3$s"
+
+msgid "Journey planner"
+msgstr "Reseplanerare"
+
+msgid "Connection search results"
+msgstr "Sökresultat för anslutningar"
+
+msgid "Timetable month view, %s"
+msgstr "Månadsvy för tidtabell, %s"
+
+msgid "Month navigation"
+msgstr "Månadsnavigation"
+
+msgid "Operating days for %s"
+msgstr "Trafikdagar för %s"
+
+msgid "Show timetable for %1$s, %2$d services"
+msgstr "Visa tidtabell för %1$s, %2$d turer"
+
+msgid "Show timetable for %s"
+msgstr "Visa tidtabell för %s"
+
+msgid "Selected day timetable"
+msgstr "Tidtabell för vald dag"
+

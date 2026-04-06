@@ -78,6 +78,7 @@
 | **Datamodell** | DATA_MODEL.md med UML |
 | **Validering** | `composer plugin-check` (= `php scripts/validate.php`), validate.ps1 |
 | **CI** | `.github/workflows/ci.yml` (validate vid push/PR) |
+| **Tillgänglighet (dokumenterat)** | WCAG_JOURNEY_WIZARD, WCAG_PUBLIC_SHORTCODES (inkl. overview-grid), RELEASE_A11Y_SMOKE för manuell rökning |
 | **Dependabot** | `.github/dependabot.yml` (Composer månadsvis) |
 | **Överblick** | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) |
 | **Lint** | PHPStan, PHPCS, scripts/lint.ps1 |

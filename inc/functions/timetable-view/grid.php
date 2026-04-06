@@ -27,7 +27,7 @@ function MRT_render_timetable_table_body($station_posts, $services_list, $servic
         $html .= MRT_render_grid_to_row(end($station_posts), $services_list, $service_classes, $service_info);
     }
     if (!empty($all_connections)) {
-        $html .= MRT_render_grid_transfer_rows($services_list, $service_classes, $all_connections);
+        $html .= MRT_render_grid_transfer_rows($services_list, $service_classes, $all_connections, $service_info);
     }
     $html .= '</div>';
 
@@ -64,21 +64,22 @@ function MRT_render_timetable_group($group, $dateYmd) {
     $all_connections = $prepared['all_connections'];
 
     $service_count = count($services_list);
+    $group_heading_id = wp_unique_id('mrtgrh');
     ob_start();
     ?>
     <div class="mrt-timetable-group">
         <div class="mrt-route-header">
-            <div class="mrt-route-header-main"><?php echo esc_html($route_label); ?></div>
+            <h3 class="mrt-route-header-main" id="<?php echo esc_attr($group_heading_id); ?>"><?php echo esc_html($route_label); ?></h3>
             <?php if ($from_station && $to_station): ?>
                 <div class="mrt-route-header-details">
                     <span class="mrt-route-from"><?php printf(esc_html__('Från %s', 'museum-railway-timetable'), esc_html(MRT_get_station_display_name($from_station))); ?></span>
-                    <span class="mrt-route-separator">→</span>
+                    <span class="mrt-route-separator" aria-hidden="true">→</span>
                     <span class="mrt-route-to"><?php printf(esc_html__('Till %s', 'museum-railway-timetable'), esc_html(MRT_get_station_display_name($to_station))); ?></span>
                 </div>
             <?php endif; ?>
         </div>
 
-        <div class="mrt-overview-grid" style="--service-count: <?php echo (int) $service_count; ?>;">
+        <div class="mrt-overview-grid" style="--service-count: <?php echo (int) $service_count; ?>;" role="group" aria-labelledby="<?php echo esc_attr($group_heading_id); ?>">
             <?php echo MRT_render_timetable_table_header($services_list, $service_classes, $service_info); ?>
             <?php echo MRT_render_timetable_table_body($station_posts, $services_list, $service_classes, $service_info, $all_connections); ?>
         </div>

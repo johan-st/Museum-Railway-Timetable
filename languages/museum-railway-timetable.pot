@@ -637,3 +637,51 @@ msgstr ""
 msgid "Security check failed."
 msgstr ""
 
+#: inc/functions/timetable-view/overview.php
+msgid "Timetable overview: %s"
+msgstr ""
+
+#: inc/functions/timetable-view/grid-helpers.php
+msgid "%1$s. %2$s: %3$s"
+msgstr ""
+
+#: inc/functions/journey-connections-table.php
+msgid "Train connections from %1$s to %2$s on %3$s"
+msgstr ""
+
+#: inc/functions/journey-connections-table.php
+msgid "Return train connections from %1$s to %2$s on %3$s"
+msgstr ""
+
+#: inc/shortcodes/shortcode-journey.php
+msgid "Journey planner"
+msgstr ""
+
+#: inc/shortcodes/shortcode-journey.php
+msgid "Connection search results"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Timetable month view, %s"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Month navigation"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Operating days for %s"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Show timetable for %1$s, %2$d services"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Show timetable for %s"
+msgstr ""
+
+#: inc/shortcodes/shortcode-month.php
+msgid "Selected day timetable"
+msgstr ""
+

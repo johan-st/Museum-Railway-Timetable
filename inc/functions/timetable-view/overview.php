@@ -63,10 +63,16 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     ];
     $timetable_type_label = isset($type_labels[$timetable_type]) ? $type_labels[$timetable_type] : '';
 
+    $overview_label = sprintf(
+        /* translators: %s: timetable post title */
+        __('Timetable overview: %s', 'museum-railway-timetable'),
+        get_the_title($timetable_id)
+    );
+
     // Render HTML
     ob_start();
     ?>
-    <div class="mrt-timetable-overview">
+    <div class="mrt-timetable-overview" role="region" aria-label="<?php echo esc_attr($overview_label); ?>">
         <?php if (!empty($timetable_type_label)): ?>
             <div class="mrt-heading mrt-heading--lg mrt-font-bold mrt-text-primary mrt-mb-sm mrt-py-sm mrt-border-b-2"><?php echo esc_html($timetable_type_label); ?></div>
         <?php endif; ?>
@@ -78,7 +84,7 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
             echo MRT_render_timetable_group($group, $dateYmd);
             if ($group_index < $group_count):
         ?>
-            <div class="mrt-timetable-separator"></div>
+            <div class="mrt-timetable-separator" aria-hidden="true"></div>
         <?php
             endif;
         endforeach;
@@ -122,7 +128,7 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
     ]);
 
     if (empty($services)) {
-        return '<div class="mrt-alert mrt-alert-info mrt-empty">' . esc_html__('No services found.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('No services found.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
     // Group services by route and direction using helper function
@@ -132,11 +138,13 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
         return MRT_render_alert(__('No valid services found for this date.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
+    $day_heading_id = wp_unique_id('mrtdayh');
+
     // Render HTML using the same component as timetable overview
     ob_start();
     ?>
-    <div class="mrt-day-timetable mrt-my-1">
-        <h3 class="mrt-heading mrt-heading--xl mrt-mb-1">
+    <div class="mrt-day-timetable mrt-my-1" role="region" aria-labelledby="<?php echo esc_attr($day_heading_id); ?>">
+        <h3 class="mrt-heading mrt-heading--xl mrt-mb-1" id="<?php echo esc_attr($day_heading_id); ?>">
             <?php
             printf(
                 esc_html__('Timetable for %s', 'museum-railway-timetable'),
@@ -153,7 +161,7 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
                 echo MRT_render_timetable_group($group, $dateYmd);
                 if ($group_index < $group_count):
             ?>
-                <div class="mrt-timetable-separator"></div>
+                <div class="mrt-timetable-separator" aria-hidden="true"></div>
             <?php
                 endif;
             endforeach;

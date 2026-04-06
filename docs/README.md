@@ -6,7 +6,8 @@
 |-----|----------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager (domän / WP / UI), testning, affärslogik fri från presentation |
 | [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) | Tillgänglighet för reseplaneraren (wizard) |
-| [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md) | Tillgänglighet: journey planner + månadskalender (shortcodes) |
+| [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md) | Tillgänglighet: journey planner, månad, tidtabellsöversikt (shortcodes) |
+| [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md) | Manuell a11y-rökning inför release |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, clean code, PHP/CSS/JS |
 | [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (btn, form, badge, card) |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Tokens, färger, spacing |

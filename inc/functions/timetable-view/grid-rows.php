@@ -29,7 +29,7 @@ function MRT_render_timetable_table_header($services_list, $service_classes, $se
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
-        <div class="mrt-grid-cell mrt-station-col-header-empty"></div>
+        <div class="mrt-grid-cell mrt-station-col-header-empty" aria-hidden="true"></div>
         <?php foreach ($services_list as $idx => $service_data):
             $info = $service_info[$idx];
         ?>
@@ -50,6 +50,10 @@ function MRT_render_timetable_table_header($services_list, $service_classes, $se
  */
 function MRT_render_grid_from_row($first_station, $services_list, $service_classes, $service_info) {
     $first_station_id = $first_station->ID;
+    $station_row_label = sprintf(
+        __('Från %s', 'museum-railway-timetable'),
+        MRT_get_station_display_name($first_station)
+    );
     ob_start();
     ?>
     <div class="mrt-grid-row mrt-from-row">
@@ -62,10 +66,12 @@ function MRT_render_grid_from_row($first_station, $services_list, $service_class
             $time_display = MRT_format_stop_time_display($display ?? $stop_time);
             $label_parts = MRT_get_service_label_parts($service_info[$idx]);
             $special_name = $service_info[$idx]['special_name'] ?? '';
+            $cell_aria = MRT_overview_grid_cell_aria_label($station_row_label, $label_parts, $time_display . ($special_name ? ' ' . $special_name : ''));
         ?>
             <div class="mrt-grid-cell mrt-time-cell mrt-from-time-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
                  data-service-number="<?php echo esc_attr($service_info[$idx]['service_number']); ?>"
-                 data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>">
+                 data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>"
+                 aria-label="<?php echo esc_attr($cell_aria); ?>">
                 <?php echo esc_html($time_display); ?>
                 <?php if (!empty($special_name)): ?>
                     <span class="mrt-special-label-inline"><?php echo esc_html($special_name); ?></span>
@@ -82,8 +88,9 @@ function MRT_render_grid_from_row($first_station, $services_list, $service_class
  */
 function MRT_render_grid_regular_station_rows($regular_stations, $services_list, $service_classes, $service_info) {
     $html = '';
-    foreach ($regular_stations as $station) {
+        foreach ($regular_stations as $station) {
         $station_id = $station->ID;
+        $station_row_label = $station->post_title;
         ob_start();
         ?>
         <div class="mrt-grid-row">
@@ -94,10 +101,12 @@ function MRT_render_grid_regular_station_rows($regular_stations, $services_list,
                 $stop_time = $service_data['stop_times'][$station_id] ?? null;
                 $time_display = MRT_format_stop_time_display($stop_time);
                 $label_parts = MRT_get_service_label_parts($service_info[$idx]);
+                $cell_aria = MRT_overview_grid_cell_aria_label($station_row_label, $label_parts, $time_display);
             ?>
                 <div class="mrt-grid-cell mrt-time-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
                      data-service-number="<?php echo esc_attr($service_info[$idx]['service_number']); ?>"
-                     data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>">
+                     data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>"
+                     aria-label="<?php echo esc_attr($cell_aria); ?>">
                     <?php echo esc_html($time_display); ?>
                 </div>
             <?php endforeach; ?>
@@ -113,6 +122,10 @@ function MRT_render_grid_regular_station_rows($regular_stations, $services_list,
  */
 function MRT_render_grid_to_row($last_station, $services_list, $service_classes, $service_info) {
     $last_station_id = $last_station->ID;
+    $station_row_label = sprintf(
+        __('Till %s', 'museum-railway-timetable'),
+        MRT_get_station_display_name($last_station)
+    );
     ob_start();
     ?>
     <div class="mrt-grid-row mrt-to-row">
@@ -124,10 +137,12 @@ function MRT_render_grid_to_row($last_station, $services_list, $service_classes,
             $display = MRT_get_to_row_display_stop_time($stop_time);
             $time_display = MRT_format_stop_time_display($display ?? $stop_time);
             $label_parts = MRT_get_service_label_parts($service_info[$idx]);
+            $cell_aria = MRT_overview_grid_cell_aria_label($station_row_label, $label_parts, $time_display);
         ?>
             <div class="mrt-grid-cell mrt-time-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
                  data-service-number="<?php echo esc_attr($service_info[$idx]['service_number']); ?>"
-                 data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>">
+                 data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>"
+                 aria-label="<?php echo esc_attr($cell_aria); ?>">
                 <?php echo esc_html($time_display); ?>
             </div>
         <?php endforeach; ?>
@@ -139,7 +154,8 @@ function MRT_render_grid_to_row($last_station, $services_list, $service_classes,
 /**
  * Render "Tågbyte:" transfer rows (2 rows: train types + train numbers)
  */
-function MRT_render_grid_transfer_rows($services_list, $service_classes, $all_connections) {
+function MRT_render_grid_transfer_rows($services_list, $service_classes, $all_connections, $service_info) {
+    $transfer_prefix = __('Tågbyte:', 'museum-railway-timetable');
     ob_start();
     ?>
     <div class="mrt-grid-row mrt-transfer-row">
@@ -150,8 +166,11 @@ function MRT_render_grid_transfer_rows($services_list, $service_classes, $all_co
             if (isset($all_connections[$idx]) && !empty($all_connections[$idx])):
                 $first_conn = $all_connections[$idx][0];
                 $train_type_name = !empty($first_conn['train_type']) ? $first_conn['train_type'] : '';
+                $label_parts = MRT_get_service_label_parts($service_info[$idx]);
+                $cell_aria = MRT_overview_grid_cell_aria_label($transfer_prefix, array_merge($label_parts, [$train_type_name]), $train_type_name);
         ?>
-            <div class="mrt-grid-cell mrt-time-cell mrt-transfer-train-type <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>">
+            <div class="mrt-grid-cell mrt-time-cell mrt-transfer-train-type <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
+                 aria-label="<?php echo esc_attr($cell_aria); ?>">
                 <?php echo esc_html($train_type_name); ?>
             </div>
         <?php else: ?>
@@ -160,21 +179,16 @@ function MRT_render_grid_transfer_rows($services_list, $service_classes, $all_co
         endforeach; ?>
     </div>
     <div class="mrt-grid-row mrt-transfer-row">
-        <div class="mrt-grid-cell mrt-station-col-empty"></div>
+        <div class="mrt-grid-cell mrt-station-col-empty" aria-hidden="true"></div>
         <?php foreach ($services_list as $idx => $service_data):
             if (isset($all_connections[$idx]) && !empty($all_connections[$idx])):
-                $conn_text = [];
-                foreach ($all_connections[$idx] as $conn) {
-                    $conn_str = esc_html($conn['service_number']);
-                    if (!empty($conn['to_departure'])) {
-                        $conn_str .= ' ' . esc_html(MRT_format_time_display($conn['to_departure']));
-                    } elseif (!empty($conn['departure_time'])) {
-                        $conn_str .= ' ' . esc_html(MRT_format_time_display($conn['departure_time']));
-                    }
-                    $conn_text[] = $conn_str;
-                }
+                [$conn_text, $conn_plain] = MRT_render_grid_transfer_conn_chunks($all_connections[$idx]);
+                $label_parts = MRT_get_service_label_parts($service_info[$idx]);
+                $joined_plain = implode(', ', $conn_plain);
+                $cell_aria = MRT_overview_grid_cell_aria_label($transfer_prefix, $label_parts, $joined_plain);
         ?>
-            <div class="mrt-grid-cell mrt-time-cell mrt-transfer-service-number <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>">
+            <div class="mrt-grid-cell mrt-time-cell mrt-transfer-service-number <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
+                 aria-label="<?php echo esc_attr($cell_aria); ?>">
                 <?php echo implode(', ', $conn_text); ?>
             </div>
         <?php else: ?>

@@ -30,6 +30,16 @@
     box-shadow: var(--mrt-shadow-xl);
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .mrt-timetable-group {
+        transition: none;
+    }
+
+    .mrt-timetable-group:hover {
+        box-shadow: var(--mrt-shadow-lg);
+    }
+}
+
 .mrt-route-header {
     background: linear-gradient(135deg, var(--mrt-green-primary) 0%, var(--mrt-route-header-end) 100%);
     color: var(--mrt-text-white);
@@ -42,7 +52,7 @@
 .mrt-route-header-main {
     font-size: var(--mrt-font-lg);
     font-weight: 700;
-    margin-bottom: var(--mrt-spacing-xs);
+    margin: 0 0 var(--mrt-spacing-xs);
     letter-spacing: 0.3px;
 }
 

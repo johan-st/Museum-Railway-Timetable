@@ -1,8 +1,8 @@
-# WCAG – publika shortcodes (resa + månad)
+# WCAG – publika shortcodes (resa, månad, översikt)
 
-Mål: **WCAG 2.1 nivå AA** där det är tekniskt rimligt utan att duplicera temats ansvar. Detta dokument täcker **`[museum_journey_planner]`** och **`[museum_timetable_month]`** (PHP + `assets/frontend.js` + månads-CSS).
+Mål: **WCAG 2.1 nivå AA** där det är tekniskt rimligt utan att duplicera temats ansvar. Detta dokument täcker **`[museum_journey_planner]`**, **`[museum_timetable_month]`** och **`[museum_timetable_overview]`** (PHP, tidtabellsrutnät, `assets/frontend.js`, CSS).
 
-**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [SHORTCODES_OVERVIEW.md](SHORTCODES_OVERVIEW.md), [ARCHITECTURE.md](ARCHITECTURE.md).
+**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [SHORTCODES_OVERVIEW.md](SHORTCODES_OVERVIEW.md), [ARCHITECTURE.md](ARCHITECTURE.md), [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md).
 
 ---
 
@@ -36,23 +36,40 @@ Mål: **WCAG 2.1 nivå AA** där det är tekniskt rimligt utan att duplicera tem
 
 ---
 
-## 3. Manuell checklista (vid release eller temaändring)
+## 3. `[museum_timetable_overview]` (och samma rutnät i dag-vy)
 
-- [ ] **Planner:** tabba formulär → sök → resultat; skärmläsare läser caption och kolumnrubriker; efter AJAX hamnar fokus logiskt.
-- [ ] **Månad:** tabba prev/next → veckodagar → en trafikdag (knapp) → panel uppdateras; `aria-pressed` följer vald dag.
-- [ ] Zoom **200 %**: kalenderceller och tabeller fortfarande användbara.
-- [ ] Kontrast mot aktivt **tema** (gröna celler / blå aktiv dag).
+Layouten är ett **CSS Grid** av `div`-element (inte `<table>`). För att kompensera används:
+
+| Område | Åtgärd |
+|--------|--------|
+| **Översikt** | Yttre `mrt-timetable-overview`: `role="region"`, `aria-label` med tidtabellens titel (`Timetable overview: %s`). |
+| **Dagvy (AJAX)** | `mrt-day-timetable`: `role="region"`, `aria-labelledby` mot `h3` med unikt id (datum i rubriken). |
+| **Ruttblock** | Ruttitel är **`h3`** med unikt id; `mrt-overview-grid` har `role="group"`, `aria-labelledby` mot samma id. |
+| **Tidsceller** | `aria-label` byggs med `MRT_overview_grid_cell_aria_label` (station rad + tåg/tjänst + tid). Tågbyte-rader inkluderade. |
+| **Dekorativt** | Separatorer mellan block `aria-hidden="true"`; pil mellan Från/Till `aria-hidden="true"`; tom header-cell `aria-hidden="true"`. |
+| **Rörelse** | `prefers-reduced-motion: reduce` tar bort hover-skuggeffekt på rutt-kort. |
+
+**Filer:** `inc/functions/timetable-view/overview.php`, `grid.php`, `grid-rows.php`, `grid-helpers.php`, `assets/admin-timetable-overview-layout.css`.
+
+**Admin:** Förhandsvisning i metabox använder samma HTML; landmärken är fortfarande meningsfulla i admin.
 
 ---
 
-## 4. Kända gränser
+## 4. Manuell checklista (vid release eller temaändring)
 
-- Samma som wizard: **tema** och **manuell** skärmläsarverifiering per miljö.
-- **`[museum_timetable_overview]`** och andra shortcodes har **egen** granskning om de utökas.
+Se den samlade listan i **[RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md)** (wizard + alla tre shortcodes + admin-fokus).
 
 ---
 
-## 5. Referenser
+## 5. Kända gränser
+
+- **Full WCAG** kräver sidvis granskning (kontrast mot tema).
+- **CSS Grid** med `display: contents` ger inte tabellsemantik; vi litar på **region + rubriker + aria-label** på celler.
+- **Tredjepartstema** kan åsidosätta plugin-CSS.
+
+---
+
+## 6. Referenser
 
 - [WCAG 2.1](https://www.w3.org/TR/WCAG21/)
 - [WAI-ARIA Practices](https://www.w3.org/WAI/ARIA/apg/)

@@ -5,6 +5,14 @@
  * @package Museum_Railway_Timetable
  */
 
+/* Keyboard focus (admin + frontend plugin UI) */
+a.mrt-btn:focus-visible,
+button.mrt-btn:focus-visible,
+input.mrt-btn:focus-visible {
+    outline: 2px solid var(--mrt-wp-blue);
+    outline-offset: 2px;
+}
+
 .mrt-btn--primary {
     background: var(--mrt-wp-blue);
     color: var(--mrt-text-white);

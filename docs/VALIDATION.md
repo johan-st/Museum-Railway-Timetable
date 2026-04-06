@@ -19,6 +19,8 @@ Skriptet kontrollerar bland annat: obligatoriska filer, PHP-syntax, ABSPATH, inl
 
 Se även [DEVELOPER.md](DEVELOPER.md) för `composer lint` (PHPStan + PHPCS) och kända begränsningar.
 
+Efter större UI-/temaändringar: kör även den manuella checklistan i [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md) (shortcodes + wizard + admin-fokus).
+
 ---
 
 ## Filstruktur (manuell checklista)
