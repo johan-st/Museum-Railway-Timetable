@@ -6,6 +6,8 @@
 (function($) {
     'use strict';
 
+    var u = window.MRTAdminUtils;
+
     function startEditStopTime($row, state) {
         state.editingRow = $row;
         $row.addClass('mrt-editing');
@@ -81,28 +83,28 @@
             }
 
             if (!data.station_id || !data.sequence) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseFillStationAndSequence : 'Please fill in Station and Sequence.');
+                alert(u.msg('pleaseFillStationAndSequence', 'Please fill in Station and Sequence.'));
                 return;
             }
 
             var $btn = $(this);
             var originalText = $btn.text();
-            $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...');
+            $btn.prop('disabled', true).text(u.msg('saving', 'Saving...'));
 
-            $.post(window.MRTAdminUtils.getAjaxUrl(), data, function(response) {
+            $.post(u.getAjaxUrl(), data, function(response) {
                 if (response.success) {
                     if (response.data) {
                         applyStoptimeToRow($row, response.data);
                     }
                     exitEditMode($row, state);
-                    var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeSavedSuccessfully) ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop time saved successfully.';
+                    var successMsg = u.msg('stopTimeSavedSuccessfully', 'Stop time saved successfully.');
                     showStoptimeSuccess($container, successMsg);
                 } else {
-                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop time.'));
+                    alert(response.data.message || u.msg('errorSavingStopTime', 'Error saving stop time.'));
                     $btn.prop('disabled', false).text(originalText);
                 }
             }).fail(function() {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.');
+                alert(u.msg('networkError', 'Network error. Please try again.'));
                 $btn.prop('disabled', false).text(originalText);
             });
         });
@@ -127,15 +129,15 @@
             };
 
             if (!data.station_id || !data.sequence) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseFillStationAndSequence : 'Please fill in Station and Sequence.');
+                alert(u.msg('pleaseFillStationAndSequence', 'Please fill in Station and Sequence.'));
                 return;
             }
 
             var $btn = $(this);
             var originalText = $btn.text();
-            $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.adding) ? mrtAdmin.adding : 'Adding...');
+            $btn.prop('disabled', true).text(u.msg('adding', 'Adding...'));
 
-            $.post(window.MRTAdminUtils.getAjaxUrl(), data, function(response) {
+            $.post(u.getAjaxUrl(), data, function(response) {
                 if (response.success) {
                     if (response.data) {
                         var st = response.data;
@@ -144,15 +146,15 @@
                         $row.removeClass('mrt-new-row');
                         applyStoptimeToRow($row, st);
                         exitEditMode($row, state);
-                        var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeAddedSuccessfully) ? mrtAdmin.stopTimeAddedSuccessfully : 'Stop time added successfully.';
+                        var successMsg = u.msg('stopTimeAddedSuccessfully', 'Stop time added successfully.');
                         showStoptimeSuccess($container, successMsg);
                     }
                 } else {
-                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorAddingStopTime : 'Error adding stop time.'));
+                    alert(response.data.message || u.msg('errorAddingStopTime', 'Error adding stop time.'));
                     $btn.prop('disabled', false).text(originalText);
                 }
             }).fail(function() {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.');
+                alert(u.msg('networkError', 'Network error. Please try again.'));
                 $btn.prop('disabled', false).text(originalText);
             });
         });
@@ -165,13 +167,13 @@
         var nonce = $('#mrt_stoptimes_nonce').val();
 
         if (stoptimeId && stoptimeId !== 'new' && id) {
-            $.post(window.MRTAdminUtils.getAjaxUrl(), { action: 'mrt_get_stoptime', nonce: nonce, id: id }, function(response) {
+            $.post(u.getAjaxUrl(), { action: 'mrt_get_stoptime', nonce: nonce, id: id }, function(response) {
                 if (response.success && response.data) {
                     applyStoptimeToRow($row, response.data);
                 }
                 exitEditMode($row, state);
             }).fail(function() {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.');
+                alert(u.msg('networkError', 'Network error. Please try again.'));
                 exitEditMode($row, state);
             });
         } else {
@@ -189,11 +191,11 @@
     function bindDelete($container, nonce) {
         $container.on('click', '.mrt-delete-stoptime', function(e) {
             e.stopPropagation();
-            if (!confirm(typeof mrtAdmin !== 'undefined' ? mrtAdmin.confirmDeleteStopTime : 'Are you sure you want to delete this stop time?')) {
+            if (!confirm(u.msg('confirmDeleteStopTime', 'Are you sure you want to delete this stop time?'))) {
                 return;
             }
             var id = $(this).data('id');
-            $.post(window.MRTAdminUtils.getAjaxUrl(), {
+            $.post(u.getAjaxUrl(), {
                 action: 'mrt_delete_stoptime',
                 nonce: nonce,
                 id: id
@@ -201,10 +203,10 @@
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorDeletingStopTime : 'Error deleting stop time.'));
+                    alert(response.data.message || u.msg('errorDeletingStopTime', 'Error deleting stop time.'));
                 }
             }).fail(function() {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.');
+                alert(u.msg('networkError', 'Network error. Please try again.'));
             });
         });
     }

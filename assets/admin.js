@@ -7,7 +7,7 @@
  * MODULES:
  * - mrt-string-utils.js: MRTStringUtils.escapeHtml
  * - mrt-date-utils.js: MRTDateUtils (datum/tid, validateHhMm)
- * - admin-utils.js: getAjaxUrl, escapeHtml (→ MRTStringUtils), populateDestinationsSelect, setSelectState, validateTimeFormat (→ MRTDateUtils)
+ * - admin-utils.js: msg (mrtAdmin), getAjaxUrl, escapeHtml (→ MRTStringUtils), populateDestinationsSelect, setSelectState, validateTimeFormat (→ MRTDateUtils)
  * - mrt-frontend-api.js: MRTFrontendApi (endast frontend; ej admin-bundle)
  * - admin-route-ui.js: Route stations add/remove/reorder
  * - admin-stoptimes-ui.js: Stop times legacy inline editing

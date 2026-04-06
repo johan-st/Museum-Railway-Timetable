@@ -8,6 +8,21 @@
 
     window.MRTAdminUtils = {
         /**
+         * Localized string from mrtAdmin (wp_localize_script), or fallback.
+         *
+         * @param {string} key
+         * @param {string} [fallback]
+         * @returns {string}
+         */
+        msg: function(key, fallback) {
+            var o = typeof mrtAdmin !== 'undefined' ? mrtAdmin : {};
+            if (o[key] !== undefined && o[key] !== '') {
+                return o[key];
+            }
+            return fallback !== undefined ? fallback : '';
+        },
+
+        /**
          * Get AJAX URL for admin requests
          * @returns {string}
          */
@@ -31,7 +46,7 @@
          * @param {string} defaultLabel - Label for the empty option
          */
         populateDestinationsSelect: function($select, destinations, defaultLabel) {
-            var label = defaultLabel || (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+            var label = defaultLabel || window.MRTAdminUtils.msg('selectDestination', '— Select Destination —');
             var selectEl = $select[0];
             $select.empty();
             var defaultOpt = document.createElement('option');
@@ -53,7 +68,9 @@
          * Set select to loading or error state (XSS-safe)
          */
         setSelectState: function($select, state, label) {
-            var text = label || (state === 'loading' ? ((typeof mrtAdmin !== 'undefined' && mrtAdmin.loading) ? mrtAdmin.loading : 'Loading...') : ((typeof mrtAdmin !== 'undefined' && mrtAdmin.errorLoadingDestinations) ? mrtAdmin.errorLoadingDestinations : 'Error loading destinations'));
+            var text = label || (state === 'loading'
+                ? window.MRTAdminUtils.msg('loading', 'Loading...')
+                : window.MRTAdminUtils.msg('errorLoadingDestinations', 'Error loading destinations'));
             var opt = document.createElement('option');
             opt.value = '';
             opt.textContent = text;

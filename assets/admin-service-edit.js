@@ -47,23 +47,24 @@
         },
 
         handleNoRoute: function($stoptimesContainer, $destinationSelect) {
+            var u = window.MRTAdminUtils;
             if ($stoptimesContainer.length) {
                 $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-empty">' +
-                    (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noRouteSelected : 'No route selected. Select a route to configure stop times.') +
+                    u.msg('noRouteSelected', 'No route selected. Select a route to configure stop times.') +
                     '</td></tr>');
                 $('#mrt-save-all-stoptimes').closest('p').hide();
             }
             if ($destinationSelect.length) {
                 var defOpt = document.createElement('option');
                 defOpt.value = '';
-                defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+                defOpt.textContent = u.msg('selectDestination', '— Select Destination —');
                 $destinationSelect.empty().append(defOpt);
             }
         },
 
         showLoadingStations: function($stoptimesContainer) {
             $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-block mrt-text-center mrt-p-xl"><span class="spinner is-active mrt-spinner-inline"></span> ' +
-                (typeof mrtAdmin !== 'undefined' ? mrtAdmin.loadingStations : 'Loading stations...') + '</td></tr>');
+                window.MRTAdminUtils.msg('loadingStations', 'Loading stations...') + '</td></tr>');
         },
 
         loadDestinations: function($destinationSelect, routeId, nonce, utils) {
@@ -106,14 +107,14 @@
                         $('#mrt-save-all-stoptimes').closest('p').show();
                     } else {
                         $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-empty">' +
-                            (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noStationsOnRoute : 'No stations found on this route.') +
+                            window.MRTAdminUtils.msg('noStationsOnRoute', 'No stations found on this route.') +
                             '</td></tr>');
                         $('#mrt-save-all-stoptimes').closest('p').hide();
                     }
                 },
                 error: function() {
                     $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-alert mrt-alert-error">' +
-                        (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorLoadingStations : 'Error loading stations. Please refresh the page.') +
+                        window.MRTAdminUtils.msg('errorLoadingStations', 'Error loading stations. Please refresh the page.') +
                         '</td></tr>');
                 }
             });
@@ -122,9 +123,9 @@
         renderStoptimesRows: function(stations, serviceId) {
             var $tbody = $('#mrt-stoptimes-tbody');
             var utils = window.MRTAdminUtils;
-            var timeHint = (typeof mrtAdmin !== 'undefined' && mrtAdmin.timeHint) ? mrtAdmin.timeHint : 'Leave empty if train stops but time is not fixed';
-            var pickupLabel = (typeof mrtAdmin !== 'undefined' && mrtAdmin.pickup) ? mrtAdmin.pickup : 'Pickup';
-            var dropoffLabel = (typeof mrtAdmin !== 'undefined' && mrtAdmin.dropoff) ? mrtAdmin.dropoff : 'Dropoff';
+            var timeHint = utils.msg('timeHint', 'Leave empty if train stops but time is not fixed');
+            var pickupLabel = utils.msg('pickup', 'Pickup');
+            var dropoffLabel = utils.msg('dropoff', 'Dropoff');
             $tbody.empty();
             stations.forEach(function(station, index) {
                 var stopsHere = station.stops_here;
@@ -211,7 +212,7 @@
 
                 if (timeValue && timeValue.trim() !== '' && !utils.validateTimeFormat(timeValue)) {
                     $input.addClass('mrt-time-error');
-                    var errorText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.invalidTimeFormat) ? mrtAdmin.invalidTimeFormat : 'Invalid format. Use HH:MM (e.g., 09:15)';
+                    var errorText = utils.msg('invalidTimeFormat', 'Invalid format. Use HH:MM (e.g., 09:15)');
                     var $err = document.createElement('span');
                     $err.className = 'mrt-time-error-message mrt-block mrt-text-error mrt-text-small mrt-mt-xs';
                     $err.textContent = errorText;
@@ -243,7 +244,7 @@
                 }
             });
             if (hasErrors) {
-                var errorMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.fixTimeFormats) ? mrtAdmin.fixTimeFormats : 'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).';
+                var errorMsg = utils.msg('fixTimeFormats', 'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).');
                 alert(errorMsg);
                 return true;
             }
@@ -267,7 +268,7 @@
                 });
             });
             var originalText = $btn.data('original-text') || $btn.text();
-            var savingText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...';
+            var savingText = window.MRTAdminUtils.msg('saving', 'Saving...');
             $btn.prop('disabled', true).text(savingText).addClass('mrt-opacity-70 mrt-cursor-wait');
 
             $.post(window.MRTAdminUtils.getAjaxUrl(), {
@@ -276,7 +277,10 @@
                 service_id: serviceId,
                 stops: stops
             }, function(response) {
-                var msg = response.success ? (response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop times saved successfully.')) : (response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop times.'));
+                var u = window.MRTAdminUtils;
+                var msg = response.success
+                    ? (response.data.message || u.msg('stopTimeSavedSuccessfully', 'Stop times saved successfully.'))
+                    : (response.data.message || u.msg('errorSavingStopTime', 'Error saving stop times.'));
                 var cssClass = response.success ? 'mrt-success-message notice notice-success' : 'mrt-error-message notice notice-error';
                 var $msg = $('<div class="' + cssClass + ' is-dismissible mrt-my-1"><p></p></div>');
                 $msg.find('p').text(msg);
@@ -284,7 +288,7 @@
                 setTimeout(function() { $msg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
                 $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
             }).fail(function() {
-                var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
+                var networkErrorMsg = window.MRTAdminUtils.msg('networkError', 'Network error. Please try again.');
                 var $errP = document.createElement('p');
                 $errP.textContent = networkErrorMsg;
                 var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);

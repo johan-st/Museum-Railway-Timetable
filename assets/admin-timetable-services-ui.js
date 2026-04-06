@@ -6,14 +6,16 @@
 (function($) {
     'use strict';
 
+    var u = window.MRTAdminUtils;
+
     function getEmptyDestinationOptions() {
         var defOpt = document.createElement('option');
         defOpt.value = '';
-        defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+        defOpt.textContent = u.msg('selectDestination', '— Select Destination —');
         var disOpt = document.createElement('option');
         disOpt.value = '';
         disOpt.disabled = true;
-        disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
+        disOpt.textContent = u.msg('selectRouteFirst', 'Select a route first');
         return [defOpt, disOpt];
     }
 
@@ -43,12 +45,12 @@
         var editLink = document.createElement('a');
         editLink.href = editUrlWithTimetable;
         editLink.className = 'button button-small';
-        editLink.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.edit) ? mrtAdmin.edit : 'Edit';
+        editLink.textContent = u.msg('edit', 'Edit');
         var removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'button button-small mrt-delete-service-from-timetable';
         removeBtn.setAttribute('data-service-id', response.data.service_id);
-        removeBtn.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.remove) ? mrtAdmin.remove : 'Remove';
+        removeBtn.textContent = u.msg('remove', 'Remove');
         td4.appendChild(editLink);
         td4.appendChild(document.createTextNode(' '));
         td4.appendChild(removeBtn);
@@ -107,19 +109,19 @@
             var endStationId = $('#mrt-new-service-end-station').val();
 
             if (!routeId) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseSelectRoute : 'Please select a route.');
+                alert(u.msg('pleaseSelectRoute', 'Please select a route.'));
                 return;
             }
 
             if (!nonce) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.securityTokenMissing : 'Security token missing. Please refresh the page.');
+                alert(u.msg('securityTokenMissing', 'Security token missing. Please refresh the page.'));
                 return;
             }
 
             if (!$btn.data('original-text')) {
                 $btn.data('original-text', $btn.text());
             }
-            var addingText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.adding) ? mrtAdmin.adding : 'Adding...';
+            var addingText = u.msg('adding', 'Adding...');
             $btn.prop('disabled', true).text(addingText);
 
             $.ajax({
@@ -140,7 +142,7 @@
                         var $row = buildNewServiceRow(response, timetableId);
                         $newRow.before($row);
 
-                        var tripAddedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripAdded) ? mrtAdmin.tripAdded : 'Trip added successfully.';
+                        var tripAddedMsg = u.msg('tripAdded', 'Trip added successfully.');
                         showTemporaryNotice(tripAddedMsg, 'success');
                         resetNewServiceForm();
                     } else {
@@ -149,8 +151,7 @@
                     }
                 },
                 error: function() {
-                    var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
-                    showTemporaryNotice(networkErrorMsg, 'error');
+                    showTemporaryNotice(u.msg('networkError', 'Network error. Please try again.'), 'error');
                 },
                 complete: function() {
                     $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
@@ -161,7 +162,7 @@
 
     function bindRemoveService(nonce) {
         $('#mrt-timetable-services-container').on('click', '.mrt-delete-service-from-timetable', function() {
-            if (!confirm(typeof mrtAdmin !== 'undefined' ? mrtAdmin.confirmRemoveTrip : 'Are you sure you want to remove this trip from the timetable?')) {
+            if (!confirm(u.msg('confirmRemoveTrip', 'Are you sure you want to remove this trip from the timetable?'))) {
                 return;
             }
 
@@ -184,7 +185,7 @@
                         $row.fadeOut(function() {
                             $(this).remove();
                         });
-                        var tripRemovedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripRemoved) ? mrtAdmin.tripRemoved : 'Trip removed successfully.';
+                        var tripRemovedMsg = u.msg('tripRemoved', 'Trip removed successfully.');
                         showTemporaryNotice(tripRemovedMsg, 'success');
                     } else {
                         var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error removing trip.';
@@ -193,7 +194,7 @@
                     }
                 },
                 error: function() {
-                    alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorRemovingTrip : 'Error removing trip.');
+                    alert(u.msg('errorRemovingTrip', 'Error removing trip.'));
                     $btn.prop('disabled', false);
                 }
             });

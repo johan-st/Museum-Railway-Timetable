@@ -104,6 +104,7 @@ Kodstandarder och clean code-principer för projektet.
 - **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar). **`admin-utils.js`** `escapeHtml` delegerar hit.
 - **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`). **`admin-utils.js`** `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`.
 - **`mrt-frontend-api.js`** – `window.MRTFrontendApi`: `getAjaxUrl`, `getNonce`, `msg` (strängar från `mrtFrontend`), `post` med valfri override av URL/nonce (t.ex. wizard). Laddas före `frontend.js`; används av `frontend.js` och kan användas av andra frontend-skript med samma beroenden.
+- **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin` (samma mönster som `MRTFrontendApi.msg`). Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
 - **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
 - **Enqueue** – Registreras i `inc/assets.php` (admin: bl.a. `mrt-string-utils` före `mrt-admin-utils`; frontend: `mrt-string-utils` + `mrt-frontend-api` före `mrt-frontend`, wizard beror på string + frontend-api utöver befintliga).
 

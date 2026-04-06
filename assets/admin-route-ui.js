@@ -6,6 +6,8 @@
 (function($) {
     'use strict';
 
+    var u = window.MRTAdminUtils;
+
     function updateRouteStationOrders() {
         var $rows = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)');
         var totalRows = $rows.length;
@@ -35,13 +37,13 @@
             var $select = $('#mrt-new-route-station');
             var stationId = $select.val();
             if (!stationId) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseSelectStation : 'Please select a station.');
+                alert(u.msg('pleaseSelectStation', 'Please select a station.'));
                 return;
             }
 
             var currentStations = $('#mrt_route_stations').val().split(',').filter(function(id) { return id; });
             if (currentStations.indexOf(stationId) !== -1) {
-                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.stationAlreadyOnRoute : 'This station is already on the route.');
+                alert(u.msg('stationAlreadyOnRoute', 'This station is already on the route.'));
                 return;
             }
 
@@ -52,15 +54,15 @@
             var $tbody = $('#mrt-route-stations-tbody');
             var $newRow = $tbody.find('.mrt-new-route-station-row');
             var newIndex = currentStations.length;
-            var safeName = (window.MRTAdminUtils && window.MRTAdminUtils.escapeHtml) ? window.MRTAdminUtils.escapeHtml(stationName) : stationName;
+            var safeName = u.escapeHtml(stationName);
 
             var $row = $('<tr class="mrt-row-hover" data-station-id="' + stationId + '">' +
                 '<td>' + newIndex + '</td>' +
                 '<td>' + safeName + '</td>' +
                 '<td>' +
-                '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveUp : 'Move up') + '">↑</button> ' +
-                '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveDown : 'Move down') + '">↓</button> ' +
-                '<button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.remove : 'Remove') + '</button>' +
+                '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="' + u.msg('moveUp', 'Move up') + '">↑</button> ' +
+                '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="' + u.msg('moveDown', 'Move down') + '">↓</button> ' +
+                '<button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">' + u.msg('remove', 'Remove') + '</button>' +
                 '</td>' +
                 '</tr>');
 
@@ -126,7 +128,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            var savedText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.saved) ? mrtAdmin.saved : '✓ Saved';
+                            var savedText = u.msg('saved', '✓ Saved');
                             var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm"></span>').text(savedText);
                             $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
                             $('#mrt-route-end-station').closest('td').append($indicator);
@@ -136,8 +138,8 @@
                         }
                     },
                     error: function() {
-                        var errMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.networkError) ? mrtAdmin.networkError : 'Network error. Please try again.';
-                        var safeMsg = (window.MRTAdminUtils && window.MRTAdminUtils.escapeHtml) ? window.MRTAdminUtils.escapeHtml(errMsg) : errMsg;
+                        var errMsg = u.msg('networkError', 'Network error. Please try again.');
+                        var safeMsg = u.escapeHtml(errMsg);
                         var $err = $('<div class="mrt-alert mrt-alert-error mrt-mt-sm">' + safeMsg + '</div>');
                         $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
                         $('#mrt-route-end-station').closest('td').find('.mrt-alert').remove();
