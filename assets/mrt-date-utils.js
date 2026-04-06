@@ -6,18 +6,27 @@
 (function(global) {
     'use strict';
 
+    var HH_MM_PATTERN = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+
     function pad2(n) {
-        return (n < 10 ? '0' : '') + n;
+        var x = parseInt(n, 10);
+        if (!isFinite(x) || x < 0) {
+            x = 0;
+        }
+        return (x < 10 ? '0' : '') + x;
+    }
+
+    function parseInt10(n) {
+        var x = parseInt(n, 10);
+        return isFinite(x) ? x : NaN;
+    }
+
+    function todayYearMonth() {
+        var d = new Date();
+        return { year: d.getFullYear(), month: d.getMonth() + 1 };
     }
 
     global.MRTDateUtils = {
-        /**
-         * Format YYYY-MM-DD for display using localized month names (e.g. "June 1, 2026").
-         *
-         * @param {string} ymd
-         * @param {string[]|{monthNames?: string[]}|undefined} monthNamesOrCfg Array of 12 names, or object with monthNames
-         * @returns {string}
-         */
         formatYmdForDisplay: function(ymd, monthNamesOrCfg) {
             if (!ymd || typeof ymd !== 'string') {
                 return '';
@@ -27,8 +36,11 @@
                 return ymd;
             }
             var y = p[0];
-            var mo = parseInt(p[1], 10);
-            var day = parseInt(p[2], 10);
+            var mo = parseInt10(p[1]);
+            var day = parseInt10(p[2]);
+            if (mo !== mo || day !== day || mo < 1 || mo > 12) {
+                return ymd;
+            }
             var monthNames = Array.isArray(monthNamesOrCfg)
                 ? monthNamesOrCfg
                 : (monthNamesOrCfg && monthNamesOrCfg.monthNames);
@@ -39,7 +51,13 @@
         },
 
         ymdFromParts: function(year, month, day) {
-            return year + '-' + pad2(month) + '-' + pad2(day);
+            var y = parseInt10(year);
+            var m = parseInt10(month);
+            var d = parseInt10(day);
+            if (y !== y || m !== m || d !== d) {
+                return '';
+            }
+            return y + '-' + pad2(m) + '-' + pad2(d);
         },
 
         calendarMonthTitle: function(year, month, monthNames) {
@@ -56,26 +74,18 @@
             return (first.getDay() - startOfWeek + 7) % 7;
         },
 
-        /**
-         * Local “today” as calendar year + month (month 1–12).
-         *
-         * @returns {{ year: number, month: number }}
-         */
         currentCalendarYearMonth: function() {
-            var d = new Date();
-            return { year: d.getFullYear(), month: d.getMonth() + 1 };
+            return todayYearMonth();
         },
 
-        /**
-         * Add whole calendar months; month is 1–12 (same convention as loadCalendar APIs).
-         *
-         * @param {number} year
-         * @param {number} month
-         * @param {number} delta e.g. -1 (previous month), +1 (next month)
-         * @returns {{ year: number, month: number }}
-         */
         addCalendarMonths: function(year, month, delta) {
-            var d = new Date(year, month - 1 + delta, 1);
+            var y = parseInt10(year);
+            var m = parseInt10(month);
+            var del = parseInt10(delta);
+            if (y !== y || m !== m || del !== del) {
+                return todayYearMonth();
+            }
+            var d = new Date(y, m - 1 + del, 1);
             return { year: d.getFullYear(), month: d.getMonth() + 1 };
         },
 
@@ -83,8 +93,7 @@
             if (!timeString || String(timeString).trim() === '') {
                 return true;
             }
-            var timePattern = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
-            return timePattern.test(String(timeString).trim());
+            return HH_MM_PATTERN.test(String(timeString).trim());
         }
     };
 }(typeof window !== 'undefined' ? window : this));
