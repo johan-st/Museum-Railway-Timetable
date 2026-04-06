@@ -8,6 +8,59 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Apply ?mrt_month=YYYY-MM from the request (for month navigation links)
+ *
+ * @param array<string, mixed> $atts Shortcode attributes
+ * @return array<string, mixed>
+ */
+function MRT_month_shortcode_apply_query_month(array $atts) {
+    if (empty($_GET['mrt_month']) || !is_string($_GET['mrt_month'])) {
+        return $atts;
+    }
+    $gm = sanitize_text_field(wp_unslash($_GET['mrt_month']));
+    if (!preg_match('/^(\d{4})-(\d{2})$/', $gm, $m)) {
+        return $atts;
+    }
+    $y = (int) $m[1];
+    $mo = (int) $m[2];
+    if ($y < 1970 || $y > 2100 || $mo < 1 || $mo > 12) {
+        return $atts;
+    }
+    $atts['month'] = sprintf('%04d-%02d', $y, $mo);
+
+    return $atts;
+}
+
+/**
+ * Prev/next month URLs for shortcode navigation (preserves other query args)
+ *
+ * @param int|false $first_ts Timestamp of first day of displayed month
+ * @return array{0:string,1:string}
+ */
+function MRT_month_shortcode_nav_link_urls($first_ts) {
+    if (false === $first_ts) {
+        $t = current_time('timestamp');
+        $ym = date('Y-m', $t);
+        $u = add_query_arg('mrt_month', $ym, home_url('/'));
+
+        return [$u, $u];
+    }
+    $prev_ts = strtotime('-1 month', $first_ts);
+    $next_ts = strtotime('+1 month', $first_ts);
+    if (false === $prev_ts) {
+        $prev_ts = $first_ts;
+    }
+    if (false === $next_ts) {
+        $next_ts = $first_ts;
+    }
+
+    return [
+        add_query_arg('mrt_month', date('Y-m', $prev_ts)),
+        add_query_arg('mrt_month', date('Y-m', $next_ts)),
+    ];
+}
+
+/**
  * Render month view shortcode output
  *
  * @param array $atts Shortcode attributes
@@ -21,7 +74,10 @@ function MRT_render_shortcode_month($atts) {
         'legend' => 1,
         'show_counts' => 1,
         'start_monday' => 1,
+        'nav' => 1,
     ], $atts, 'museum_timetable_month');
+
+    $atts = MRT_month_shortcode_apply_query_month($atts);
 
     $datetime = MRT_get_current_datetime();
     $now_ts = $datetime['timestamp'];
@@ -64,7 +120,22 @@ function MRT_render_shortcode_month($atts) {
 
     ob_start();
     echo '<div class="mrt-month mrt-my-1" data-train-type="' . esc_attr($atts['train_type']) . '">';
-    echo '<div class="mrt-heading mrt-heading--lg mrt-font-semibold">' . esc_html(date_i18n('F Y', $first_ts)) . '</div>';
+    if (!empty($atts['nav'])) {
+        $nav_urls = MRT_month_shortcode_nav_link_urls($first_ts);
+        echo '<div class="mrt-month-nav" role="navigation" aria-label="' . esc_attr__('Month', 'museum-railway-timetable') . '">';
+        echo '<a class="mrt-btn mrt-btn--secondary mrt-month-nav__prev" href="' . esc_url($nav_urls[0]) . '">';
+        echo '<span class="mrt-month-nav__chev" aria-hidden="true">‹</span> ';
+        echo esc_html__('Previous month', 'museum-railway-timetable');
+        echo '</a>';
+        echo '<h2 class="mrt-month-nav__title mrt-heading mrt-heading--lg mrt-font-semibold">' .
+            esc_html(date_i18n('F Y', $first_ts)) . '</h2>';
+        echo '<a class="mrt-btn mrt-btn--secondary mrt-month-nav__next" href="' . esc_url($nav_urls[1]) . '">';
+        echo esc_html__('Next month', 'museum-railway-timetable');
+        echo ' <span class="mrt-month-nav__chev" aria-hidden="true">›</span>';
+        echo '</a></div>';
+    } else {
+        echo '<div class="mrt-heading mrt-heading--lg mrt-font-semibold">' . esc_html(date_i18n('F Y', $first_ts)) . '</div>';
+    }
     echo '<table class="mrt-month-table"><thead><tr>';
     $headers = $startMonday
         ? [__('Mon'), __('Tue'), __('Wed'), __('Thu'), __('Fri'), __('Sat'), __('Sun')]

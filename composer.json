@@ -3,12 +3,13 @@
     "description": "WordPress plugin for museum railway timetables",
     "type": "project",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.2"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "wp-coding-standards/wpcs": "^3.0"
+        "wp-coding-standards/wpcs": "^3.0",
+        "phpunit/phpunit": "^11.5"
     },
     "config": {
         "allow-plugins": {
@@ -20,6 +21,7 @@
         "phpstan": "phpstan analyse",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
-        "lint": ["@phpstan", "@phpcs"]
+        "lint": ["@phpstan", "@phpcs"],
+        "test": "phpunit"
     }
 }

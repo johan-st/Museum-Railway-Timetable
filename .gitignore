@@ -48,6 +48,9 @@ wp-config.php
 #/wp-content/themes
 COMMIT_MESSAGE.txt
 
+# PHPUnit
+.phpunit.cache/
+
 # Composer
 /vendor/
 

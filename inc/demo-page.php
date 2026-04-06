@@ -88,6 +88,52 @@ function MRT_demo_mockup_caption($label) {
 }
 
 /**
+ * How to get connections on the demo (Lennakatten import + example station pair)
+ *
+ * @return string HTML
+ */
+function MRT_get_components_demo_journey_test_data_html() {
+    $dates = function_exists('MRT_import_get_timetable_dates') ? MRT_import_get_timetable_dates() : [];
+    $example = !empty($dates[0]) ? $dates[0] : '2026-05-30';
+    $date_list = !empty($dates) ? implode(', ', array_slice($dates, 0, 5)) : $example;
+    if (count($dates) > 5) {
+        $date_list .= ' …';
+    }
+    $out = '<div class="mrt-alert mrt-alert-info mrt-mb-lg"><p><strong>' .
+        esc_html__('Trying the journey wizard', 'museum-railway-timetable') .
+        '</strong></p><ul class="mrt-demo-mockup-list">';
+    $out .= '<li>' . sprintf(
+        /* translators: %s: timetable title e.g. GRÖN TIDTABELL 2026 */
+        esc_html__('Run %s from the Railway Timetable admin menu so stations, routes, and services exist.', 'museum-railway-timetable'),
+        '<code>' . esc_html(MRT_demo_lennakatten_timetable_title()) . '</code>'
+    ) . '</li>';
+    $out .= '<li>' . esc_html__(
+        'In the wizard, choose stations on the same line (e.g. From: Uppsala Östra, To: Faringe). If either station is missing, the import did not finish.',
+        'museum-railway-timetable'
+    ) . '</li>';
+    $out .= '<li>' . sprintf(
+        /* translators: %1$s: example YYYY-MM-DD, %2$s: list of sample dates */
+        esc_html__(
+            'Pick a traffic day: the GRÖN import includes dates such as %2$s. Example first day: %1$s. Use the wizard calendar’s previous/next month buttons until that month appears, then choose a green (available) day for your pair.',
+            'museum-railway-timetable'
+        ),
+        '<code>' . esc_html($example) . '</code>',
+        esc_html($date_list)
+    ) . '</li>';
+    $out .= '<li>' . esc_html__(
+        'If you see “No connections on this date”, the pair or date has no matching service — try the example stations and a listed traffic day.',
+        'museum-railway-timetable'
+    ) . '</li>';
+    $out .= '<li>' . esc_html__(
+        'The month calendar in section 1 has Previous month / Next month links (?mrt_month= in the URL).',
+        'museum-railway-timetable'
+    ) . '</li>';
+    $out .= '</ul></div>';
+
+    return $out;
+}
+
+/**
  * Page content: intro + all shortcodes
  *
  * @return string
@@ -105,6 +151,7 @@ function MRT_get_components_demo_page_content() {
     $lines = [
         '<p>' . esc_html($intro) . '</p>',
         MRT_get_components_demo_mockup_legend_html(),
+        MRT_get_components_demo_journey_test_data_html(),
         '<h2>' . esc_html__('1. Month calendar', 'museum-railway-timetable') . '</h2>',
         MRT_demo_mockup_caption(__('Mockup: calendar / traffic days (timetable context, not the journey booking flow).', 'museum-railway-timetable')),
         '[museum_timetable_month show_counts="1" legend="1"]',
@@ -116,7 +163,7 @@ function MRT_get_components_demo_page_content() {
         '[museum_journey_planner]',
         '<h2>' . esc_html__('4. Journey wizard (multi-step)', 'museum-railway-timetable') . '</h2>',
         MRT_demo_mockup_caption(__('Mockup-based: full journey flow (V1–V5) with calendar, legs, optional return, prices in summary).', 'museum-railway-timetable')),
-        '[museum_journey_wizard]',
+        '[museum_journey_wizard hero_subtitle="Step 1 — route and trip type (mockup: sok-din-resa)."]',
     ];
     return implode("\n\n", $lines);
 }

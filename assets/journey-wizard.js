@@ -133,7 +133,7 @@
             });
             updateStepNav(name);
             if ($visible && $visible.length) {
-                var $h = $visible.find('h3').first();
+                var $h = $visible.find('h2, h3').first();
                 if ($h.length) {
                     $h.attr('tabindex', '-1');
                     $h.trigger('focus');

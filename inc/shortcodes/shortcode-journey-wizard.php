@@ -2,10 +2,27 @@
 /**
  * Shortcode: multi-step journey wizard [museum_journey_wizard]
  *
+ * Attributes: ticket_url, hero_image (cover URL for step 1), hero_subtitle (optional line under title).
+ *
  * @package Museum_Railway_Timetable
  */
 
 if (!defined('ABSPATH')) { exit; }
+
+/**
+ * Optional hero background: CSS custom property for cover image (see journey-wizard.css).
+ *
+ * @param string $hero_image Attachment URL or empty
+ * @return string Safe HTML attributes for the opening tag (leading space when non-empty; escaped).
+ */
+function MRT_journey_wizard_hero_bg_attr($hero_image) {
+    $hero_image = is_string($hero_image) ? trim($hero_image) : '';
+    if ($hero_image === '') {
+        return '';
+    }
+    $u = esc_url($hero_image);
+    return ' data-has-hero-bg="1" style="' . esc_attr('--mrt-hero-image: url("' . $u . '")') . '"';
+}
 
 /**
  * Output one station select field
@@ -35,60 +52,85 @@ function MRT_render_journey_wizard_station_select($id, $label, $stations, $selec
 }
 
 /**
- * Step 1: route and trip type
+ * Route step: station fields, trip type, primary action
  *
  * @param array<int> $stations Station IDs
- * @param string     $title_id Heading id (aria-labelledby target)
- * @param string     $panel_id Panel wrapper id
  * @return void
  */
-function MRT_render_journey_wizard_step_route(array $stations, $title_id, $panel_id) {
+function MRT_render_journey_wizard_route_form_fields(array $stations) {
+    MRT_render_journey_wizard_station_select(
+        'from',
+        __('From', 'museum-railway-timetable'),
+        $stations,
+        0,
+        __('Select station', 'museum-railway-timetable')
+    );
+    MRT_render_journey_wizard_station_select(
+        'to',
+        __('To', 'museum-railway-timetable'),
+        $stations,
+        0,
+        __('Select station', 'museum-railway-timetable')
+    );
     ?>
-    <div
-        class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
-        id="<?php echo esc_attr($panel_id); ?>"
-        data-wizard-step="route"
-        role="tabpanel"
-        aria-labelledby="<?php echo esc_attr($title_id); ?>"
-    >
-        <h3 class="mrt-heading mrt-heading--lg mrt-mb-1" id="<?php echo esc_attr($title_id); ?>">
-            <?php esc_html_e('Plan your trip', 'museum-railway-timetable'); ?>
-        </h3>
-        <div class="mrt-form-fields mrt-journey-wizard__route">
-            <?php
-            MRT_render_journey_wizard_station_select(
-                'from',
-                __('From', 'museum-railway-timetable'),
-                $stations,
-                0,
-                __('Select station', 'museum-railway-timetable')
-            );
-            MRT_render_journey_wizard_station_select(
-                'to',
-                __('To', 'museum-railway-timetable'),
-                $stations,
-                0,
-                __('Select station', 'museum-railway-timetable')
-            );
-            ?>
-            <fieldset class="mrt-form-field mrt-journey-wizard__trip-type">
-                <legend class="mrt-journey-wizard__legend"><?php esc_html_e('Trip type', 'museum-railway-timetable'); ?></legend>
-                <label class="mrt-journey-wizard__radio-label">
-                    <input type="radio" name="mrt_wizard_trip_type" value="single" checked>
-                    <?php esc_html_e('One way', 'museum-railway-timetable'); ?>
-                </label>
-                <label class="mrt-journey-wizard__radio-label">
-                    <input type="radio" name="mrt_wizard_trip_type" value="return">
-                    <?php esc_html_e('Return', 'museum-railway-timetable'); ?>
-                </label>
-            </fieldset>
-            <div class="mrt-form-field mrt-journey-wizard__actions">
-                <button type="button" class="mrt-btn mrt-btn--primary" data-wizard-next="route">
-                    <?php esc_html_e('Continue', 'museum-railway-timetable'); ?>
-                </button>
+    <fieldset class="mrt-form-field mrt-journey-wizard__trip-type">
+        <legend class="mrt-journey-wizard__legend"><?php esc_html_e('Trip type', 'museum-railway-timetable'); ?></legend>
+        <div class="mrt-journey-wizard__trip-type-toggle">
+            <label class="mrt-journey-wizard__radio-label">
+                <input type="radio" name="mrt_wizard_trip_type" value="single" checked>
+                <span class="mrt-journey-wizard__radio-text"><?php esc_html_e('One way', 'museum-railway-timetable'); ?></span>
+            </label>
+            <label class="mrt-journey-wizard__radio-label">
+                <input type="radio" name="mrt_wizard_trip_type" value="return">
+                <span class="mrt-journey-wizard__radio-text"><?php esc_html_e('Return', 'museum-railway-timetable'); ?></span>
+            </label>
+        </div>
+    </fieldset>
+    <div class="mrt-form-field mrt-journey-wizard__actions">
+        <button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta" data-wizard-next="route">
+            <?php esc_html_e('Search trip', 'museum-railway-timetable'); ?>
+        </button>
+    </div>
+    <?php
+}
+
+/**
+ * Step 1: route and trip type
+ *
+ * @param array<int>        $stations Station IDs
+ * @param string            $title_id Heading id (aria-labelledby target)
+ * @param string            $panel_id Panel wrapper id
+ * @param array<string,mixed> $hero Optional keys: image (url), subtitle (string)
+ * @return void
+ */
+function MRT_render_journey_wizard_step_route(array $stations, $title_id, $panel_id, array $hero = []) {
+    $hero_image = isset($hero['image']) && is_string($hero['image']) ? trim($hero['image']) : '';
+    $hero_subtitle = isset($hero['subtitle']) && is_string($hero['subtitle']) ? trim($hero['subtitle']) : '';
+    $hero_attr = MRT_journey_wizard_hero_bg_attr($hero_image);
+    ?>
+    <section class="mrt-journey-wizard__hero"<?php echo $hero_attr; ?>>
+        <div class="mrt-journey-wizard__hero-inner">
+            <div
+                class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
+                id="<?php echo esc_attr($panel_id); ?>"
+                data-wizard-step="route"
+                role="tabpanel"
+                aria-labelledby="<?php echo esc_attr($title_id); ?>"
+            >
+                <header class="mrt-journey-wizard__hero-head">
+                    <h2 class="mrt-journey-wizard__hero-title" id="<?php echo esc_attr($title_id); ?>">
+                        <?php esc_html_e('Search for your trip', 'museum-railway-timetable'); ?>
+                    </h2>
+                    <?php if ($hero_subtitle !== '') : ?>
+                        <p class="mrt-journey-wizard__hero-lede"><?php echo esc_html($hero_subtitle); ?></p>
+                    <?php endif; ?>
+                </header>
+                <div class="mrt-form-fields mrt-journey-wizard__route">
+                    <?php MRT_render_journey_wizard_route_form_fields($stations); ?>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
     <?php
 }
 
@@ -198,11 +240,19 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
  */
 function MRT_render_shortcode_journey_wizard($atts) {
     $atts = shortcode_atts(
-        ['ticket_url' => ''],
+        [
+            'ticket_url' => '',
+            'hero_image' => '',
+            'hero_subtitle' => '',
+        ],
         (array) $atts,
         'museum_journey_wizard'
     );
     $ticket_url = esc_url($atts['ticket_url']);
+    $hero = [
+        'image' => is_string($atts['hero_image']) ? $atts['hero_image'] : '',
+        'subtitle' => is_string($atts['hero_subtitle']) ? $atts['hero_subtitle'] : '',
+    ];
     $stations = MRT_get_all_stations();
     if (empty($stations)) {
         return '<p class="mrt-alert mrt-alert-info">' . esc_html__('No stations are available.', 'museum-railway-timetable') . '</p>';
@@ -236,7 +286,7 @@ function MRT_render_shortcode_journey_wizard($atts) {
         </nav>
         <div class="mrt-journey-wizard__panels">
             <?php
-            MRT_render_journey_wizard_step_route($stations, $ids['route_title'], $ids['route_panel']);
+            MRT_render_journey_wizard_step_route($stations, $ids['route_title'], $ids['route_panel'], $hero);
             MRT_render_journey_wizard_step_date($ids['date_title'], $ids['date_panel']);
             MRT_render_journey_wizard_step_placeholders(
                 $ids['out_title'],
