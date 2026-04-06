@@ -14,6 +14,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class JourneyPricesTest extends TestCase {
 
+    protected function tearDown(): void {
+        unset($GLOBALS['mrt_test_options']);
+        parent::tearDown();
+    }
+
     public function test_default_matrix_shape(): void {
         $m = MRT_get_default_price_matrix();
         self::assertSame(['single', 'return', 'day'], array_keys($m));
@@ -50,5 +55,39 @@ final class JourneyPricesTest extends TestCase {
     public function test_sanitize_non_array_input_returns_defaults(): void {
         $out = MRT_sanitize_price_matrix('bad');
         self::assertEquals(MRT_get_default_price_matrix(), $out);
+    }
+
+    public function test_get_price_matrix_invalid_option_returns_defaults(): void {
+        $GLOBALS['mrt_test_options'] = ['mrt_price_matrix' => 'not-array'];
+        $m = MRT_get_price_matrix();
+        self::assertEquals(MRT_get_default_price_matrix(), $m);
+    }
+
+    public function test_get_price_matrix_merges_stored(): void {
+        $GLOBALS['mrt_test_options'] = [
+            'mrt_price_matrix' => [
+                'single' => ['adult' => 100],
+            ],
+        ];
+        $m = MRT_get_price_matrix();
+        self::assertSame(100, $m['single']['adult']);
+        self::assertNull($m['return']['adult']);
+    }
+
+    public function test_get_prices_for_context_active_row(): void {
+        $GLOBALS['mrt_test_options'] = [
+            'mrt_price_matrix' => [
+                'return' => ['adult' => 200],
+            ],
+        ];
+        $ctx = MRT_get_prices_for_context(['trip' => 'return']);
+        self::assertSame('return', $ctx['active_ticket_type']);
+        self::assertSame(200, $ctx['active_row']['adult']);
+    }
+
+    public function test_get_prices_for_context_invalid_trip_falls_back_to_single(): void {
+        $ctx = MRT_get_prices_for_context(['trip' => 'unknown']);
+        self::assertSame('single', $ctx['active_ticket_type']);
+        self::assertSame($ctx['matrix']['single'], $ctx['active_row']);
     }
 }

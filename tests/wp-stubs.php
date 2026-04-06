@@ -103,6 +103,23 @@ if (!function_exists('get_post')) {
     }
 }
 
+if (!function_exists('get_option')) {
+    /**
+     * Test overrides via $GLOBALS['mrt_test_options'][ option_name ]
+     *
+     * @param string $option
+     * @param mixed  $default
+     * @return mixed
+     */
+    function get_option($option, $default = false) {
+        if (isset($GLOBALS['mrt_test_options']) && is_array($GLOBALS['mrt_test_options']) && array_key_exists($option, $GLOBALS['mrt_test_options'])) {
+            return $GLOBALS['mrt_test_options'][$option];
+        }
+
+        return $default;
+    }
+}
+
 if (!function_exists('get_post_meta')) {
     /**
      * Test overrides via $GLOBALS['mrt_test_post_meta'][ "{$id}|{$key}" ]

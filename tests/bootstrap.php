@@ -25,6 +25,7 @@ if (!function_exists('__')) {
 }
 
 require_once ABSPATH . 'inc/functions/helpers-datetime.php';
+require_once ABSPATH . 'inc/functions/services.php';
 require_once ABSPATH . 'inc/functions/helpers-services.php';
 require_once ABSPATH . 'inc/functions/journey-notice.php';
 require_once ABSPATH . 'inc/functions/journey-normalize.php';
