@@ -4,6 +4,8 @@ Princip: **domänlogik och testbara PHP-funktioner** byggs och stabiliseras för
 
 **Underlag:** [USER_STORIES_DATA_GAP_ANALYSIS.md](USER_STORIES_DATA_GAP_ANALYSIS.md), [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md), [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md), mockups i `docs/mockups/`.
 
+**Arkitektur (lager, testning, logik vs UI):** [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ---
 
 ## 0. Scope-beslut innan kod (kort)
