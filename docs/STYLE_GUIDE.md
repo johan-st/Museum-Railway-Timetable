@@ -100,11 +100,12 @@ Kodstandarder och clean code-principer för projektet.
 - **Nonces** – Skicka alltid med AJAX-anrop
 - **Felhantering** – Hantera nätverksfel och visa användarvänliga meddelanden
 
-### Datum och tid (delad JS)
-- **`assets/mrt-date-utils.js`** – Gemensamma hjälpare under `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för tid `HH:MM`)
-- **Lägg ny datum-/tidslogik här** om den kan återanvändas eller motsvarar befintliga metoder; undvik att duplicera i flera skript
-- **Enqueue** – Skriptet registreras i `inc/assets.php` och används som beroende till `mrt-admin-utils` och `mrt-journey-wizard` där det behövs
-- **`admin-utils.js`** – `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`
+### Delade util-moduler (`assets/mrt-*.js`)
+- **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar). **`admin-utils.js`** `escapeHtml` delegerar hit.
+- **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`). **`admin-utils.js`** `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`.
+- **`mrt-frontend-api.js`** – `window.MRTFrontendApi`: `getAjaxUrl`, `getNonce`, `msg` (strängar från `mrtFrontend`), `post` med valfri override av URL/nonce (t.ex. wizard). Laddas före `frontend.js`; används av `frontend.js` och kan användas av andra frontend-skript med samma beroenden.
+- **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
+- **Enqueue** – Registreras i `inc/assets.php` (admin: bl.a. `mrt-string-utils` före `mrt-admin-utils`; frontend: `mrt-string-utils` + `mrt-frontend-api` före `mrt-frontend`, wizard beror på string + frontend-api utöver befintliga).
 
 ---
 
@@ -152,7 +153,9 @@ museum-railway-timetable/
 ├── assets/
 │   ├── admin-*.css                # Uppdelad CSS (base, timetable, meta-boxes, dashboard, ui)
 │   ├── admin.js
-│   ├── mrt-date-utils.js          # MRTDateUtils (datum/tid, delad frontend + admin)
+│   ├── mrt-string-utils.js        # MRTStringUtils.escapeHtml
+│   ├── mrt-date-utils.js          # MRTDateUtils (datum/tid)
+│   ├── mrt-frontend-api.js        # MRTFrontendApi (AJAX + mrtFrontend-meddelanden)
 │   ├── admin-*.js                 # Moduler (utils, route-ui, stoptimes-ui, timetable-services-ui)
 │   └── frontend.js
 └── languages/

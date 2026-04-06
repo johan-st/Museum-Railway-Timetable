@@ -21,14 +21,7 @@
          * @returns {string}
          */
         escapeHtml: function(str) {
-            if (str == null) return '';
-            var s = String(str);
-            return s
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+            return window.MRTStringUtils.escapeHtml(str);
         },
 
         /**

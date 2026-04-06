@@ -6,6 +6,8 @@
 (function($) {
     'use strict';
 
+    var api = window.MRTFrontendApi;
+
     function prefersReducedMotion() {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
@@ -62,29 +64,29 @@
             }
 
             if (fromStation === toStation) {
-                showError($results, typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorSameStations : 'Please select different stations for departure and arrival.');
+                showError($results, api.msg('errorSameStations', 'Please select different stations for departure and arrival.'));
                 focusJourneyResultsHeading($results);
                 return;
             }
 
             // Show loading state
-            $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.searching : 'Searching...');
+            $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(api.msg('searching', 'Searching...'));
             $results.attr('aria-busy', 'true');
-            $results.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
+            $results.html('<div class="mrt-empty mrt-empty--loading">' + api.msg('loading', 'Loading...') + '</div>');
 
             // AJAX request
             $.ajax({
-                url: (typeof mrtFrontend !== 'undefined' && mrtFrontend.ajaxurl) ? mrtFrontend.ajaxurl : '/wp-admin/admin-ajax.php',
+                url: api.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_search_journey',
-                    nonce: (typeof mrtFrontend !== 'undefined' && mrtFrontend.nonce) ? mrtFrontend.nonce : '',
+                    nonce: api.getNonce(),
                     from_station: fromStation,
                     to_station: toStation,
                     date: date
                 },
                 success: function(response) {
-                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
+                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(api.msg('search', 'Search'));
 
                     if (response.success) {
                         $results.html(response.data.html);
@@ -100,13 +102,13 @@
                             history.pushState({}, '', url);
                         }
                     } else {
-                        showError($results, response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorSearching : 'Error searching for connections.'));
+                        showError($results, response.data.message || api.msg('errorSearching', 'Error searching for connections.'));
                         focusJourneyResultsHeading($results);
                     }
                 },
                 error: function() {
-                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
-                    showError($results, typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.');
+                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(api.msg('search', 'Search'));
+                    showError($results, api.msg('networkError', 'Network error. Please try again.'));
                     focusJourneyResultsHeading($results);
                 }
             });
@@ -140,7 +142,7 @@
 
             var wasHidden = $container.hasClass('mrt-hidden');
             $container.removeClass('mrt-hidden').attr('aria-busy', 'true');
-            $container.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
+            $container.html('<div class="mrt-empty mrt-empty--loading">' + api.msg('loading', 'Loading...') + '</div>');
             if (wasHidden) {
                 if (prefersReducedMotion()) {
                     $container.show();
@@ -151,11 +153,11 @@
 
             // AJAX request
             $.ajax({
-                url: (typeof mrtFrontend !== 'undefined' && mrtFrontend.ajaxurl) ? mrtFrontend.ajaxurl : '/wp-admin/admin-ajax.php',
+                url: api.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_get_timetable_for_date',
-                    nonce: (typeof mrtFrontend !== 'undefined' && mrtFrontend.nonce) ? mrtFrontend.nonce : '',
+                    nonce: api.getNonce(),
                     date: date,
                     train_type: trainType
                 },
@@ -164,13 +166,13 @@
                     if (response.success) {
                         $container.html(response.data.html);
                     } else {
-                        var msg = response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.');
+                        var msg = response.data.message || api.msg('errorLoading', 'Error loading timetable.');
                         showError($container, msg);
                     }
                     $container.trigger('focus');
                 },
                 error: function() {
-                    var msg = typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.';
+                    var msg = api.msg('networkError', 'Network error. Please try again.');
                     showError($container, msg);
                     $container.trigger('focus');
                 }
