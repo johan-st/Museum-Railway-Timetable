@@ -163,7 +163,10 @@ function MRT_get_components_demo_page_content() {
         '[museum_journey_planner]',
         '<h2>' . esc_html__('4. Journey wizard (multi-step)', 'museum-railway-timetable') . '</h2>',
         MRT_demo_mockup_caption(__('Mockup-based: full journey flow (V1–V5) with calendar, legs, optional return, prices in summary).', 'museum-railway-timetable')),
-        '[museum_journey_wizard hero_subtitle="Step 1 — route and trip type (mockup: sok-din-resa)."]',
+        sprintf(
+            '[museum_journey_wizard timetable="%s" hero_subtitle="Step 1 — route and trip type (mockup: sok-din-resa)."]',
+            esc_attr($tt)
+        ),
     ];
     return implode("\n\n", $lines);
 }

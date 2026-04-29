@@ -88,9 +88,32 @@ function MRT_render_grid_from_row($first_station, $services_list, $service_class
  */
 function MRT_render_grid_regular_station_rows($regular_stations, $services_list, $service_classes, $service_info) {
     $html = '';
-        foreach ($regular_stations as $station) {
+    $direction = MRT_timetable_grid_direction($regular_stations);
+    foreach ($regular_stations as $station) {
         $station_id = $station->ID;
         $station_row_label = $station->post_title;
+        if (MRT_station_row_has_arrival_departure_split($station_id, $services_list)) {
+            $html .= MRT_render_grid_station_time_row(
+                $station,
+                $services_list,
+                $service_classes,
+                $service_info,
+                'arrival',
+                sprintf(__('Till %s', 'museum-railway-timetable'), MRT_get_station_display_name($station)),
+                'mrt-to-row mrt-print-split-arrival-row'
+            );
+            $html .= MRT_render_print_mid_transfer_row($station, $services_list, $service_classes, $service_info);
+            $html .= MRT_render_grid_station_time_row(
+                $station,
+                $services_list,
+                $service_classes,
+                $service_info,
+                'departure',
+                sprintf(__('Från %s', 'museum-railway-timetable'), MRT_get_station_display_name($station)),
+                'mrt-from-row mrt-print-split-departure-row'
+            );
+            continue;
+        }
         ob_start();
         ?>
         <div class="mrt-grid-row">
@@ -113,8 +136,137 @@ function MRT_render_grid_regular_station_rows($regular_stations, $services_list,
         </div>
         <?php
         $html .= ob_get_clean();
+        if (MRT_should_render_print_bus_notice_after_station($station, $direction)) {
+            $html .= MRT_render_print_bus_notice_row($direction);
+        }
     }
     return $html;
+}
+
+/**
+ * Direction marker for source-like printed inserts.
+ *
+ * @param array<int, WP_Post> $regular_stations
+ */
+function MRT_timetable_grid_direction(array $regular_stations): string {
+    if ($regular_stations === []) {
+        return '';
+    }
+    $first = $regular_stations[0]->post_title ?? '';
+    return $first === 'Moga' ? 'inbound' : 'outbound';
+}
+
+/**
+ * Whether a station has distinct arrival/departure times in any service.
+ *
+ * @param int $station_id
+ * @param array<int, array<string, mixed>> $services_list
+ */
+function MRT_station_row_has_arrival_departure_split(int $station_id, array $services_list): bool {
+    foreach ($services_list as $service_data) {
+        $stop_time = $service_data['stop_times'][$station_id] ?? null;
+        if (!$stop_time) {
+            continue;
+        }
+        $arrival = $stop_time['arrival_time'] ?? '';
+        $departure = $stop_time['departure_time'] ?? '';
+        if ($arrival !== '' && $departure !== '' && $arrival !== $departure) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Render one synthetic arrival/departure row for a split station such as Marielund.
+ *
+ * @param WP_Post $station
+ * @param array<int, array<string, mixed>> $services_list
+ * @param array<int, array<int, string>> $service_classes
+ * @param array<int, array<string, mixed>> $service_info
+ */
+function MRT_render_grid_station_time_row($station, array $services_list, array $service_classes, array $service_info, string $time_key, string $label, string $row_class): string {
+    $station_id = $station->ID;
+    ob_start();
+    ?>
+    <div class="mrt-grid-row <?php echo esc_attr($row_class); ?>">
+        <div class="mrt-grid-cell mrt-station-col"><?php echo esc_html($label); ?></div>
+        <?php foreach ($services_list as $idx => $service_data):
+            $stop_time = $service_data['stop_times'][$station_id] ?? null;
+            $time_display = '—';
+            if ($stop_time && !empty($stop_time[$time_key . '_time'])) {
+                $time_display = MRT_format_time_display((string) $stop_time[$time_key . '_time']);
+            }
+            $label_parts = MRT_get_service_label_parts($service_info[$idx]);
+            $cell_aria = MRT_overview_grid_cell_aria_label($label, $label_parts, $time_display);
+        ?>
+            <div class="mrt-grid-cell mrt-time-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"
+                 data-service-number="<?php echo esc_attr($service_info[$idx]['service_number']); ?>"
+                 data-service-label="<?php echo esc_attr(implode(' ', $label_parts)); ?>"
+                 aria-label="<?php echo esc_attr($cell_aria); ?>">
+                <?php echo esc_html($time_display); ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+/**
+ * Source PDF train-change row at Marielund.
+ *
+ * @param WP_Post $station
+ * @param array<int, array<string, mixed>> $services_list
+ * @param array<int, array<int, string>> $service_classes
+ * @param array<int, array<string, mixed>> $service_info
+ */
+function MRT_render_print_mid_transfer_row($station, array $services_list, array $service_classes, array $service_info): string {
+    if (($station->post_title ?? '') !== 'Marielund') {
+        return '';
+    }
+    $map = [
+        '71' => ['type' => 'Dieseltåg', 'service' => '61'],
+        '63' => ['type' => 'Rälsbuss', 'service' => '97'],
+        '60' => ['type' => 'Ångtåg', 'service' => '74'],
+        '96' => ['type' => 'Dieseltåg', 'service' => '64'],
+    ];
+    ob_start();
+    ?>
+    <div class="mrt-grid-row mrt-print-transfer-inline-row">
+        <div class="mrt-grid-cell mrt-station-col mrt-transfer-station-col"><?php esc_html_e('Tågbyte:', 'museum-railway-timetable'); ?></div>
+        <?php foreach ($services_list as $idx => $service_data):
+            $service_number = (string) ($service_info[$idx]['service_number'] ?? '');
+            $transfer = $map[$service_number] ?? null;
+        ?>
+            <div class="mrt-grid-cell mrt-time-cell mrt-print-transfer-inline-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>">
+                <?php if ($transfer): ?>
+                    <span class="mrt-print-transfer-inline-type"><?php echo esc_html($transfer['type']); ?></span>
+                    <span class="mrt-print-transfer-inline-number"><?php echo esc_html($transfer['service']); ?></span>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+function MRT_should_render_print_bus_notice_after_station($station, string $direction): bool {
+    $name = $station->post_title ?? '';
+    return ($direction === 'outbound' && $name === 'Selknä') || ($direction === 'inbound' && $name === 'Löt');
+}
+
+function MRT_render_print_bus_notice_row(string $direction): string {
+    $label = $direction === 'inbound'
+        ? __('Från Fjällnora* Till Selknä*', 'museum-railway-timetable')
+        : __('Från Selknä* Till Fjällnora*', 'museum-railway-timetable');
+    ob_start();
+    ?>
+    <div class="mrt-grid-row mrt-print-bus-notice-row">
+        <div class="mrt-grid-cell mrt-station-col mrt-print-bus-notice-label"><?php echo esc_html($label); ?></div>
+        <div class="mrt-grid-cell mrt-print-bus-notice-message"><?php esc_html_e('INGA BUSSANSLUTNINGAR TILL/FRÅN FJÄLLNORA', 'museum-railway-timetable'); ?></div>
+    </div>
+    <?php
+    return ob_get_clean();
 }
 
 /**

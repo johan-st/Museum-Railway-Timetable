@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) { exit; }
  * @param array<string, mixed> $grouped_services From MRT_group_services_by_route
  */
 function MRT_render_timetable_groups_inner_html(array $grouped_services, string $dateYmd): string {
+    usort($grouped_services, 'MRT_sort_timetable_groups_source_order');
     $group_count = count($grouped_services);
     $group_index = 0;
     ob_start();
@@ -24,6 +25,22 @@ function MRT_render_timetable_groups_inner_html(array $grouped_services, string 
         }
     }
     return ob_get_clean();
+}
+
+/**
+ * Keep the printed green timetable in source order: Uppsala → Faringe before the return trip.
+ *
+ * @param array<string, mixed> $a
+ * @param array<string, mixed> $b
+ */
+function MRT_sort_timetable_groups_source_order(array $a, array $b): int {
+    $a_stations = $a['stations'] ?? [];
+    $b_stations = $b['stations'] ?? [];
+    $a_first = is_array($a_stations) && $a_stations !== [] ? (int) $a_stations[0] : 0;
+    $b_first = is_array($b_stations) && $b_stations !== [] ? (int) $b_stations[0] : 0;
+    $a_order = $a_first ? (int) get_post_meta($a_first, 'mrt_display_order', true) : 0;
+    $b_order = $b_first ? (int) get_post_meta($b_first, 'mrt_display_order', true) : 0;
+    return $a_order <=> $b_order;
 }
 
 /**
@@ -67,17 +84,55 @@ function MRT_get_services_by_post_ids(array $service_ids): array {
 
 function MRT_timetable_type_banner_html(string $timetable_type): string {
     $type_labels = [
-        'green' => 'GRÖN TIDTABELL',
-        'red' => 'RÖD TIDTABELL',
-        'yellow' => 'GUL TIDTABELL',
-        'orange' => 'ORANGE TIDTABELL',
+        'green' => ['title' => 'Grön tidtabell', 'meta' => 'Lördagar'],
+        'red' => ['title' => 'Röd tidtabell', 'meta' => ''],
+        'yellow' => ['title' => 'Gul tidtabell', 'meta' => ''],
+        'orange' => ['title' => 'Orange tidtabell', 'meta' => ''],
     ];
-    $timetable_type_label = $type_labels[$timetable_type] ?? '';
-    if ($timetable_type_label === '') {
+    $timetable_type_label = $type_labels[$timetable_type] ?? null;
+    if (!$timetable_type_label) {
         return '';
     }
-    return '<div class="mrt-heading mrt-heading--lg mrt-font-bold mrt-text-primary mrt-mb-sm mrt-py-sm mrt-border-b-2">' .
-        esc_html($timetable_type_label) . '</div>';
+    return sprintf(
+        '<div class="mrt-heading mrt-heading--lg mrt-font-bold mrt-text-primary mrt-mb-sm mrt-py-sm mrt-border-b-2 mrt-timetable-type-banner mrt-timetable-type-banner--%1$s"><span class="mrt-timetable-type-banner__title">%2$s</span>%3$s</div>',
+        esc_attr($timetable_type),
+        esc_html($timetable_type_label['title']),
+        $timetable_type_label['meta'] !== ''
+            ? '<span class="mrt-timetable-type-banner__meta">' . esc_html($timetable_type_label['meta']) . '</span>'
+            : ''
+    );
+}
+
+/**
+ * Printed timetable key matching the source PDF.
+ */
+function MRT_timetable_print_key_html(): string {
+    ob_start();
+    ?>
+    <section class="mrt-timetable-print-key" aria-label="<?php esc_attr_e('Förklaringar', 'museum-railway-timetable'); ?>">
+        <h3 class="mrt-timetable-print-key__title"><?php esc_html_e('Förklaringar', 'museum-railway-timetable'); ?></h3>
+        <div class="mrt-timetable-print-key__grid">
+            <div class="mrt-timetable-print-key__mark">X</div>
+            <div class="mrt-timetable-print-key__text">
+                <?php esc_html_e('Tåget stannar endast om det finns av- eller påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Vill du stiga av, säg till konduktören i god tid. Observera att avgångstiden är ungefärlig.', 'museum-railway-timetable'); ?>
+            </div>
+            <div class="mrt-timetable-print-key__mark">P</div>
+            <div class="mrt-timetable-print-key__text">
+                <?php esc_html_e('Tåget stannar endast om det finns påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Observera att avgångstiden är ungefärlig.', 'museum-railway-timetable'); ?>
+            </div>
+            <div class="mrt-timetable-print-key__mark mrt-timetable-print-key__mark--bus">*Buss</div>
+            <div class="mrt-timetable-print-key__text mrt-timetable-print-key__text--bus">
+                <?php esc_html_e('Inga anslutningsbussar går denna dag.', 'museum-railway-timetable'); ?>
+            </div>
+            <div class="mrt-timetable-print-key__mark mrt-timetable-print-key__mark--express">Thun’s-expressen</div>
+            <div class="mrt-timetable-print-key__text mrt-timetable-print-key__text--express">
+                <?php esc_html_e('Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe.', 'museum-railway-timetable'); ?>
+            </div>
+        </div>
+        <p class="mrt-timetable-print-key__reservation"><?php esc_html_e('Med reservation för ändring av tågtyp.', 'museum-railway-timetable'); ?></p>
+    </section>
+    <?php
+    return ob_get_clean();
 }
 
 /**
@@ -125,14 +180,15 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     $tt = (string) get_post_meta($timetable_id, 'mrt_timetable_type', true);
 
     return sprintf(
-        '<div class="mrt-timetable-overview" role="region" aria-label="%s">%s%s</div>',
+        '<div class="mrt-timetable-overview" role="region" aria-label="%s">%s%s%s</div>',
         esc_attr(sprintf(
             /* translators: %s: timetable post title */
             __('Timetable overview: %s', 'museum-railway-timetable'),
             get_the_title($timetable_id)
         )),
         MRT_timetable_type_banner_html($tt),
-        $inner
+        $inner,
+        MRT_timetable_print_key_html()
     );
 }
 

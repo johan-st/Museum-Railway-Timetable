@@ -2,7 +2,8 @@
 /**
  * Shortcode: multi-step journey wizard [museum_journey_wizard]
  *
- * Attributes: ticket_url, hero_image (cover URL for step 1), hero_subtitle (optional line under title).
+ * Attributes: ticket_url, hero_image (cover URL for step 1), hero_subtitle (optional line under title),
+ * timetable_id / timetable (optional printed timetable shown below the search form).
  *
  * @package Museum_Railway_Timetable
  */
@@ -97,19 +98,70 @@ function MRT_render_journey_wizard_route_form_fields(array $stations) {
 }
 
 /**
+ * Resolve a timetable for the optional printed overview in the wizard.
+ *
+ * @param array<string,mixed> $atts Parsed shortcode attributes
+ * @return int Timetable post ID or 0
+ */
+function MRT_journey_wizard_resolve_timetable_id(array $atts): int {
+    $timetable_id = isset($atts['timetable_id']) ? intval($atts['timetable_id']) : 0;
+    if ($timetable_id > 0) {
+        return $timetable_id;
+    }
+
+    $timetable_title = isset($atts['timetable']) && is_string($atts['timetable']) ? trim($atts['timetable']) : '';
+    if ($timetable_title === '') {
+        return 0;
+    }
+
+    $timetable_post = MRT_get_post_by_title($timetable_title, 'mrt_timetable');
+    return $timetable_post ? intval($timetable_post->ID) : 0;
+}
+
+/**
+ * Optional full timetable block for the wizard first step.
+ */
+function MRT_render_journey_wizard_timetable_drawer(int $timetable_id): void {
+    if ($timetable_id <= 0) {
+        return;
+    }
+    ?>
+    <details class="mrt-journey-wizard__timetable">
+        <summary class="mrt-journey-wizard__timetable-summary">
+            <?php esc_html_e('Visa tidtabell', 'museum-railway-timetable'); ?>
+        </summary>
+        <div class="mrt-journey-wizard__timetable-body">
+            <?php echo MRT_render_timetable_overview($timetable_id); ?>
+        </div>
+    </details>
+    <?php
+}
+
+/**
  * Step 1: route and trip type
  *
  * @param array<int>        $stations Station IDs
  * @param string            $title_id Heading id (aria-labelledby target)
  * @param string            $panel_id Panel wrapper id
  * @param array<string,mixed> $hero Optional keys: image (url), subtitle (string)
+ * @param int               $timetable_id Optional timetable overview post ID
  * @return void
  */
-function MRT_render_journey_wizard_step_route(array $stations, $title_id, $panel_id, array $hero = []) {
+function MRT_render_journey_wizard_step_route(
+    array $stations,
+    $title_id,
+    $panel_id,
+    array $hero = [],
+    int $timetable_id = 0
+) {
     $hero_subtitle = isset($hero['subtitle']) && is_string($hero['subtitle']) ? trim($hero['subtitle']) : '';
+    $panel_class = 'mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel';
+    if ($timetable_id > 0) {
+        $panel_class .= ' mrt-journey-wizard__search-panel--with-timetable';
+    }
     ?>
     <div
-        class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
+        class="<?php echo esc_attr($panel_class); ?>"
         id="<?php echo esc_attr($panel_id); ?>"
         data-wizard-step="route"
         role="region"
@@ -126,6 +178,7 @@ function MRT_render_journey_wizard_step_route(array $stations, $title_id, $panel
         <div class="mrt-form-fields mrt-journey-wizard__route">
             <?php MRT_render_journey_wizard_route_form_fields($stations); ?>
         </div>
+        <?php MRT_render_journey_wizard_timetable_drawer($timetable_id); ?>
     </div>
     <?php
 }
@@ -254,7 +307,7 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
 }
 
 /**
- * @return array{ticket_url: string, hero: array{image: string, subtitle: string}}
+ * @return array{ticket_url: string, hero: array{image: string, subtitle: string}, timetable_id: int}
  */
 function MRT_journey_wizard_parse_shortcode_atts($atts): array {
     $atts = shortcode_atts(
@@ -262,10 +315,14 @@ function MRT_journey_wizard_parse_shortcode_atts($atts): array {
             'ticket_url' => '',
             'hero_image' => '',
             'hero_subtitle' => '',
+            'timetable_id' => '',
+            'timetable' => '',
         ],
         (array) $atts,
         'museum_journey_wizard'
     );
+
+    $timetable_id = MRT_journey_wizard_resolve_timetable_id($atts);
 
     return [
         'ticket_url' => esc_url($atts['ticket_url']),
@@ -273,6 +330,7 @@ function MRT_journey_wizard_parse_shortcode_atts($atts): array {
             'image' => is_string($atts['hero_image']) ? $atts['hero_image'] : '',
             'subtitle' => is_string($atts['hero_subtitle']) ? $atts['hero_subtitle'] : '',
         ],
+        'timetable_id' => $timetable_id,
     ];
 }
 
@@ -304,6 +362,7 @@ function MRT_render_shortcode_journey_wizard($atts) {
     $parsed = MRT_journey_wizard_parse_shortcode_atts($atts);
     $ticket_url = $parsed['ticket_url'];
     $hero = $parsed['hero'];
+    $timetable_id = isset($parsed['timetable_id']) ? intval($parsed['timetable_id']) : 0;
     $hero_image = isset($hero['image']) && is_string($hero['image']) ? trim($hero['image']) : '';
     $hero_attr = MRT_journey_wizard_hero_bg_attr($hero_image);
 
@@ -331,7 +390,13 @@ function MRT_render_shortcode_journey_wizard($atts) {
                 </nav>
                 <div class="mrt-journey-wizard__panels">
                     <?php
-                    MRT_render_journey_wizard_step_route($stations, $ids['route_title'], $ids['route_panel'], $hero);
+                    MRT_render_journey_wizard_step_route(
+                        $stations,
+                        $ids['route_title'],
+                        $ids['route_panel'],
+                        $hero,
+                        $timetable_id
+                    );
                     MRT_render_journey_wizard_step_date($ids['date_title'], $ids['date_panel']);
                     MRT_render_journey_wizard_step_placeholders(
                         $ids['out_title'],

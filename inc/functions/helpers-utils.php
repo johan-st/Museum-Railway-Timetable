@@ -139,28 +139,45 @@ function MRT_log_error(string $message): void {
  * Returns emoji or HTML based on train type name/slug
  *
  * @param WP_Term|null $train_type Train type term object
- * @return string Icon (emoji or empty string)
+ * @return string Icon HTML or empty string
  */
 function MRT_get_train_type_icon(?WP_Term $train_type): string {
     if (!$train_type) {
         return '';
     }
-    
+
     $name_lower = strtolower($train_type->name);
     $slug_lower = strtolower($train_type->slug);
-    
+
     // Match common train types
     if (strpos($name_lower, 'ång') !== false || strpos($slug_lower, 'steam') !== false || strpos($slug_lower, 'ang') !== false) {
-        return '🚂'; // Steam train
+        return MRT_train_type_symbol_svg('steam');
     } elseif (strpos($name_lower, 'diesel') !== false || strpos($slug_lower, 'diesel') !== false) {
-        return '🚃'; // Diesel train
+        return MRT_train_type_symbol_svg('diesel');
     } elseif (strpos($name_lower, 'elektrisk') !== false || strpos($name_lower, 'electric') !== false || strpos($slug_lower, 'electric') !== false) {
-        return '🚄'; // Electric train
+        return MRT_train_type_symbol_svg('diesel');
     } elseif (strpos($name_lower, 'rälsbuss') !== false || strpos($name_lower, 'railbus') !== false || strpos($slug_lower, 'bus') !== false || strpos($slug_lower, 'buss') !== false) {
-        return '🚌'; // Rail bus
+        return MRT_train_type_symbol_svg('railbus');
     }
-    
-    return '🚆'; // Default train icon
+
+    return MRT_train_type_symbol_svg('diesel');
+}
+
+/**
+ * Printed timetable train symbol SVG.
+ *
+ * @param string $type steam|diesel|railbus
+ */
+function MRT_train_type_symbol_svg(string $type): string {
+    if ($type === 'railbus') {
+        return '<svg class="mrt-train-symbol mrt-train-symbol--railbus" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M11 8h40c4 0 7 3 7 7v2H6v-4c0-3 2-5 5-5Z" fill="currentColor"/><path d="M18 4h24c5 0 9 3 11 7H8c2-4 5-7 10-7Z" fill="currentColor"/><circle cx="18" cy="19" r="4" fill="currentColor"/><circle cx="47" cy="19" r="4" fill="currentColor"/><rect x="18" y="7" width="8" height="4" fill="#fff"/><rect x="30" y="7" width="8" height="4" fill="#fff"/></svg>';
+    }
+
+    if ($type === 'steam') {
+        return '<svg class="mrt-train-symbol mrt-train-symbol--steam" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M8 12h27v7H8z" fill="currentColor"/><path d="M36 8h9l5 4h6v7H36z" fill="currentColor"/><rect x="14" y="6" width="5" height="6" fill="currentColor"/><rect x="23" y="4" width="4" height="8" fill="currentColor"/><path d="M27 2h8v4h-8z" fill="currentColor"/><circle cx="14" cy="20" r="3" fill="currentColor"/><circle cx="26" cy="20" r="3" fill="currentColor"/><circle cx="44" cy="20" r="3" fill="currentColor"/><circle cx="55" cy="20" r="3" fill="currentColor"/></svg>';
+    }
+
+    return '<svg class="mrt-train-symbol mrt-train-symbol--diesel" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M9 7h46c3 0 5 2 5 5v6H4v-6c0-3 2-5 5-5Z" fill="currentColor"/><rect x="14" y="3" width="10" height="4" fill="currentColor"/><rect x="30" y="3" width="12" height="4" fill="currentColor"/><rect x="13" y="10" width="8" height="4" fill="#fff"/><rect x="25" y="10" width="8" height="4" fill="#fff"/><rect x="37" y="10" width="8" height="4" fill="#fff"/><circle cx="18" cy="20" r="3" fill="currentColor"/><circle cx="46" cy="20" r="3" fill="currentColor"/></svg>';
 }
 
 /**

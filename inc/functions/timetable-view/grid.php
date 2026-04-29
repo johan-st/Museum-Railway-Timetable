@@ -35,6 +35,24 @@ function MRT_render_timetable_table_body($station_posts, $services_list, $servic
 }
 
 /**
+ * Sort service columns by time at the first station, matching printed timetables.
+ *
+ * @param array<int, array<string, mixed>> $services_list
+ * @param int $first_station_id
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_sort_timetable_services_by_first_station_time(array $services_list, int $first_station_id): array {
+    usort($services_list, function($a, $b) use ($first_station_id) {
+        $a_stop = $a['stop_times'][$first_station_id] ?? [];
+        $b_stop = $b['stop_times'][$first_station_id] ?? [];
+        $a_time = MRT_stop_effective_departure(is_array($a_stop) ? $a_stop : []);
+        $b_time = MRT_stop_effective_departure(is_array($b_stop) ? $b_stop : []);
+        return strcmp($a_time, $b_time);
+    });
+    return $services_list;
+}
+
+/**
  * Render a single timetable group (route)
  */
 function MRT_render_timetable_group($group, $dateYmd) {
@@ -57,6 +75,9 @@ function MRT_render_timetable_group($group, $dateYmd) {
     $route_label = MRT_get_route_label($route, $direction, $services_list, $station_posts);
     $from_station = !empty($station_posts) ? $station_posts[0] : null;
     $to_station = !empty($station_posts) ? end($station_posts) : null;
+    if ($from_station) {
+        $services_list = MRT_sort_timetable_services_by_first_station_time($services_list, (int) $from_station->ID);
+    }
 
     $prepared = MRT_prepare_service_info($services_list, $dateYmd);
     $service_classes = $prepared['service_classes'];
