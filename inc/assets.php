@@ -364,6 +364,9 @@ function MRT_frontend_shortcode_flags_from_post(): array {
     if (!$has_shortcode) {
         $has_shortcode = (bool) apply_filters('mrt_should_enqueue_frontend_assets', false);
     }
+    if ($has_journey_wizard) {
+        $has_overview_shortcode = true;
+    }
     $has_overview_shortcode = (bool) apply_filters('mrt_should_enqueue_frontend_overview_css', $has_overview_shortcode);
 
     return [

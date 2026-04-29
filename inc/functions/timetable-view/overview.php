@@ -67,17 +67,23 @@ function MRT_get_services_by_post_ids(array $service_ids): array {
 
 function MRT_timetable_type_banner_html(string $timetable_type): string {
     $type_labels = [
-        'green' => 'GRÖN TIDTABELL',
-        'red' => 'RÖD TIDTABELL',
-        'yellow' => 'GUL TIDTABELL',
-        'orange' => 'ORANGE TIDTABELL',
+        'green' => ['title' => 'Grön tidtabell', 'meta' => 'Lördagar'],
+        'red' => ['title' => 'Röd tidtabell', 'meta' => ''],
+        'yellow' => ['title' => 'Gul tidtabell', 'meta' => ''],
+        'orange' => ['title' => 'Orange tidtabell', 'meta' => ''],
     ];
-    $timetable_type_label = $type_labels[$timetable_type] ?? '';
-    if ($timetable_type_label === '') {
+    $timetable_type_label = $type_labels[$timetable_type] ?? null;
+    if (!$timetable_type_label) {
         return '';
     }
-    return '<div class="mrt-heading mrt-heading--lg mrt-font-bold mrt-text-primary mrt-mb-sm mrt-py-sm mrt-border-b-2">' .
-        esc_html($timetable_type_label) . '</div>';
+    return sprintf(
+        '<div class="mrt-heading mrt-heading--lg mrt-font-bold mrt-text-primary mrt-mb-sm mrt-py-sm mrt-border-b-2 mrt-timetable-type-banner mrt-timetable-type-banner--%1$s"><span class="mrt-timetable-type-banner__title">%2$s</span>%3$s</div>',
+        esc_attr($timetable_type),
+        esc_html($timetable_type_label['title']),
+        $timetable_type_label['meta'] !== ''
+            ? '<span class="mrt-timetable-type-banner__meta">' . esc_html($timetable_type_label['meta']) . '</span>'
+            : ''
+    );
 }
 
 /**
