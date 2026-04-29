@@ -8,11 +8,12 @@
 .mrt-table {
     width: 100%;
     border-collapse: collapse;
+    background: var(--mrt-paper);
 }
 
 .mrt-table th,
 .mrt-table td {
-    border: 1px solid var(--mrt-border-default);
+    border: 2px solid var(--mrt-border-default);
     padding: var(--mrt-cell-padding);
     text-align: left;
 }
@@ -24,8 +25,12 @@
 
 .mrt-table th,
 .mrt-stoptimes-table th {
-    background: linear-gradient(to bottom, var(--mrt-bg-lighter) 0%, var(--mrt-bg-light) 100%);
-    font-weight: 700;
+    background: var(--mrt-ink);
+    color: var(--mrt-paper);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-journey-table__caption {

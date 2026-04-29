@@ -15,8 +15,8 @@
 .mrt-grid-cell .mrt-train-type {
     font-size: var(--mrt-font-xs);
     font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     display: block;
     line-height: 1.3;
 }
@@ -27,6 +27,7 @@
     display: block;
     line-height: 1.2;
     margin-top: var(--mrt-spacing-xs);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 .mrt-grid-cell .mrt-special-label {
@@ -80,6 +81,7 @@
     color: var(--mrt-text-primary);
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
     background: var(--mrt-overlay-white-80);
+    border: 1px solid var(--mrt-line);
     border-radius: var(--mrt-radius-sm);
     display: inline-block;
     min-width: 32px;
@@ -88,10 +90,12 @@
 .mrt-special-label {
     font-size: var(--mrt-font-xs);
     color: var(--mrt-text-tertiary);
-    font-style: italic;
+    font-style: normal;
     margin-top: var(--mrt-spacing-xs);
     padding: var(--mrt-spacing-xs);
     background: var(--mrt-special-bg-subtle);
     border-radius: var(--mrt-radius-xs);
-    font-weight: 500;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }

@@ -5,18 +5,27 @@
  */
 
 .mrt-journey-wizard {
-    --mrt-jw-green: #1c650f;
-    --mrt-jw-green-dark: #15530b;
-    --mrt-jw-olive: #858814;
-    --mrt-jw-yellow: #e3d449;
-    --mrt-jw-orange: #f39813;
-    --mrt-jw-surface: #ffffff;
-    --mrt-jw-surface-muted: #d5d5d5;
-    --mrt-jw-text: #141414;
-    --mrt-jw-border: #cfcfcf;
-    --mrt-jw-focus: #fff4a3;
+    --mrt-jw-paper: #f4f4f0;
+    --mrt-jw-paper-warm: #eae8e3;
+    --mrt-jw-ink: #050505;
+    --mrt-jw-ink-soft: #242424;
+    --mrt-jw-red: #e61919;
+    --mrt-jw-line: #050505;
+    --mrt-jw-line-muted: #9c9a94;
+    --mrt-jw-green: var(--mrt-jw-ink);
+    --mrt-jw-green-dark: var(--mrt-jw-ink);
+    --mrt-jw-olive: var(--mrt-jw-red);
+    --mrt-jw-yellow: var(--mrt-jw-red);
+    --mrt-jw-orange: var(--mrt-jw-red);
+    --mrt-jw-surface: var(--mrt-jw-paper);
+    --mrt-jw-surface-muted: var(--mrt-jw-paper-warm);
+    --mrt-jw-text: var(--mrt-jw-ink);
+    --mrt-jw-border: var(--mrt-jw-line);
+    --mrt-jw-focus: var(--mrt-jw-red);
     color: var(--mrt-jw-text);
     overflow-x: hidden;
+    background: var(--mrt-jw-paper);
+    font-family: Inter, Arial, Helvetica, sans-serif;
 }
 
 .mrt-journey-wizard .mrt-sr-only {
@@ -49,15 +58,16 @@
     min-height: 76dvh;
     box-sizing: border-box;
     padding: clamp(3rem, 8vw, 7rem) 1rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(17, 17, 17, 0.22)),
-        linear-gradient(135deg, #7ca7d8 0%, #d6e7f6 52%, #8a3d24 53%, #2d1c17 100%);
+    background: var(--mrt-jw-paper);
     background-size: cover;
     background-position: center;
+    border-bottom: 3px solid var(--mrt-jw-line);
 }
 
 .mrt-journey-wizard__hero[data-has-hero-bg="1"] {
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(17, 17, 17, 0.16)),
-        var(--mrt-hero-image);
+    background-color: var(--mrt-jw-paper);
+    background-image: var(--mrt-hero-image);
+    background-blend-mode: luminosity;
 }
 
 .mrt-journey-wizard__hero-inner {
@@ -66,35 +76,38 @@
 }
 
 .mrt-journey-wizard__nav {
-    margin: 0 0 0.75rem;
+    margin: 0 0 1rem;
 }
 
 .mrt-journey-wizard__steps {
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
-    justify-content: center;
+    justify-content: flex-start;
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
 .mrt-journey-wizard__steps li {
-    padding: 0.25rem 0.55rem;
-    color: rgba(255, 255, 255, 0.78);
-    background: rgba(21, 83, 11, 0.62);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    font-size: 0.8125rem;
-    font-weight: 700;
+    padding: 0.3rem 0.65rem;
+    color: var(--mrt-jw-ink);
+    background: var(--mrt-jw-paper);
+    border: 1px solid var(--mrt-jw-line);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .mrt-journey-wizard__steps li.is-active {
-    color: #151515;
-    background: var(--mrt-jw-yellow);
+    color: var(--mrt-jw-paper);
+    background: var(--mrt-jw-red);
 }
 
 .mrt-journey-wizard__steps li.is-done {
-    color: var(--mrt-jw-yellow);
+    color: var(--mrt-jw-red);
 }
 
 .mrt-journey-wizard__errors {
@@ -106,8 +119,9 @@
     width: min(100%, 46rem);
     margin-inline: auto;
     padding: clamp(1.5rem, 4vw, 2.75rem);
-    background: var(--mrt-jw-green-dark);
-    color: #ffffff;
+    background: var(--mrt-jw-paper);
+    color: var(--mrt-jw-ink);
+    border: 3px solid var(--mrt-jw-line);
     box-sizing: border-box;
 }
 
@@ -123,27 +137,37 @@
 
 .mrt-journey-wizard__hero-head {
     margin-bottom: 1.6rem;
-    text-align: center;
+    text-align: left;
 }
 
 .mrt-journey-wizard__hero-title,
 .mrt-journey-wizard__step-title {
     margin: 0;
-    color: #ffffff;
-    font-size: clamp(2rem, 4vw, 2.6rem);
-    line-height: 1.08;
-    font-weight: 800;
+    color: var(--mrt-jw-ink);
+    font-size: clamp(3.1rem, 11vw, 8.8rem);
+    line-height: 0.86;
+    font-weight: 900;
     letter-spacing: 0;
+    text-transform: uppercase;
 }
 
 .mrt-journey-wizard__step-title {
     margin: 1.4rem 0 1.3rem;
     text-align: left;
+    border-top: 3px solid var(--mrt-jw-line);
+    padding-top: 0.65rem;
 }
 
 .mrt-journey-wizard__hero-lede {
     margin: 0.55rem 0 0;
-    color: rgba(255, 255, 255, 0.88);
+    max-width: 38rem;
+    color: var(--mrt-jw-ink-soft);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
+    text-transform: uppercase;
 }
 
 .mrt-journey-wizard__route {
@@ -158,15 +182,18 @@
 .mrt-journey-wizard__search-panel label {
     display: block;
     margin-bottom: 0.35rem;
-    color: #ffffff;
-    font-size: 1.15rem;
+    color: var(--mrt-jw-ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.82rem;
     font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .mrt-journey-wizard__search-panel select {
     width: 100%;
     min-height: 2.9rem;
-    border: 0;
+    border: 2px solid var(--mrt-jw-line);
     border-radius: 0;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
@@ -184,7 +211,7 @@
 .mrt-journey-wizard__trip-type-toggle {
     display: inline-flex;
     align-items: stretch;
-    border: 1px solid rgba(20, 20, 20, 0.24);
+    border: 2px solid var(--mrt-jw-line);
 }
 
 .mrt-journey-wizard__radio-label {
@@ -198,6 +225,10 @@
     background: var(--mrt-jw-surface-muted);
     color: var(--mrt-jw-text);
     font-size: 0.95rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     line-height: 1;
     cursor: pointer;
 }
@@ -215,7 +246,8 @@
 }
 
 .mrt-journey-wizard__radio-label:has(input:checked) {
-    background: var(--mrt-jw-yellow);
+    background: var(--mrt-jw-red);
+    color: var(--mrt-jw-paper);
 }
 
 .mrt-journey-wizard__radio-label:focus-within,
@@ -713,12 +745,14 @@
     justify-content: center;
     min-height: 2.45rem;
     padding: 0.35rem 0.9rem;
-    border: 0;
+    border: 2px solid var(--mrt-jw-red);
     border-radius: 0;
     background: var(--mrt-jw-yellow);
-    color: #151515;
+    color: var(--mrt-jw-paper);
     font-size: 1.08rem;
     font-weight: 900;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    letter-spacing: 0.08em;
     line-height: 1;
     text-transform: uppercase;
     text-decoration: none;
@@ -726,9 +760,10 @@
 }
 
 .mrt-journey-wizard__btn-select {
-    background: var(--mrt-jw-green-dark);
-    color: var(--mrt-jw-yellow);
-    text-transform: none;
+    background: var(--mrt-jw-ink);
+    border-color: var(--mrt-jw-ink);
+    color: var(--mrt-jw-paper);
+    text-transform: uppercase;
 }
 
 .mrt-journey-wizard__cta:active,
@@ -746,7 +781,7 @@
     border: 0;
     padding: 0;
     background: transparent;
-    color: var(--mrt-jw-yellow);
+    color: var(--mrt-jw-red);
     font-size: 1.35rem;
     font-weight: 800;
     cursor: pointer;
@@ -754,7 +789,7 @@
 
 .mrt-journey-wizard__context {
     margin: 0;
-    color: #ffffff;
+    color: var(--mrt-jw-ink);
     white-space: pre-line;
     font-size: 1.28rem;
     line-height: 1.35;
@@ -768,6 +803,8 @@
     padding: 1.2rem 1.8rem 0;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
+    border: 2px solid var(--mrt-jw-line);
+    border-bottom: 0;
 }
 
 .mrt-journey-wizard__cal-prev,
@@ -775,7 +812,7 @@
     border: 0;
     padding: 0;
     background: transparent;
-    color: #a8a8a8;
+    color: var(--mrt-jw-red);
     font-size: 3rem;
     line-height: 1;
     cursor: pointer;
@@ -785,13 +822,15 @@
     font-size: clamp(1.8rem, 4vw, 2.4rem);
     line-height: 1;
     font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
 .mrt-journey-wizard__cal-today {
-    border: 2px solid #b8b8b8;
+    border: 2px solid var(--mrt-jw-line);
     padding: 0.2rem 0.55rem;
     background: transparent;
-    color: #5a5a5a;
+    color: var(--mrt-jw-ink);
     font-size: 1.25rem;
     cursor: pointer;
 }
@@ -800,6 +839,8 @@
     padding: 1.2rem 1.8rem 3rem;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
+    border: 2px solid var(--mrt-jw-line);
+    border-top: 0;
 }
 
 .mrt-journey-wizard__calendar table {
@@ -818,6 +859,8 @@
     padding: 0.25rem;
     font-size: 1.45rem;
     font-weight: 900;
+    background: var(--mrt-jw-ink);
+    color: var(--mrt-jw-paper);
 }
 
 .mrt-journey-wizard__calendar td {
@@ -838,23 +881,23 @@
 
 .mrt-journey-wizard__day--ok {
     background: var(--mrt-jw-olive);
-    color: #ffffff;
+    color: var(--mrt-jw-paper);
 }
 
 .mrt-journey-wizard__day--traffic {
-    background: #d8d8d8;
-    color: #151515;
+    background: var(--mrt-jw-paper-warm);
+    color: var(--mrt-jw-ink);
     cursor: not-allowed;
 }
 
 .mrt-journey-wizard__day--none {
-    color: #151515;
+    color: var(--mrt-jw-ink);
     opacity: 0.52;
     cursor: not-allowed;
 }
 
 .mrt-journey-wizard__day.is-selected {
-    box-shadow: inset 0 0 0 3px var(--mrt-jw-yellow);
+    box-shadow: inset 0 0 0 4px var(--mrt-jw-ink);
 }
 
 .mrt-journey-wizard__legend {
@@ -863,6 +906,8 @@
     padding: 1rem 1.8rem 1.6rem;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
+    border: 2px solid var(--mrt-jw-line);
+    border-top: 0;
 }
 
 .mrt-journey-wizard__legend li {
@@ -884,17 +929,19 @@
 }
 
 .mrt-journey-wizard__swatch--traffic {
-    background: #d8d8d8;
+    background: var(--mrt-jw-paper-warm);
 }
 
 .mrt-journey-wizard__swatch--none {
-    background: #efefef;
+    background: var(--mrt-jw-paper);
     border: 1px solid var(--mrt-jw-border);
 }
 
 .mrt-journey-wizard__trip-list {
     display: grid;
-    gap: 1.15rem;
+    gap: 1px;
+    background: var(--mrt-jw-line);
+    border: 2px solid var(--mrt-jw-line);
 }
 
 .mrt-journey-wizard__trip-card {
@@ -903,7 +950,7 @@
 }
 
 .mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-main {
-    background: #d6d6d6;
+    background: var(--mrt-jw-paper-warm);
 }
 
 .mrt-journey-wizard__trip-main {
@@ -918,6 +965,7 @@
     font-size: clamp(1.35rem, 3vw, 1.85rem);
     line-height: 1.05;
     font-weight: 900;
+    letter-spacing: 0;
 }
 
 .mrt-journey-wizard__trip-route {
@@ -935,7 +983,7 @@
 .mrt-journey-wizard__duration {
     font-size: 1.35rem;
     font-weight: 900;
-    color: #3f3f3f;
+    color: var(--mrt-jw-red);
     white-space: nowrap;
 }
 
@@ -947,15 +995,15 @@
     border: 0;
     padding: 0 0.8rem 0.6rem;
     background: transparent;
-    color: #151515;
+    color: var(--mrt-jw-ink);
     cursor: pointer;
 }
 
 .mrt-journey-wizard__chevron {
     width: 1.1rem;
     height: 1.1rem;
-    border-right: 3px solid #151515;
-    border-bottom: 3px solid #151515;
+    border-right: 3px solid var(--mrt-jw-ink);
+    border-bottom: 3px solid var(--mrt-jw-ink);
     transform: rotate(45deg);
 }
 
@@ -974,7 +1022,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    color: #151515;
+    color: var(--mrt-jw-ink);
     font-size: 1.12rem;
     line-height: 1;
 }
@@ -982,27 +1030,28 @@
 .mrt-journey-wizard__vehicle-mark {
     width: 2.2rem;
     height: 0.7rem;
-    border-radius: 0.45rem 0.45rem 0.15rem 0.15rem;
+    border-radius: 0;
     background: var(--mrt-jw-green-dark);
-    box-shadow: 0 0.38rem 0 -0.18rem currentColor;
+    box-shadow: none;
 }
 
 .mrt-journey-wizard__vehicle--railbus .mrt-journey-wizard__vehicle-mark {
-    background: var(--mrt-jw-orange);
+    background: var(--mrt-jw-red);
 }
 
 .mrt-journey-wizard__vehicle--diesel .mrt-journey-wizard__vehicle-mark,
 .mrt-journey-wizard__vehicle--train .mrt-journey-wizard__vehicle-mark {
-    background: #0d6d17;
+    background: var(--mrt-jw-ink);
 }
 
 .mrt-journey-wizard__vehicle--steam .mrt-journey-wizard__vehicle-mark {
-    background: #151515;
+    background: var(--mrt-jw-ink);
 }
 
 .mrt-journey-wizard__detail {
     padding: 1.2rem 0.8rem 1rem;
     background: var(--mrt-jw-surface);
+    border-top: 2px solid var(--mrt-jw-line);
 }
 
 .mrt-journey-wizard__detail[hidden] {
@@ -1051,8 +1100,8 @@
     width: 1.2rem;
     height: 1.2rem;
     margin-top: 0.1rem;
-    border: 0.35rem solid #151515;
-    border-radius: 50%;
+    border: 0.35rem solid var(--mrt-jw-ink);
+    border-radius: 0;
     background: #ffffff;
 }
 
@@ -1063,7 +1112,7 @@
     top: 0.85rem;
     width: 0.35rem;
     height: 2.1rem;
-    background: #151515;
+    background: var(--mrt-jw-ink);
     transform: translateX(-50%);
 }
 
@@ -1087,14 +1136,14 @@
     border: 0;
     padding: 0;
     background: transparent;
-    color: var(--mrt-jw-olive);
+    color: var(--mrt-jw-red);
     font-size: 1.1rem;
     cursor: pointer;
 }
 
 .mrt-journey-wizard__transfer-block {
     margin: 0.45rem 0 0.8rem 6.6rem;
-    color: #333333;
+    color: var(--mrt-jw-ink-soft);
     font-size: 1.05rem;
     font-weight: 700;
 }
@@ -1102,7 +1151,7 @@
 .mrt-journey-wizard__notice,
 .mrt-journey-wizard__price-note {
     margin: 0.2rem 0 0.4rem;
-    color: #151515;
+    color: var(--mrt-jw-ink);
     font-size: 0.95rem;
 }
 
@@ -1113,9 +1162,9 @@
     width: 1.25rem;
     height: 1.25rem;
     margin-left: 0.35rem;
-    border-radius: 50%;
-    background: #fff100;
-    color: #d45500;
+    border-radius: 0;
+    background: var(--mrt-jw-red);
+    color: var(--mrt-jw-paper);
     font-size: 0.95rem;
     vertical-align: middle;
 }
@@ -1126,7 +1175,7 @@
 
 .mrt-journey-wizard__selected-label {
     margin-bottom: 0.4rem;
-    color: var(--mrt-jw-yellow);
+    color: var(--mrt-jw-red);
     font-weight: 800;
 }
 
@@ -1135,21 +1184,21 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.45rem 1rem;
     padding: 0.65rem;
-    border: 2px solid #ffffff;
-    color: #ffffff;
+    border: 2px solid var(--mrt-jw-line);
+    color: var(--mrt-jw-ink);
 }
 
 .mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle {
-    color: #ffffff;
+    color: var(--mrt-jw-ink);
 }
 
 .mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle-mark {
-    background: #ffffff;
+    background: var(--mrt-jw-red);
 }
 
 .mrt-journey-wizard__prices {
     margin-top: 1.4rem;
-    border-top: 2px solid #bdbdbd;
+    border-top: 3px solid var(--mrt-jw-line);
     padding-top: 1rem;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
@@ -1183,7 +1232,7 @@
 }
 
 .mrt-journey-wizard__price-table tbody tr:nth-child(odd) {
-    background: #d2d2d2;
+    background: var(--mrt-jw-paper-warm);
 }
 
 .mrt-journey-wizard__price-table th[scope="row"] {
@@ -1195,6 +1244,7 @@
     padding: 0.9rem;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
+    border: 2px solid var(--mrt-jw-line);
 }
 
 .mrt-demo-mockup-list {
@@ -1218,7 +1268,7 @@
 
     .mrt-journey-wizard__hero-title,
     .mrt-journey-wizard__step-title {
-        font-size: 1.8rem;
+        font-size: 2.5rem;
     }
 
     .mrt-journey-wizard__calendar-nav {

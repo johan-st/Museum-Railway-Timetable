@@ -22,8 +22,8 @@
     border-radius: var(--mrt-radius-md);
     overflow: hidden;
     box-shadow: var(--mrt-shadow-lg);
-    border: 1px solid var(--mrt-border-light);
-    transition: box-shadow 0.2s ease;
+    border: 2px solid var(--mrt-border-default);
+    transition: none;
 }
 
 .mrt-timetable-group:hover {
@@ -41,7 +41,7 @@
 }
 
 .mrt-route-header {
-    background: linear-gradient(135deg, var(--mrt-green-primary) 0%, var(--mrt-route-header-end) 100%);
+    background: var(--mrt-green-primary);
     color: var(--mrt-text-white);
     padding: var(--mrt-spacing-md) var(--mrt-spacing-lg);
     margin: 0;
@@ -50,10 +50,12 @@
 }
 
 .mrt-route-header-main {
-    font-size: var(--mrt-font-lg);
-    font-weight: 700;
+    font-size: clamp(1.7rem, 4vw, 4rem);
+    font-weight: 900;
     margin: 0 0 var(--mrt-spacing-xs);
-    letter-spacing: 0.3px;
+    letter-spacing: 0;
+    line-height: 0.9;
+    text-transform: uppercase;
 }
 
 .mrt-route-header-details {
@@ -64,13 +66,17 @@
     gap: var(--mrt-spacing-sm);
     margin-top: var(--mrt-spacing-xs);
     flex-wrap: wrap;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-route-from,
 .mrt-route-to {
     font-weight: 600;
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
-    background: var(--mrt-overlay-white-15);
+    background: transparent;
+    border: 1px solid var(--mrt-paper);
     border-radius: var(--mrt-radius-sm);
 }
 
@@ -87,7 +93,7 @@
     background: var(--mrt-bg-white);
     margin: 0;
     font-size: var(--mrt-font-base);
-    border: 1px solid var(--mrt-border-default);
+    border: 2px solid var(--mrt-border-default);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -118,6 +124,9 @@
     box-shadow: var(--mrt-shadow-side);
     border-right: 2px solid var(--mrt-border-default);
     justify-content: flex-start;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-station-col-header-empty {
