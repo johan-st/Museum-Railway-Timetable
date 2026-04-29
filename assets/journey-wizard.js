@@ -48,16 +48,53 @@
         return String(v);
     }
 
-    function mrtWizardBuildPriceSection(tripType, cfg) {
-        if (!cfg.priceMatrix || !mrtWizardMatrixHasAnyPrice(cfg.priceMatrix)) {
+    function mrtWizardPriceZonesForStationPair(fromId, toId, cfg) {
+        var map = cfg.priceStationZones || {};
+        var fromZones = map[String(fromId)] || map[fromId] || [];
+        var toZones = map[String(toId)] || map[toId] || [];
+        var best = 4;
+        if (!fromZones.length || !toZones.length) {
+            return best;
+        }
+        fromZones.forEach(function(fz) {
+            toZones.forEach(function(tz) {
+                var span = Math.abs(parseInt(tz, 10) - parseInt(fz, 10)) + 1;
+                if (!isNaN(span)) {
+                    best = Math.min(best, span);
+                }
+            });
+        });
+        return Math.max(1, Math.min(4, best));
+    }
+
+    function mrtWizardPriceMatrixForZone(cfg, zones) {
+        var byZone = cfg.priceMatrixByZone || null;
+        var zoneKey = String(Math.max(1, Math.min(4, parseInt(zones, 10) || 4)));
+        var out = {};
+        if (!byZone) {
+            return cfg.priceMatrix || {};
+        }
+        PRICE_TYPE_KEYS.forEach(function(tk) {
+            out[tk] = {};
+            PRICE_CAT_KEYS.forEach(function(ck) {
+                out[tk][ck] = byZone[tk] && byZone[tk][ck] ? byZone[tk][ck][zoneKey] : null;
+            });
+        });
+        return out;
+    }
+
+    function mrtWizardBuildPriceSection(tripType, cfg, zones) {
+        var matrix = mrtWizardPriceMatrixForZone(cfg, zones);
+        if (!matrix || !mrtWizardMatrixHasAnyPrice(matrix)) {
             return '';
         }
-        var matrix = cfg.priceMatrix;
         var tickets = cfg.priceTickets || {};
         var cats = cfg.priceCategories || {};
         var activeType = tripType === 'return' ? 'return' : 'single';
+        var zoneText = (cfg.priceZoneLabel || '%d zones').replace('%d', String(zones || 4));
         var html = '<div class="mrt-journey-wizard__prices mrt-mt-lg">';
-        html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || '') + '</h4>';
+        html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || '') + ' <span>(' +
+            SU.escapeHtml(zoneText) + ')</span></h4>';
         html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
         html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
             SU.escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';
@@ -893,7 +930,11 @@
                     mrtWizardVehicleBadge(ib.train_type, ib.service_name) + '</div>' +
                     '</div>');
             }
-            $box.html(parts.join('') + mrtWizardBuildPriceSection(state.tripType, cfg));
+            $box.html(parts.join('') + mrtWizardBuildPriceSection(
+                state.tripType,
+                cfg,
+                mrtWizardPriceZonesForStationPair(state.from, state.to, cfg)
+            ));
 
             var url = $root.attr('data-ticket-url') || '';
             var $tw = $root.find('[data-wizard-ticket-wrap]');
