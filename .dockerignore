@@ -1,0 +1,12 @@
+.git
+.github
+.cursor
+vendor
+node_modules
+local/deploy.config.json
+wp-admin
+wp-content
+wp-includes
+wp-config.php
+*.log
+.phpunit.cache

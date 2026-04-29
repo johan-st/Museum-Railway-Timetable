@@ -1,0 +1,76 @@
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
+
+  wordpress-init:
+    image: wordpress:cli-php8.2
+    depends_on:
+      - db
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: admin
+      WORDPRESS_ADMIN_EMAIL: admin@example.test
+      WORDPRESS_SITE_TITLE: Museum Railway Timetable
+      WORDPRESS_SITE_URL: http://localhost:8080
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
+    command: >
+      sh -c '
+        until [ -f wp-config.php ] && wp --allow-root db check >/dev/null 2>&1; do
+          sleep 3;
+        done;
+        if ! wp --allow-root core is-installed >/dev/null 2>&1; then
+          wp --allow-root core install \
+            --url="$${WORDPRESS_SITE_URL}" \
+            --title="$${WORDPRESS_SITE_TITLE}" \
+            --admin_user="$${WORDPRESS_ADMIN_USER}" \
+            --admin_password="$${WORDPRESS_ADMIN_PASSWORD}" \
+            --admin_email="$${WORDPRESS_ADMIN_EMAIL}" \
+            --skip-email;
+        fi;
+        wp --allow-root plugin activate museum-railway-timetable;
+      '
+
+  composer:
+    image: composer:2
+    entrypoint:
+      - composer
+    profiles:
+      - tools
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: install
+
+volumes:
+  db_data:
+  wordpress_data:

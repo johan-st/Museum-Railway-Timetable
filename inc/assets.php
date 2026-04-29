@@ -236,22 +236,34 @@ function MRT_journey_wizard_calendar_i18n_arrays(): array {
  */
 function MRT_journey_wizard_l10n_steps_and_trip(): array {
     return [
-        'stepRoute' => __('Route', MRT_TEXT_DOMAIN),
-        'stepDate' => __('Date', MRT_TEXT_DOMAIN),
-        'stepOutbound' => __('Outbound', MRT_TEXT_DOMAIN),
-        'stepReturn' => __('Return', MRT_TEXT_DOMAIN),
-        'stepSummary' => __('Summary', MRT_TEXT_DOMAIN),
+        'stepRoute' => __('Sök resa', MRT_TEXT_DOMAIN),
+        'stepDate' => __('Datum', MRT_TEXT_DOMAIN),
+        'stepOutbound' => __('Utresa', MRT_TEXT_DOMAIN),
+        'stepReturn' => __('Återresa', MRT_TEXT_DOMAIN),
+        'stepSummary' => __('Sammanfattning', MRT_TEXT_DOMAIN),
         'loading' => __('Loading...', MRT_TEXT_DOMAIN),
         'errorGeneric' => __('Something went wrong. Please try again.', MRT_TEXT_DOMAIN),
         'noConnections' => __('No connections on this date.', MRT_TEXT_DOMAIN),
-        'showStops' => __('Stops & times', MRT_TEXT_DOMAIN),
-        'selectTrip' => __('Choose', MRT_TEXT_DOMAIN),
-        'noticeLabel' => __('Notice', MRT_TEXT_DOMAIN),
-        'durationMinutes' => __('Duration: %d min', MRT_TEXT_DOMAIN),
-        'outboundHeading' => __('Outbound', MRT_TEXT_DOMAIN),
-        'returnHeading' => __('Return', MRT_TEXT_DOMAIN),
+        'showStops' => __('Visa passerade stationer', MRT_TEXT_DOMAIN),
+        'hideStops' => __('Dölj passerade stationer', MRT_TEXT_DOMAIN),
+        'selectTrip' => __('Välj →', MRT_TEXT_DOMAIN),
+        'noticeLabel' => __('Trafikmeddelande', MRT_TEXT_DOMAIN),
+        'durationMinutes' => __('%d min', MRT_TEXT_DOMAIN),
+        'outboundHeading' => __('Utresa', MRT_TEXT_DOMAIN),
+        'returnHeading' => __('Återresa', MRT_TEXT_DOMAIN),
         'onDate' => __('on %s', MRT_TEXT_DOMAIN),
         'pleaseStations' => __('Please select both departure and arrival stations.', MRT_TEXT_DOMAIN),
+        'tripTypeSingle' => __('Enkel', MRT_TEXT_DOMAIN),
+        'tripTypeReturn' => __('Tur- och retur', MRT_TEXT_DOMAIN),
+        'routeContext' => __('%1$s → %2$s | %3$s', MRT_TEXT_DOMAIN),
+        'routeDateContext' => __('%1$s → %2$s | %3$s\n%4$s', MRT_TEXT_DOMAIN),
+        'directTrip' => __('Direktresa', MRT_TEXT_DOMAIN),
+        'transferTrip' => __('Byte', MRT_TEXT_DOMAIN),
+        'selectedOutbound' => __('Vald utresa', MRT_TEXT_DOMAIN),
+        'towards' => __('mot %s', MRT_TEXT_DOMAIN),
+        'changeAt' => __('Byte vid %s', MRT_TEXT_DOMAIN),
+        'transferWait' => __('%d min byte', MRT_TEXT_DOMAIN),
+        'passedStations' => __('passerade stationer', MRT_TEXT_DOMAIN),
     ];
 }
 
@@ -275,8 +287,8 @@ function MRT_journey_wizard_l10n_table_calendar(): array {
         'tripsCaptionOutbound' => __('Outbound trips for %s', MRT_TEXT_DOMAIN),
         'tripsCaptionReturn' => __('Return trips on the same day', MRT_TEXT_DOMAIN),
         'btnChooseTripAria' => __('Choose this trip: %1$s, departure %2$s, arrival %3$s', MRT_TEXT_DOMAIN),
-        'btnShowStopsAria' => __('Stops and times for %s', MRT_TEXT_DOMAIN),
-        'legSegmentLabel' => __('Train %d', MRT_TEXT_DOMAIN),
+        'btnShowStopsAria' => __('Visa hållplatser och tider för %s', MRT_TEXT_DOMAIN),
+        'legSegmentLabel' => __('Delsträcka %d', MRT_TEXT_DOMAIN),
     ];
 }
 
@@ -288,10 +300,13 @@ function MRT_journey_wizard_l10n_table_calendar(): array {
 function MRT_journey_wizard_l10n_price(): array {
     return [
         'priceTableTypeColumn' => __('Ticket type', MRT_TEXT_DOMAIN),
-        'priceTitle' => __('Indicative prices', MRT_TEXT_DOMAIN),
-        'priceNote' => __('Amounts are configured in timetable settings (same units as there).', MRT_TEXT_DOMAIN),
+        'priceTitle' => __('Priser', MRT_TEXT_DOMAIN),
+        'priceNote' => __('Price is based on the cheapest valid zone count for the selected journey.', MRT_TEXT_DOMAIN),
         'priceDash' => '—',
-        'priceMatrix' => MRT_get_price_matrix(),
+        'priceMatrix' => MRT_price_matrix_for_zone(MRT_get_price_matrix(), 4),
+        'priceMatrixByZone' => MRT_get_price_matrix(),
+        'priceStationZones' => MRT_get_station_price_zones_map(),
+        'priceZoneLabel' => __('%d zones', MRT_TEXT_DOMAIN),
         'priceTickets' => MRT_price_ticket_type_labels(),
         'priceCategories' => MRT_price_category_labels(),
     ];
@@ -515,4 +530,3 @@ function MRT_enqueue_frontend_assets(): void {
     }
 }
 add_action('wp_enqueue_scripts', 'MRT_enqueue_frontend_assets');
-

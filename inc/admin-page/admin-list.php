@@ -81,12 +81,12 @@ function MRT_render_stations_overview_filter_form() {
  * @param int $sid Station post ID
  * @return array Route posts
  */
-function MRT_get_routes_using_station($sid) {
+function MRT_get_routes_using_station(int $sid): array {
     $all_routes = get_posts(['post_type' => 'mrt_route', 'posts_per_page' => -1, 'fields' => 'all']);
     $routes_using_station = [];
     foreach ($all_routes as $route) {
         $route_stations = get_post_meta($route->ID, 'mrt_route_stations', true);
-        if (is_array($route_stations) && in_array($sid, $route_stations)) {
+        if (is_array($route_stations) && in_array($sid, $route_stations, true)) {
             $routes_using_station[] = $route;
         }
     }

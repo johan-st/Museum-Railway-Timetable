@@ -4,7 +4,21 @@
  * @package Museum_Railway_Timetable
  */
 
-/* Screen-reader-only (WCAG: name / table headers) */
+.mrt-journey-wizard {
+    --mrt-jw-green: #1c650f;
+    --mrt-jw-green-dark: #15530b;
+    --mrt-jw-olive: #858814;
+    --mrt-jw-yellow: #e3d449;
+    --mrt-jw-orange: #f39813;
+    --mrt-jw-surface: #ffffff;
+    --mrt-jw-surface-muted: #d5d5d5;
+    --mrt-jw-text: #141414;
+    --mrt-jw-border: #cfcfcf;
+    --mrt-jw-focus: #fff4a3;
+    color: var(--mrt-jw-text);
+    overflow-x: hidden;
+}
+
 .mrt-journey-wizard .mrt-sr-only {
     position: absolute;
     width: 1px;
@@ -27,146 +41,164 @@
     }
 }
 
+.mrt-journey-wizard__hero {
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    width: 100vw;
+    max-width: 100vw;
+    min-height: 76dvh;
+    box-sizing: border-box;
+    padding: clamp(3rem, 8vw, 7rem) 1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(17, 17, 17, 0.22)),
+        linear-gradient(135deg, #7ca7d8 0%, #d6e7f6 52%, #8a3d24 53%, #2d1c17 100%);
+    background-size: cover;
+    background-position: center;
+}
+
+.mrt-journey-wizard__hero[data-has-hero-bg="1"] {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(17, 17, 17, 0.16)),
+        var(--mrt-hero-image);
+}
+
+.mrt-journey-wizard__hero-inner {
+    width: min(100%, 58rem);
+    margin-inline: auto;
+}
+
 .mrt-journey-wizard__nav {
-    margin-bottom: 1.25rem;
+    margin: 0 0 0.75rem;
 }
 
 .mrt-journey-wizard__steps {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    gap: 0.35rem;
+    justify-content: center;
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
 .mrt-journey-wizard__steps li {
-    font-size: 0.875rem;
-    color: var(--mrt-text-tertiary, #6b7280);
+    padding: 0.25rem 0.55rem;
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(21, 83, 11, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    font-size: 0.8125rem;
+    font-weight: 700;
 }
 
 .mrt-journey-wizard__steps li.is-active {
-    font-weight: 600;
-    color: var(--mrt-text-primary, #111827);
+    color: #151515;
+    background: var(--mrt-jw-yellow);
 }
 
 .mrt-journey-wizard__steps li.is-done {
-    color: var(--mrt-text-secondary, #4b5563);
+    color: var(--mrt-jw-yellow);
 }
 
-/* Step 1 hero + search panel (UI_MOCKUP_PLAN §3, sok-din-resa) */
-.mrt-journey-wizard {
-    --mrt-ui-green-900: #14532d;
-    --mrt-ui-accent: #ca8a04;
-    --mrt-ui-on-green: #f9fafb;
-    --mrt-ui-muted: rgba(255, 255, 255, 0.14);
-    overflow-x: hidden;
+.mrt-journey-wizard__errors {
+    max-width: 46rem;
+    margin: 0 auto 0.75rem;
 }
 
-.mrt-journey-wizard__hero {
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    width: 100vw;
-    max-width: 100vw;
+.mrt-journey-wizard__panel {
+    width: min(100%, 46rem);
+    margin-inline: auto;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--mrt-jw-green-dark);
+    color: #ffffff;
     box-sizing: border-box;
-    padding: 2rem 1rem 2.5rem;
-    background: linear-gradient(165deg, #0f3d22 0%, #1a5c34 45%, #0f3d22 100%);
-}
-
-.mrt-journey-wizard__hero[data-has-hero-bg="1"] {
-    background-image: linear-gradient(
-        rgba(15, 61, 34, 0.82),
-        rgba(15, 61, 34, 0.9)
-    ), var(--mrt-hero-image);
-    background-size: cover;
-    background-position: center;
-}
-
-.mrt-journey-wizard__hero-inner {
-    max-width: 40rem;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .mrt-journey-wizard__search-panel {
-    background: var(--mrt-ui-green-900);
-    color: var(--mrt-ui-on-green);
-    padding: 1.5rem 1.25rem 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    width: min(100%, 54rem);
+    margin-top: 1.5rem;
+    padding-block: clamp(1.75rem, 4vw, 3rem);
 }
 
 .mrt-journey-wizard__hero-head {
+    margin-bottom: 1.6rem;
     text-align: center;
-    margin-bottom: 1.25rem;
 }
 
-.mrt-journey-wizard__hero-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--mrt-ui-on-green);
+.mrt-journey-wizard__hero-title,
+.mrt-journey-wizard__step-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: 0;
 }
 
-@media (min-width: 40rem) {
-    .mrt-journey-wizard__hero-title {
-        font-size: 1.75rem;
-    }
+.mrt-journey-wizard__step-title {
+    margin: 1.4rem 0 1.3rem;
+    text-align: left;
 }
 
 .mrt-journey-wizard__hero-lede {
-    margin: 0;
-    font-size: 0.9375rem;
-    line-height: 1.45;
-    opacity: 0.92;
+    margin: 0.55rem 0 0;
+    color: rgba(255, 255, 255, 0.88);
 }
 
-.mrt-journey-wizard__search-panel .mrt-form-field label {
-    color: var(--mrt-ui-on-green);
+.mrt-journey-wizard__route {
+    width: min(100%, 32rem);
+    margin-inline: auto;
 }
 
-.mrt-journey-wizard__search-panel .mrt-form-field select {
-    background: var(--mrt-surface, #fff);
-    color: var(--mrt-text-primary, #111827);
-    border-color: rgba(0, 0, 0, 0.12);
+.mrt-journey-wizard__search-panel .mrt-form-field {
+    margin-bottom: 1.15rem;
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__trip-type .mrt-journey-wizard__legend {
-    color: var(--mrt-ui-on-green);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.mrt-journey-wizard__search-panel label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.mrt-journey-wizard__search-panel select {
+    width: 100%;
+    min-height: 2.9rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+    font-size: 1rem;
+}
+
+.mrt-journey-wizard__trip-type {
+    display: flex;
+    justify-content: center;
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.6rem;
 }
 
 .mrt-journey-wizard__trip-type-toggle {
     display: inline-flex;
-    flex-wrap: wrap;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    align-items: stretch;
+    border: 1px solid rgba(20, 20, 20, 0.24);
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__radio-label {
+.mrt-journey-wizard__radio-label {
     position: relative;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.35rem;
     margin: 0;
-    padding: 0.5rem 1rem;
-    min-height: 2.5rem;
+    padding: 0.18rem 0.7rem;
+    min-height: 1.7rem;
+    background: var(--mrt-jw-surface-muted);
+    color: var(--mrt-jw-text);
+    font-size: 0.95rem;
+    line-height: 1;
     cursor: pointer;
-    background: var(--mrt-ui-muted);
-    color: var(--mrt-ui-on-green);
-    font-weight: 600;
-    font-size: 0.875rem;
-    border-right: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__radio-label:last-child {
-    border-right: 0;
-}
-
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__radio-label input {
+.mrt-journey-wizard__radio-label input {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -178,71 +210,116 @@
     border: 0;
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__radio-label:has(input:checked) {
-    background: var(--mrt-ui-accent);
-    color: #111827;
+.mrt-journey-wizard__radio-label:has(input:checked) {
+    background: var(--mrt-jw-yellow);
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__radio-label:focus-within {
-    outline: 2px solid var(--mrt-ui-accent);
-    outline-offset: 2px;
-    z-index: 1;
+.mrt-journey-wizard__radio-label:focus-within,
+.mrt-journey-wizard button:focus-visible,
+.mrt-journey-wizard a:focus-visible,
+.mrt-journey-wizard select:focus-visible {
+    outline: 3px solid var(--mrt-jw-focus);
+    outline-offset: 3px;
 }
 
-.mrt-journey-wizard__cta {
-    letter-spacing: 0.06em;
+.mrt-journey-wizard__actions {
+    text-align: center;
+}
+
+.mrt-journey-wizard__cta,
+.mrt-journey-wizard__btn-select {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.45rem;
+    padding: 0.35rem 0.9rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--mrt-jw-yellow);
+    color: #151515;
+    font-size: 1.08rem;
+    font-weight: 900;
+    line-height: 1;
     text-transform: uppercase;
-    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__cta.mrt-btn--primary {
-    background: var(--mrt-ui-accent);
-    color: #111827;
-    border-color: transparent;
-    width: 100%;
+.mrt-journey-wizard__btn-select {
+    background: var(--mrt-jw-green-dark);
+    color: var(--mrt-jw-yellow);
+    text-transform: none;
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__cta.mrt-btn--primary:hover {
-    background: color-mix(in srgb, var(--mrt-ui-accent) 88%, #000);
-    color: #111827;
+.mrt-journey-wizard__cta:active,
+.mrt-journey-wizard__btn-select:active {
+    transform: translateY(1px);
 }
 
-.mrt-journey-wizard__search-panel .mrt-journey-wizard__cta.mrt-btn--primary:focus-visible {
-    outline: 2px solid var(--mrt-ui-on-green);
-    outline-offset: 2px;
+.mrt-journey-wizard__step-head {
+    display: grid;
+    gap: 0.8rem;
 }
 
-@media (min-width: 30rem) {
-    .mrt-journey-wizard__search-panel .mrt-journey-wizard__cta.mrt-btn--primary {
-        width: auto;
-        min-width: 12rem;
-    }
+.mrt-journey-wizard__back {
+    justify-self: start;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--mrt-jw-yellow);
+    font-size: 1.35rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__context {
+    margin: 0;
+    color: #ffffff;
+    white-space: pre-line;
+    font-size: 1.28rem;
+    line-height: 1.35;
+    font-weight: 800;
 }
 
 .mrt-journey-wizard__calendar-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
+    gap: 0.8rem;
+    padding: 1.2rem 1.8rem 0;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard__calendar-nav .mrt-journey-wizard__cal-prev,
-.mrt-journey-wizard__calendar-nav .mrt-journey-wizard__cal-next {
-    flex-shrink: 0;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    font-size: 1.35rem;
+.mrt-journey-wizard__cal-prev,
+.mrt-journey-wizard__cal-next {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #a8a8a8;
+    font-size: 3rem;
     line-height: 1;
+    cursor: pointer;
 }
 
 .mrt-journey-wizard__cal-title {
-    flex: 1 1 auto;
-    min-width: 0;
-    text-align: center;
-    font-weight: 600;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__cal-today {
+    border: 2px solid #b8b8b8;
+    padding: 0.2rem 0.55rem;
+    background: transparent;
+    color: #5a5a5a;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__calendar {
+    padding: 1.2rem 1.8rem 3rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
 .mrt-journey-wizard__calendar table {
@@ -251,161 +328,454 @@
     table-layout: fixed;
 }
 
-.mrt-journey-wizard__calendar th {
+.mrt-journey-wizard__calendar th,
+.mrt-journey-wizard__calendar td {
+    border: 1px solid var(--mrt-jw-border);
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.35rem;
+}
+
+.mrt-journey-wizard__calendar th {
+    padding: 0.25rem;
+    font-size: 1.45rem;
+    font-weight: 900;
 }
 
 .mrt-journey-wizard__calendar td {
-    padding: 0.2rem;
-    text-align: center;
-    vertical-align: middle;
+    height: 3.2rem;
 }
 
 .mrt-journey-wizard__day {
     width: 100%;
-    min-height: 2.25rem;
-    border: 1px solid var(--mrt-border, #e5e7eb);
-    border-radius: 4px;
-    background: var(--mrt-surface, #fff);
+    min-height: 3.2rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--mrt-jw-text);
+    font-size: clamp(1.55rem, 3vw, 2.15rem);
+    line-height: 1;
     cursor: pointer;
-    font-size: 0.875rem;
-}
-
-.mrt-journey-wizard__day:hover:not(:disabled) {
-    border-color: var(--mrt-primary, #2563eb);
-}
-
-.mrt-journey-wizard__day:focus {
-    outline: none;
-}
-
-.mrt-journey-wizard__day:focus-visible {
-    outline: 2px solid var(--mrt-primary, #2563eb);
-    outline-offset: 2px;
-}
-
-.mrt-journey-wizard__table-caption {
-    caption-side: top;
-    text-align: left;
-    font-weight: 600;
-    padding: 0 0 0.5rem;
 }
 
 .mrt-journey-wizard__day--ok {
-    background: color-mix(in srgb, var(--mrt-success, #16a34a) 18%, transparent);
+    background: var(--mrt-jw-olive);
+    color: #ffffff;
 }
 
 .mrt-journey-wizard__day--traffic {
-    background: color-mix(in srgb, var(--mrt-warning, #ca8a04) 15%, transparent);
+    background: #d8d8d8;
+    color: #151515;
     cursor: not-allowed;
-    opacity: 0.85;
 }
 
 .mrt-journey-wizard__day--none {
-    opacity: 0.45;
+    color: #151515;
+    opacity: 0.52;
     cursor: not-allowed;
 }
 
 .mrt-journey-wizard__day.is-selected {
-    outline: 2px solid var(--mrt-primary, #2563eb);
-    outline-offset: 1px;
+    box-shadow: inset 0 0 0 3px var(--mrt-jw-yellow);
 }
 
 .mrt-journey-wizard__legend {
     list-style: none;
     margin: 0;
-    padding: 0;
-    font-size: 0.8125rem;
+    padding: 1rem 1.8rem 1.6rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
 .mrt-journey-wizard__legend li {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
+    gap: 0.8rem;
+    margin-bottom: 0.55rem;
+    font-size: 1.1rem;
 }
 
 .mrt-journey-wizard__swatch {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 2px;
-    border: 1px solid var(--mrt-border, #e5e7eb);
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
 }
 
 .mrt-journey-wizard__swatch--ok {
-    background: color-mix(in srgb, var(--mrt-success, #16a34a) 25%, #fff);
+    background: var(--mrt-jw-olive);
 }
 
 .mrt-journey-wizard__swatch--traffic {
-    background: color-mix(in srgb, var(--mrt-warning, #ca8a04) 20%, #fff);
+    background: #d8d8d8;
 }
 
 .mrt-journey-wizard__swatch--none {
-    background: #f3f4f6;
+    background: #efefef;
+    border: 1px solid var(--mrt-jw-border);
 }
 
-.mrt-journey-wizard__radio-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-right: 1rem;
+.mrt-journey-wizard__trip-list {
+    display: grid;
+    gap: 1.15rem;
 }
 
-.mrt-journey-wizard__legend {
-    margin-top: 0.5rem;
+.mrt-journey-wizard__trip-card {
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard__trip-type {
-    border: 0;
-    padding: 0;
+.mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-main {
+    background: #d6d6d6;
+}
+
+.mrt-journey-wizard__trip-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.65rem 0.8rem;
+}
+
+.mrt-journey-wizard__trip-time {
     margin: 0;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.05;
+    font-weight: 900;
 }
 
-.mrt-journey-wizard__trip-type .mrt-journey-wizard__legend {
-    margin-bottom: 0.35rem;
-    font-weight: 600;
+.mrt-journey-wizard__trip-route {
+    margin: 0.2rem 0 0.6rem;
+    font-size: 1.2rem;
 }
 
-.mrt-journey-wizard__conn-actions {
+.mrt-journey-wizard__trip-side {
+    display: grid;
+    align-content: start;
+    justify-items: end;
+    gap: 0.35rem;
+}
+
+.mrt-journey-wizard__duration {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #3f3f3f;
     white-space: nowrap;
 }
 
-.mrt-journey-wizard__conn-actions .mrt-btn {
-    margin-right: 0.25rem;
+.mrt-journey-wizard__btn-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: 0;
+    padding: 0 0.8rem 0.6rem;
+    background: transparent;
+    color: #151515;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__chevron {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-right: 3px solid #151515;
+    border-bottom: 3px solid #151515;
+    transform: rotate(45deg);
+}
+
+.mrt-journey-wizard__trip-card.is-expanded .mrt-journey-wizard__chevron {
+    transform: rotate(225deg);
+}
+
+.mrt-journey-wizard__vehicle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+
+.mrt-journey-wizard__vehicle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #151515;
+    font-size: 1.12rem;
+    line-height: 1;
+}
+
+.mrt-journey-wizard__vehicle-mark {
+    width: 2.2rem;
+    height: 0.7rem;
+    border-radius: 0.45rem 0.45rem 0.15rem 0.15rem;
+    background: var(--mrt-jw-green-dark);
+    box-shadow: 0 0.38rem 0 -0.18rem currentColor;
+}
+
+.mrt-journey-wizard__vehicle--railbus .mrt-journey-wizard__vehicle-mark {
+    background: var(--mrt-jw-orange);
+}
+
+.mrt-journey-wizard__vehicle--diesel .mrt-journey-wizard__vehicle-mark,
+.mrt-journey-wizard__vehicle--train .mrt-journey-wizard__vehicle-mark {
+    background: #0d6d17;
+}
+
+.mrt-journey-wizard__vehicle--steam .mrt-journey-wizard__vehicle-mark {
+    background: #151515;
 }
 
 .mrt-journey-wizard__detail {
-    font-size: 0.875rem;
+    padding: 1.2rem 0.8rem 1rem;
+    background: var(--mrt-jw-surface);
 }
 
-.mrt-journey-wizard__detail table {
-    margin-top: 0.5rem;
+.mrt-journey-wizard__detail[hidden] {
+    display: none;
+}
+
+.mrt-journey-wizard__detail-title {
+    margin: 0 0 0.6rem;
+    color: var(--mrt-jw-text);
+    font-size: 1rem;
+}
+
+.mrt-journey-wizard__timeline-leg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+    margin: 0 0 0.55rem 6.6rem;
+}
+
+.mrt-journey-wizard__towards {
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard__timeline {
+    display: grid;
+    gap: 0;
+}
+
+.mrt-journey-wizard__timeline-row {
+    display: grid;
+    grid-template-columns: 5.4rem 1.6rem minmax(0, 1fr);
+    gap: 0.65rem;
+    min-height: 2.7rem;
+    align-items: start;
+}
+
+.mrt-journey-wizard__timeline-time {
+    text-align: right;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.mrt-journey-wizard__timeline-node {
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.1rem;
+    border: 0.35rem solid #151515;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.mrt-journey-wizard__timeline-node::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0.85rem;
+    width: 0.35rem;
+    height: 2.1rem;
+    background: #151515;
+    transform: translateX(-50%);
+}
+
+.mrt-journey-wizard__timeline-row:last-of-type .mrt-journey-wizard__timeline-node::after {
+    display: none;
+}
+
+.mrt-journey-wizard__timeline-station {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-station,
+.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-time {
+    font-weight: 500;
+}
+
+.mrt-journey-wizard__passed-toggle {
+    justify-self: start;
+    margin: 0.3rem 0 0.6rem 6.6rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--mrt-jw-olive);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__transfer-block {
+    margin: 0.45rem 0 0.8rem 6.6rem;
+    color: #333333;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mrt-journey-wizard__notice,
+.mrt-journey-wizard__price-note {
+    margin: 0.2rem 0 0.4rem;
+    color: #151515;
+    font-size: 0.95rem;
+}
+
+.mrt-journey-wizard__notice-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.35rem;
+    border-radius: 50%;
+    background: #fff100;
+    color: #d45500;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.mrt-journey-wizard__selected-trip {
+    margin: 1.4rem 0 1.6rem;
+}
+
+.mrt-journey-wizard__selected-label {
+    margin-bottom: 0.4rem;
+    color: var(--mrt-jw-yellow);
+    font-weight: 800;
+}
+
+.mrt-journey-wizard__selected-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.45rem 1rem;
+    padding: 0.65rem;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle {
+    color: #ffffff;
+}
+
+.mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle-mark {
+    background: #ffffff;
+}
+
+.mrt-journey-wizard__prices {
+    margin-top: 1.4rem;
+    border-top: 2px solid #bdbdbd;
+    padding-top: 1rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__prices h4,
+.mrt-journey-wizard__prices .mrt-heading {
+    margin: 0 0 0.35rem;
+    color: var(--mrt-jw-text);
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__prices-scroll {
+    overflow-x: auto;
+}
+
+.mrt-journey-wizard__price-table {
+    width: 100%;
+    min-width: 35rem;
+    border-collapse: collapse;
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__price-table th,
+.mrt-journey-wizard__price-table td {
+    padding: 0.25rem 0.45rem;
+    text-align: left;
+    border: 0;
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard__price-table tbody tr:nth-child(odd) {
+    background: #d2d2d2;
 }
 
 .mrt-journey-wizard__price-table th[scope="row"] {
-    font-weight: 600;
-    text-align: left;
+    font-weight: 900;
 }
 
-.mrt-journey-wizard__price-row--active td,
-.mrt-journey-wizard__price-row--active th {
-    background: color-mix(in srgb, var(--mrt-primary, #2563eb) 12%, transparent);
+.mrt-journey-wizard__summary-card {
+    margin-bottom: 1rem;
+    padding: 0.9rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard__price-note {
-    font-size: 0.8125rem;
-    max-width: 40rem;
-}
-
-/* Component demo page (same URL may load wizard shortcode) */
 .mrt-demo-mockup-list {
     margin: 0.5rem 0 0 1.25rem;
 }
 
 .mrt-demo-mockup-caption {
     font-size: 0.875rem;
+}
+
+@media (max-width: 48rem) {
+    .mrt-journey-wizard__hero {
+        padding: 1rem;
+    }
+
+    .mrt-journey-wizard__panel,
+    .mrt-journey-wizard__search-panel {
+        width: 100%;
+        padding: 1.2rem;
+    }
+
+    .mrt-journey-wizard__hero-title,
+    .mrt-journey-wizard__step-title {
+        font-size: 1.8rem;
+    }
+
+    .mrt-journey-wizard__calendar-nav {
+        flex-wrap: wrap;
+        padding: 0.9rem 0.9rem 0;
+    }
+
+    .mrt-journey-wizard__calendar,
+    .mrt-journey-wizard__legend {
+        padding-inline: 0.9rem;
+    }
+
+    .mrt-journey-wizard__calendar th {
+        font-size: 1rem;
+    }
+
+    .mrt-journey-wizard__day {
+        min-height: 2.4rem;
+        font-size: 1.2rem;
+    }
+
+    .mrt-journey-wizard__trip-main,
+    .mrt-journey-wizard__selected-card {
+        grid-template-columns: 1fr;
+    }
+
+    .mrt-journey-wizard__trip-side {
+        justify-items: start;
+    }
+
+    .mrt-journey-wizard__timeline-row {
+        grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
+    }
+
+    .mrt-journey-wizard__timeline-leg,
+    .mrt-journey-wizard__passed-toggle,
+    .mrt-journey-wizard__transfer-block {
+        margin-left: 5.2rem;
+    }
 }

@@ -162,6 +162,53 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 **Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) och [docs/PROJECT_HEALTH.md](docs/PROJECT_HEALTH.md) (CI, `composer plugin-check`). Bidrag: [CONTRIBUTING.md](CONTRIBUTING.md).
 
+### Docker WordPress Development
+
+You can run the plugin in a local WordPress install without installing PHP locally. The Docker setup starts WordPress, MariaDB, installs WordPress, and activates this plugin automatically.
+
+Requirements:
+- Docker Desktop or another Docker Compose compatible runtime
+
+Start the site:
+
+```sh
+docker compose up -d --build
+```
+
+Open:
+- Site: http://localhost:8080
+- Admin: http://localhost:8080/wp-admin
+
+Default admin login:
+- Username: `admin`
+- Password: `admin`
+
+The repository is mounted into WordPress at:
+
+```text
+/var/www/html/wp-content/plugins/museum-railway-timetable
+```
+
+So edits in this checkout are reflected immediately in the running plugin.
+
+Useful commands:
+
+```sh
+docker compose logs -f wordpress
+docker compose down
+docker compose down -v
+```
+
+`docker compose down -v` removes the WordPress and database volumes, giving you a fresh install next time.
+
+Run Composer inside Docker:
+
+```sh
+docker compose run --rm composer install
+docker compose run --rm composer test
+docker compose run --rm composer lint
+```
+
 ### Deploy to Local (WordPress)
 
 To automate copying the plugin to your Local by Flywheel site for testing:
@@ -268,4 +315,3 @@ This plugin is provided as-is for use with WordPress.
 - Custom post types for stations, routes, and services
 - Shortcodes for timetable display
 - Admin interface for management
-
