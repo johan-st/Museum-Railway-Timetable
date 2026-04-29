@@ -7,42 +7,42 @@
 
 :root {
     /* Primary Colors */
-    --mrt-green-primary: #2d5016;
-    --mrt-green-light: #9ad29a;
-    --mrt-green-border: #6fb36f;
-    --mrt-green-dark: #1e3410;
-    --mrt-green-hover: #2d7a3d;
-    --mrt-blue-primary: #2271b1;
-    --mrt-success: #46b450;
+    --mrt-green-primary: #346538;
+    --mrt-green-light: #edf3ec;
+    --mrt-green-border: #dce7da;
+    --mrt-green-dark: #244728;
+    --mrt-green-hover: #2f5a33;
+    --mrt-blue-primary: #1f6c9f;
+    --mrt-success: #346538;
 
     /* Service Type Colors */
-    --mrt-bus-bg: #e3f2fd;
-    --mrt-bus-accent: #2196F3;
-    --mrt-bus-accent-dark: #1976D2;
-    --mrt-special-bg: #fff9c4;
-    --mrt-special-bg-light: #fffde7;
-    --mrt-special-accent: #F57C00;
+    --mrt-bus-bg: #e1f3fe;
+    --mrt-bus-accent: #1f6c9f;
+    --mrt-bus-accent-dark: #185779;
+    --mrt-special-bg: #fbf3db;
+    --mrt-special-bg-light: #fffaf0;
+    --mrt-special-accent: #956400;
 
     /* Background Colors */
-    --mrt-bg-white: #fff;
-    --mrt-bg-light: #f9f9f9;
-    --mrt-bg-lighter: #f5f5f5;
-    --mrt-bg-lightest: #fafafa;
-    --mrt-bg-success: #f4fff4;
-    --mrt-bg-error: #fcf0f1;
+    --mrt-bg-white: #ffffff;
+    --mrt-bg-light: #fbfbfa;
+    --mrt-bg-lighter: #f7f6f3;
+    --mrt-bg-lightest: #fbfbfa;
+    --mrt-bg-success: #edf3ec;
+    --mrt-bg-error: #fdebec;
 
     /* Border Colors */
-    --mrt-border-default: #ddd;
-    --mrt-border-light: #eee;
+    --mrt-border-default: #eaeaea;
+    --mrt-border-light: #f0efec;
 
     /* Text Colors */
-    --mrt-text-primary: #444;
-    --mrt-text-secondary: #333;
-    --mrt-text-tertiary: #666;
-    --mrt-text-quaternary: #555;
-    --mrt-text-muted: #999;
-    --mrt-text-white: #fff;
-    --mrt-text-error: #d63638;
+    --mrt-text-primary: #2f3437;
+    --mrt-text-secondary: #111111;
+    --mrt-text-tertiary: #787774;
+    --mrt-text-quaternary: #5f625f;
+    --mrt-text-muted: #9b9994;
+    --mrt-text-white: #ffffff;
+    --mrt-text-error: #9f2f2d;
 
     /* WordPress Colors */
     --mrt-wp-blue: #2271b1;
@@ -52,15 +52,15 @@
     --mrt-wp-border: #c3c4c7;
 
     /* Semantic Colors */
-    --mrt-warning-bg: #fff3cd;
-    --mrt-warning-border: #ffc107;
-    --mrt-danger-bg: #dc3545;
-    --mrt-danger-border: #dc3545;
-    --mrt-info-bg: #f0f6fc;
-    --mrt-info-border: #2271b1;
-    --mrt-light-blue-bg: #f0f8ff;
-    --mrt-light-yellow-bg: #fff9e6;
-    --mrt-gray-bg: #f0f0f0;
+    --mrt-warning-bg: #fbf3db;
+    --mrt-warning-border: #eadcae;
+    --mrt-danger-bg: #9f2f2d;
+    --mrt-danger-border: #9f2f2d;
+    --mrt-info-bg: #e1f3fe;
+    --mrt-info-border: #c9e3f2;
+    --mrt-light-blue-bg: #e1f3fe;
+    --mrt-light-yellow-bg: #fbf3db;
+    --mrt-gray-bg: #f7f6f3;
 
     /* Spacing */
     --mrt-spacing-xs: 0.25rem;
@@ -81,11 +81,11 @@
     --mrt-font-xl: 1.2rem;
 
     /* Shadows */
-    --mrt-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --mrt-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --mrt-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --mrt-shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --mrt-shadow-side: 2px 0 4px rgba(0, 0, 0, 0.1);
+    --mrt-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.035);
+    --mrt-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.04);
+    --mrt-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --mrt-shadow-xl: 0 4px 14px rgba(0, 0, 0, 0.045);
+    --mrt-shadow-side: 2px 0 6px rgba(0, 0, 0, 0.035);
 
     /* Border Radius */
     --mrt-radius-xs: 2px;
@@ -98,7 +98,7 @@
 
     /* Component Tokens */
     --mrt-card-bg: var(--mrt-bg-white);
-    --mrt-card-border: var(--mrt-wp-border);
+    --mrt-card-border: var(--mrt-border-default);
     --mrt-box-bg: var(--mrt-bg-light);
     --mrt-box-border: var(--mrt-border-default);
 
@@ -106,8 +106,8 @@
     --mrt-from-to-bg: var(--mrt-bus-bg);
     --mrt-from-to-col-bg: #90caf9;
     --mrt-transfer-bg: var(--mrt-special-bg);
-    --mrt-transfer-col-bg: #fff59d;
-    --mrt-route-header-end: #3a6b1f;
+    --mrt-transfer-col-bg: #fbf3db;
+    --mrt-route-header-end: #244728;
 
     /* Overlays */
     --mrt-overlay-white-15: rgba(255, 255, 255, 0.15);
@@ -117,7 +117,7 @@
     --mrt-special-bg-subtle: rgba(255, 193, 7, 0.15);
     --mrt-special-bg-subtle-20: rgba(255, 193, 7, 0.2);
     --mrt-bus-bg-subtle: rgba(33, 150, 243, 0.15);
-    --mrt-shadow-focus: 0 2px 6px rgba(255, 193, 7, 0.2);
+    --mrt-shadow-focus: 0 0 0 2px rgba(31, 108, 159, 0.18);
     --mrt-shadow-focus-ring: 0 0 0 2px var(--mrt-blue-primary);
     --mrt-shadow-focus-error: 0 0 0 1px var(--mrt-text-error);
     --mrt-shadow-focus-wp: 0 0 0 1px var(--mrt-wp-blue);
