@@ -301,9 +301,12 @@ function MRT_journey_wizard_l10n_price(): array {
     return [
         'priceTableTypeColumn' => __('Ticket type', MRT_TEXT_DOMAIN),
         'priceTitle' => __('Priser', MRT_TEXT_DOMAIN),
-        'priceNote' => __('Amounts are configured in timetable settings (same units as there).', MRT_TEXT_DOMAIN),
+        'priceNote' => __('Price is based on the cheapest valid zone count for the selected journey.', MRT_TEXT_DOMAIN),
         'priceDash' => '—',
-        'priceMatrix' => MRT_get_price_matrix(),
+        'priceMatrix' => MRT_price_matrix_for_zone(MRT_get_price_matrix(), 4),
+        'priceMatrixByZone' => MRT_get_price_matrix(),
+        'priceStationZones' => MRT_get_station_price_zones_map(),
+        'priceZoneLabel' => __('%d zones', MRT_TEXT_DOMAIN),
         'priceTickets' => MRT_price_ticket_type_labels(),
         'priceCategories' => MRT_price_category_labels(),
     ];
