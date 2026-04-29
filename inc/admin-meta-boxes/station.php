@@ -12,20 +12,22 @@ if (!defined('ABSPATH')) { exit; }
  *
  * @return array<int, WP_Post>
  */
-function MRT_get_routes_using_station(int $station_id): array {
-    $all_routes = get_posts([
-        'post_type' => 'mrt_route',
-        'posts_per_page' => -1,
-        'fields' => 'all',
-    ]);
-    $routes_using_station = [];
-    foreach ($all_routes as $route) {
-        $route_stations = get_post_meta($route->ID, 'mrt_route_stations', true);
-        if (is_array($route_stations) && in_array($station_id, $route_stations, true)) {
-            $routes_using_station[] = $route;
+if (!function_exists('MRT_get_routes_using_station')) {
+    function MRT_get_routes_using_station(int $station_id): array {
+        $all_routes = get_posts([
+            'post_type' => 'mrt_route',
+            'posts_per_page' => -1,
+            'fields' => 'all',
+        ]);
+        $routes_using_station = [];
+        foreach ($all_routes as $route) {
+            $route_stations = get_post_meta($route->ID, 'mrt_route_stations', true);
+            if (is_array($route_stations) && in_array($station_id, $route_stations, true)) {
+                $routes_using_station[] = $route;
+            }
         }
+        return $routes_using_station;
     }
-    return $routes_using_station;
 }
 
 /**
