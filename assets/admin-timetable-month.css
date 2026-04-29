@@ -12,6 +12,8 @@
     justify-content: space-between;
     gap: var(--mrt-spacing-sm);
     margin-bottom: var(--mrt-spacing-md);
+    border-bottom: 2px solid var(--mrt-line);
+    padding-bottom: var(--mrt-spacing-sm);
 }
 
 .mrt-month-nav__title {
@@ -19,6 +21,10 @@
     margin: 0;
     min-width: 0;
     text-align: center;
+    font-size: clamp(1.75rem, 4vw, 4rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
 .mrt-month-nav__prev,
@@ -42,8 +48,12 @@
 }
 
 .mrt-month-table thead th {
-    background: var(--mrt-bg-lightest);
-    font-weight: 600;
+    background: var(--mrt-ink);
+    color: var(--mrt-paper);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-month-table__caption {
@@ -101,16 +111,17 @@
 
 .mrt-day-clickable {
     cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: none;
 }
 
 .mrt-day-clickable:hover {
-    background-color: var(--mrt-green-hover) !important;
+    background-color: var(--mrt-hazard) !important;
+    color: var(--mrt-paper);
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .mrt-day-clickable:hover {
-        transform: scale(1.05);
+        transform: none;
     }
 }
 

@@ -10,22 +10,26 @@ a.mrt-btn:focus-visible,
 button.mrt-btn:focus-visible,
 input.mrt-btn:focus-visible {
     outline: 2px solid var(--mrt-wp-blue);
-    outline-offset: 2px;
+    outline-offset: 3px;
 }
 
 .mrt-btn--primary {
     background: var(--mrt-wp-blue);
     color: var(--mrt-text-white);
-    border: none;
+    border: 2px solid var(--mrt-wp-blue);
     padding: var(--mrt-spacing-sm) var(--mrt-spacing-lg);
     border-radius: var(--mrt-radius-sm);
-    font-weight: 600;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: none;
 }
 
 .mrt-btn--primary:hover {
-    background: var(--mrt-wp-blue-dark);
+    background: var(--mrt-ink);
+    border-color: var(--mrt-ink);
 }
 
 .mrt-btn--primary:active {
@@ -63,7 +67,8 @@ input.mrt-btn:focus-visible {
 .mrt-badge {
     display: inline-block;
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
-    background: var(--mrt-overlay-white-80);
+    background: var(--mrt-paper);
+    border: 1px solid var(--mrt-line);
     border-radius: var(--mrt-radius-sm);
     font-weight: 700;
     font-size: var(--mrt-font-md);
@@ -74,9 +79,9 @@ input.mrt-btn:focus-visible {
 
 .mrt-badge--muted {
     background: var(--mrt-special-bg-subtle);
-    color: var(--mrt-text-tertiary);
-    font-style: italic;
-    font-weight: 500;
+    color: var(--mrt-hazard);
+    font-style: normal;
+    font-weight: 800;
 }
 
 .mrt-heading {
@@ -84,18 +89,28 @@ input.mrt-btn:focus-visible {
 }
 
 .mrt-heading--lg {
-    font-size: var(--mrt-font-lg);
+    font-size: clamp(1.4rem, 3vw, 2.6rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
 .mrt-heading--xl {
-    font-size: var(--mrt-font-xl);
+    font-size: clamp(2rem, 6vw, 5.5rem);
+    line-height: 0.88;
+    text-transform: uppercase;
+    letter-spacing: 0;
     color: var(--mrt-text-secondary);
 }
 
 .mrt-empty {
     padding: var(--mrt-spacing-sm);
     color: var(--mrt-text-tertiary);
-    font-style: italic;
+    border: 1px dashed var(--mrt-line);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-style: normal;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .mrt-empty--loading {
@@ -105,7 +120,7 @@ input.mrt-btn:focus-visible {
 }
 
 .mrt-empty--loading::before {
-    content: "⏳ ";
+    content: ">>> ";
     margin-right: var(--mrt-spacing-sm);
 }
 
@@ -125,6 +140,7 @@ input.mrt-btn:focus-visible {
 .mrt-code-inline {
     background: var(--mrt-gray-bg);
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    border: 1px solid var(--mrt-line);
     border-radius: var(--mrt-radius-sm);
 }
 
@@ -136,11 +152,11 @@ input.mrt-btn:focus-visible {
     display: inline-block;
     width: var(--mrt-size-dot);
     height: var(--mrt-size-dot);
-    border-radius: 50%;
+    border-radius: 0;
 }
 
 .mrt-dot--green {
-    background: var(--mrt-green-light);
+    background: var(--mrt-hazard);
     border: 1px solid var(--mrt-green-border);
 }
 

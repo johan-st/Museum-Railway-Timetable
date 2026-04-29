@@ -8,21 +8,27 @@
 .mrt-card {
     padding: var(--mrt-spacing-md);
     background: var(--mrt-card-bg);
-    border: 1px solid var(--mrt-card-border);
+    border: 2px solid var(--mrt-card-border);
     border-radius: var(--mrt-radius-sm);
+    color: var(--mrt-text-primary);
 }
 
 .mrt-box {
     margin-bottom: var(--mrt-spacing-lg);
     padding: var(--mrt-spacing-md);
     background: var(--mrt-box-bg);
-    border: 1px solid var(--mrt-box-border);
+    border: 2px solid var(--mrt-box-border);
     border-radius: var(--mrt-radius-sm);
+    color: var(--mrt-text-primary);
 }
 
 .mrt-box h3 {
     margin-top: 0;
     margin-bottom: var(--mrt-spacing-sm);
+    font-size: clamp(1.5rem, 3vw, 3rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
 .mrt-box-sm {
@@ -33,43 +39,55 @@
 .mrt-alert {
     padding: var(--mrt-spacing-sm);
     margin-bottom: var(--mrt-spacing-md);
+    border: 2px solid currentColor;
     border-radius: var(--mrt-radius-sm);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: var(--mrt-font-sm);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-alert-info {
     background: var(--mrt-info-bg);
-    border-left: 4px solid var(--mrt-info-border);
+    border-left: 8px solid var(--mrt-info-border);
 }
 
 .mrt-alert-warning {
     background: var(--mrt-warning-bg);
-    border-left: 4px solid var(--mrt-warning-border);
+    border-left: 8px solid var(--mrt-warning-border);
 }
 
 .mrt-alert-error {
     background: var(--mrt-bg-error);
-    border-left: 4px solid var(--mrt-text-error);
+    border-left: 8px solid var(--mrt-text-error);
     color: var(--mrt-text-error);
 }
 
 .mrt-section {
     padding: var(--mrt-spacing-lg);
     background: var(--mrt-bg-white);
-    border: 1px solid var(--mrt-wp-border);
+    border: 2px solid var(--mrt-wp-border);
     border-radius: var(--mrt-radius-sm);
     margin-top: var(--mrt-spacing-xl);
 }
 
 .mrt-section h2 {
     margin-top: 0;
+    border-bottom: 2px solid var(--mrt-line);
+    padding-bottom: var(--mrt-spacing-sm);
+    font-size: clamp(2rem, 5vw, 5rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0;
 }
 
 .mrt-row-hover {
-    transition: background-color 0.2s;
+    transition: none;
 }
 
 .mrt-row-hover:hover {
-    background-color: var(--mrt-bg-lightest);
+    background-color: var(--mrt-special-bg-subtle);
 }
 
 .mrt-grid {

@@ -14,6 +14,10 @@
     margin-bottom: var(--mrt-spacing-sm);
     font-weight: 600;
     color: var(--mrt-text-secondary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: var(--mrt-font-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-form-label--inline {
@@ -31,9 +35,11 @@
 .mrt-input {
     width: 100%;
     padding: var(--mrt-spacing-sm);
-    border: 1px solid var(--mrt-border-default);
+    border: 2px solid var(--mrt-border-default);
     border-radius: var(--mrt-radius-sm);
     font-size: 1em;
+    background: #ffffff;
+    color: var(--mrt-ink);
 }
 
 .mrt-input:focus {
@@ -75,6 +81,10 @@
     margin-bottom: var(--mrt-spacing-sm);
     font-weight: 600;
     color: var(--mrt-text-secondary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: var(--mrt-font-sm);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .mrt-form-field select,
@@ -82,9 +92,11 @@
 .mrt-form-field input[type="text"] {
     width: 100%;
     padding: var(--mrt-spacing-sm);
-    border: 1px solid var(--mrt-border-default);
+    border: 2px solid var(--mrt-border-default);
     border-radius: var(--mrt-radius-sm);
     font-size: 1em;
+    background: #ffffff;
+    color: var(--mrt-ink);
 }
 
 .mrt-form-field select:focus,
