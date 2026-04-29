@@ -31,8 +31,8 @@ describe('MRTDateUtils', () => {
     });
 
     test('addCalendarMonths rolls year', () => {
-        assert.deepEqual(DU.addCalendarMonths(2026, 12, 1), { year: 2027, month: 1 });
-        assert.deepEqual(DU.addCalendarMonths(2026, 1, -1), { year: 2025, month: 12 });
+        assert.deepEqual(JSON.parse(JSON.stringify(DU.addCalendarMonths(2026, 12, 1))), { year: 2027, month: 1 });
+        assert.deepEqual(JSON.parse(JSON.stringify(DU.addCalendarMonths(2026, 1, -1))), { year: 2025, month: 12 });
     });
 
     test('validateHhMm empty is valid', () => {

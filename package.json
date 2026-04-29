@@ -3,6 +3,6 @@
   "private": true,
   "description": "WordPress plugin – optional Node tests for shared JS utils",
   "scripts": {
-    "test:js": "node --test tests/js/"
+    "test:js": "node --test tests/js/*.mjs"
   }
 }

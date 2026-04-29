@@ -5,7 +5,8 @@
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 $journey_dir = __DIR__ . '/';
 

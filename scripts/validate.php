@@ -83,8 +83,7 @@ foreach ($php_files as $file) {
     if (strpos($file, 'uninstall.php') !== false) continue; // uninstall.php has different check
     $checks++;
     $content = file_get_contents($file);
-    if (strpos($content, 'if (!defined(\'ABSPATH\'))') === false && 
-        strpos($content, 'if (!defined("ABSPATH"))') === false) {
+    if (!preg_match('/if\s*\(\s*!\s*defined\s*\(\s*[\'"]ABSPATH[\'"]\s*\)\s*\)/', $content)) {
         $warnings[] = "Missing ABSPATH check in $file";
         echo "  ⚠️  $file (missing ABSPATH check)\n";
     } else {

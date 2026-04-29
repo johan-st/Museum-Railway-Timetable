@@ -5,7 +5,8 @@
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 /**
  * First departure (HH:MM) at journey origin from a raw multi-leg bundle
@@ -13,16 +14,16 @@ if (!defined('ABSPATH')) { exit; }
  * @param array<string, mixed> $item Row from MRT_find_multi_leg_connections
  * @return string HH:MM or empty
  */
-function MRT_journey_raw_item_first_departure(array $item) {
-    if (empty($item['legs'][0]) || !is_array($item['legs'][0])) {
-        return '';
-    }
-    $leg = $item['legs'][0];
-    $dep = $leg['from_departure'] ?? '';
-    if ($dep !== '') {
-        return (string) $dep;
-    }
-    return (string) ($leg['from_arrival'] ?? '');
+function MRT_journey_raw_item_first_departure( array $item ) {
+	if ( empty( $item['legs'][0] ) || ! is_array( $item['legs'][0] ) ) {
+		return '';
+	}
+	$leg = $item['legs'][0];
+	$dep = $leg['from_departure'] ?? '';
+	if ( $dep !== '' ) {
+		return (string) $dep;
+	}
+	return (string) ( $leg['from_arrival'] ?? '' );
 }
 
 /**
@@ -33,14 +34,14 @@ function MRT_journey_raw_item_first_departure(array $item) {
  * @param string $dateYmd         Date YYYY-MM-DD
  * @param string $outbound_arrival_hhmm Arrival at outbound destination
  */
-function MRT_return_journey_inputs_valid($from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm): bool {
-    if ($from_station_id <= 0 || $to_station_id <= 0) {
-        return false;
-    }
-    if (!MRT_validate_date($dateYmd) || MRT_time_hhmm_to_minutes($outbound_arrival_hhmm) === null) {
-        return false;
-    }
-    return true;
+function MRT_return_journey_inputs_valid( $from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm ): bool {
+	if ( $from_station_id <= 0 || $to_station_id <= 0 ) {
+		return false;
+	}
+	if ( ! MRT_validate_date( $dateYmd ) || MRT_time_hhmm_to_minutes( $outbound_arrival_hhmm ) === null ) {
+		return false;
+	}
+	return true;
 }
 
 /**
@@ -54,29 +55,29 @@ function MRT_return_journey_inputs_valid($from_station_id, $to_station_id, $date
  * @return array<int, array<string, mixed>>
  */
 function MRT_return_journey_normalized_after_turnaround(
-    array $raw,
-    string $dateYmd,
-    int $return_origin_id,
-    int $return_dest_id,
-    string $earliest_hhmm
+	array $raw,
+	string $dateYmd,
+	int $return_origin_id,
+	int $return_dest_id,
+	string $earliest_hhmm
 ): array {
-    $out = [];
-    foreach ($raw as $item) {
-        $dep = MRT_journey_raw_item_first_departure($item);
-        if ($dep === '' || !MRT_validate_time_hhmm($dep)) {
-            continue;
-        }
-        if (MRT_compare_hhmm($dep, $earliest_hhmm) < 0) {
-            continue;
-        }
-        $out[] = MRT_normalize_connection_for_api(
-            $item,
-            $dateYmd,
-            $return_origin_id,
-            $return_dest_id
-        );
-    }
-    return $out;
+	$out = array();
+	foreach ( $raw as $item ) {
+		$dep = MRT_journey_raw_item_first_departure( $item );
+		if ( $dep === '' || ! MRT_validate_time_hhmm( $dep ) ) {
+			continue;
+		}
+		if ( MRT_compare_hhmm( $dep, $earliest_hhmm ) < 0 ) {
+			continue;
+		}
+		$out[] = MRT_normalize_connection_for_api(
+			$item,
+			$dateYmd,
+			$return_origin_id,
+			$return_dest_id
+		);
+	}
+	return $out;
 }
 
 /**
@@ -90,35 +91,35 @@ function MRT_return_journey_normalized_after_turnaround(
  * @return array<int, array<string, mixed>> Normalized API payloads (MRT_normalize_connection_for_api)
  */
 function MRT_find_return_connections(
-    $from_station_id,
-    $to_station_id,
-    $dateYmd,
-    $outbound_arrival_hhmm,
-    $min_turnaround_minutes = 0
+	$from_station_id,
+	$to_station_id,
+	$dateYmd,
+	$outbound_arrival_hhmm,
+	$min_turnaround_minutes = 0
 ) {
-    if (!MRT_return_journey_inputs_valid($from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm)) {
-        return [];
-    }
-    $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
-    $raw = MRT_find_multi_leg_connections(
-        (int) $to_station_id,
-        (int) $from_station_id,
-        $dateYmd,
-        $min_xfer,
-        true
-    );
-    if ($raw === []) {
-        return [];
-    }
-    $earliest = MRT_add_minutes_to_hhmm($outbound_arrival_hhmm, (int) $min_turnaround_minutes);
-    if ($earliest === null) {
-        return [];
-    }
-    return MRT_return_journey_normalized_after_turnaround(
-        $raw,
-        $dateYmd,
-        (int) $to_station_id,
-        (int) $from_station_id,
-        $earliest
-    );
+	if ( ! MRT_return_journey_inputs_valid( $from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm ) ) {
+		return array();
+	}
+	$min_xfer = (int) apply_filters( 'mrt_min_transfer_minutes', 5 );
+	$raw      = MRT_find_multi_leg_connections(
+		(int) $to_station_id,
+		(int) $from_station_id,
+		$dateYmd,
+		$min_xfer,
+		true
+	);
+	if ( $raw === array() ) {
+		return array();
+	}
+	$earliest = MRT_add_minutes_to_hhmm( $outbound_arrival_hhmm, (int) $min_turnaround_minutes );
+	if ( $earliest === null ) {
+		return array();
+	}
+	return MRT_return_journey_normalized_after_turnaround(
+		$raw,
+		$dateYmd,
+		(int) $to_station_id,
+		(int) $from_station_id,
+		$earliest
+	);
 }

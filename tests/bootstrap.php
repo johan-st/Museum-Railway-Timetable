@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 define('ABSPATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('MRT_TEXT_DOMAIN', 'museum-railway-timetable');
+define('MRT_POST_TYPE_SERVICE', 'mrt_service');
+define('MRT_POST_TYPE_TIMETABLE', 'mrt_timetable');
 
 require_once __DIR__ . '/wp-stubs.php';
 
@@ -59,3 +61,4 @@ require_once ABSPATH . 'inc/functions/journey-normalize.php';
 require_once ABSPATH . 'inc/functions/journey-return.php';
 require_once ABSPATH . 'inc/functions/journey-prices.php';
 require_once ABSPATH . 'inc/admin-ajax/journey-parse.php';
+require_once ABSPATH . 'inc/admin-ajax/stoptimes.php';

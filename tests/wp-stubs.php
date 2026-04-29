@@ -33,6 +33,12 @@ if (!class_exists('WP_Error')) {
 
             return (string) ($keys[0] ?? '');
         }
+
+        public function get_error_message(): string {
+            $messages = reset($this->errors);
+
+            return is_array($messages) ? (string) ($messages[0] ?? '') : '';
+        }
     }
 }
 
@@ -149,9 +155,31 @@ if (!function_exists('get_posts')) {
      * @return array<int, int>
      */
     function get_posts($args = []) {
-        unset($args);
+        if (isset($GLOBALS['mrt_test_get_posts']) && is_callable($GLOBALS['mrt_test_get_posts'])) {
+            return $GLOBALS['mrt_test_get_posts']($args);
+        }
 
         return [];
+    }
+}
+
+if (!function_exists('current_user_can')) {
+    /**
+     * Test overrides via $GLOBALS['mrt_test_current_user_can'] callable or bool.
+     *
+     * @param string $capability
+     * @param mixed  ...$args
+     */
+    function current_user_can($capability, ...$args): bool {
+        $GLOBALS['mrt_test_current_user_can_calls'][] = [$capability, $args];
+        if (isset($GLOBALS['mrt_test_current_user_can']) && is_callable($GLOBALS['mrt_test_current_user_can'])) {
+            return (bool) $GLOBALS['mrt_test_current_user_can']($capability, ...$args);
+        }
+        if (isset($GLOBALS['mrt_test_current_user_can'])) {
+            return (bool) $GLOBALS['mrt_test_current_user_can'];
+        }
+
+        return true;
     }
 }
 

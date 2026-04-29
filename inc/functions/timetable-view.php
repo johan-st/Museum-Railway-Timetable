@@ -5,7 +5,8 @@
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 $timetable_view_dir = __DIR__ . '/timetable-view/';
 require_once $timetable_view_dir . 'prepare.php';
