@@ -6,10 +6,10 @@
  */
 
 .mrt-card {
-    padding: var(--mrt-spacing-md);
+    padding: var(--mrt-spacing-lg);
     background: var(--mrt-card-bg);
     border: 1px solid var(--mrt-card-border);
-    border-radius: var(--mrt-radius-sm);
+    border-radius: var(--mrt-radius-md);
 }
 
 .mrt-box {
@@ -53,15 +53,21 @@
 }
 
 .mrt-section {
-    padding: var(--mrt-spacing-lg);
+    padding: var(--mrt-spacing-xl);
     background: var(--mrt-bg-white);
-    border: 1px solid var(--mrt-wp-border);
-    border-radius: var(--mrt-radius-sm);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: var(--mrt-radius-md);
     margin-top: var(--mrt-spacing-xl);
 }
 
 .mrt-section h2 {
     margin-top: 0;
+    color: var(--mrt-text-secondary);
+    font-family: "Lyon Text", "Newsreader", "Playfair Display", "Instrument Serif", serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
 }
 
 .mrt-row-hover {

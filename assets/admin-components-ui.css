@@ -14,22 +14,23 @@ input.mrt-btn:focus-visible {
 }
 
 .mrt-btn--primary {
-    background: var(--mrt-wp-blue);
+    background: #111111;
     color: var(--mrt-text-white);
     border: none;
     padding: var(--mrt-spacing-sm) var(--mrt-spacing-lg);
     border-radius: var(--mrt-radius-sm);
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s;
 }
 
 .mrt-btn--primary:hover {
-    background: var(--mrt-wp-blue-dark);
+    background: #333333;
 }
 
 .mrt-btn--primary:active {
-    background: var(--mrt-wp-blue-darker);
+    background: #333333;
+    transform: scale(0.98);
 }
 
 .mrt-btn--danger {
@@ -63,13 +64,15 @@ input.mrt-btn:focus-visible {
 .mrt-badge {
     display: inline-block;
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
-    background: var(--mrt-overlay-white-80);
-    border-radius: var(--mrt-radius-sm);
+    background: var(--mrt-light-blue-bg);
+    border-radius: 9999px;
     font-weight: 700;
-    font-size: var(--mrt-font-md);
-    color: var(--mrt-text-primary);
+    font-size: var(--mrt-font-xs);
+    letter-spacing: 0.05em;
+    color: var(--mrt-blue-primary);
     min-width: 32px;
     text-align: center;
+    text-transform: uppercase;
 }
 
 .mrt-badge--muted {
@@ -105,7 +108,7 @@ input.mrt-btn:focus-visible {
 }
 
 .mrt-empty--loading::before {
-    content: "⏳ ";
+    content: "Loading ";
     margin-right: var(--mrt-spacing-sm);
 }
 
@@ -126,6 +129,7 @@ input.mrt-btn:focus-visible {
     background: var(--mrt-gray-bg);
     padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
     border-radius: var(--mrt-radius-sm);
+    font-family: "Geist Mono", "SF Mono", "JetBrains Mono", monospace;
 }
 
 .mrt-code-block {
